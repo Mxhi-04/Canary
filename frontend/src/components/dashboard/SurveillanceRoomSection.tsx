@@ -87,3 +87,4 @@ export const SurveillanceRoomSection: React.FC<SurveillanceRoomSectionProps> = (
     </section>
   );
 };
+
