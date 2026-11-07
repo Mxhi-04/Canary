@@ -95,7 +95,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-canvas-deep/80 backdrop-blur-md border-b border-border/80 px-6 py-3.5 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group" title="Canary Home">
-          <CanaryLogo variant="full" size="md" />
+          <CanaryLogo variant="full" size="md" glow="subtle" />
         </Link>
 
         {/* Center Navigation Links */}
@@ -245,35 +245,40 @@ export default function LandingPage() {
               DYNAMIC NARRATIVE OVERLAYS (SYNCHRONIZED WITH SCROLL PROGRESS)
               ========================================================================= */}
 
-          {/* Chapter 0: Hero Intro (0% - 20% scroll) */}
+          {/* Chapter 0: Hero Intro (0% - 20% scroll) - LEFT ALIGNED */}
           <div
-            className={`absolute z-20 max-w-2xl px-6 text-center transition-all duration-500 ease-out flex flex-col items-center ${
+            className={`absolute left-6 sm:left-12 md:left-20 lg:left-28 z-20 max-w-2xl px-4 sm:px-0 text-left transition-all duration-500 ease-out flex flex-col items-start ${
               scrollProgress < 0.20
                 ? 'opacity-100 translate-y-0 pointer-events-auto'
                 : 'opacity-0 -translate-y-8 pointer-events-none'
             }`}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-6 text-xs font-semibold uppercase tracking-wider text-canary-amber">
+            {/* Future Health Challenge 06 Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-4 text-xs font-semibold uppercase tracking-wider text-canary-amber shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-canary-amber animate-pulse" />
               <span>Future Health Challenge 06</span>
             </div>
 
-            {/* Authentic Brand Wordmark with Bird on Branch */}
-            <div className="mb-4">
-              <CanaryLogo variant="full" size="hero" priority />
+            {/* Authentic Brand Wordmark with Metallic Glow & Increased Size */}
+            <div className="mb-3 -ml-2 sm:-ml-3">
+              <CanaryLogo variant="full" size="hero" glow="metallic" priority />
             </div>
 
-            <p className="text-lg md:text-xl font-light text-[#EDCB63] mt-1">
+            {/* Subtitle */}
+            <p className="text-xl sm:text-2xl md:text-3xl font-light text-[#EDCB63] tracking-tight">
               Population &amp; Workforce Health Early-Warning Platform
             </p>
-            <p className="text-sm md:text-base text-canary-text-2 mt-4 max-w-xl leading-relaxed">
+
+            {/* Description */}
+            <p className="text-sm sm:text-base text-canary-text-2 mt-3 max-w-xl leading-relaxed">
               Sense emerging population and workforce health risks by combining environmental exposure leads with aggregated health-service and workplace outcomes.
             </p>
 
-            <div className="flex items-center gap-4 mt-8">
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap items-center gap-3.5 mt-8">
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 px-6 py-3 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-sm shadow-amber-glow transition-all"
+                className="flex items-center gap-2 px-6 py-3 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-sm shadow-amber-glow hover:shadow-[0_0_24px_rgba(242,163,58,0.5)] transition-all"
               >
                 <span>Launch Monitoring Room</span>
                 <ArrowRight className="w-4 h-4" />
@@ -285,7 +290,7 @@ export default function LandingPage() {
                     behavior: 'smooth',
                   });
                 }}
-                className="flex items-center gap-1.5 px-4 py-3 rounded-control bg-panel-raised/80 hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
+                className="flex items-center gap-2 px-4 py-3 rounded-control bg-panel-raised/85 hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
               >
                 <span>Scroll to start bird flight</span>
                 <ChevronDown className="w-4 h-4 animate-bounce" />
