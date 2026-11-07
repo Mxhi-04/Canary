@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: 'Canary — Population and Workforce Health Early-Warning Platform',
   description:
     'Sense emerging population and workforce health risk by combining environmental exposure leads with aggregated health-service and workplace outcomes.',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/images/canary-icon-64.png',
+  },
 };
 
 export default function RootLayout({

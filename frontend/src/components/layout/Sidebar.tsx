@@ -11,9 +11,12 @@ import {
   BarChart3,
   ShieldCheck,
   TrendingUp,
+  MapPin,
+  Settings,
   ChevronRight,
   ChevronLeft
 } from 'lucide-react';
+import { CanaryLogo } from '@/components/shared/CanaryLogo';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
@@ -28,9 +31,14 @@ export const Sidebar: React.FC = () => {
     },
     {
       href: '/dashboard',
-      label: 'Overview & Map',
+      label: 'Surveillance Room',
       icon: LayoutDashboard,
       exact: true,
+    },
+    {
+      href: '/map',
+      label: 'Geospatial Map',
+      icon: MapPin,
     },
     {
       href: '/alerts',
@@ -59,6 +67,11 @@ export const Sidebar: React.FC = () => {
       label: 'Impact Estimator',
       icon: TrendingUp,
     },
+    {
+      href: '/settings',
+      label: 'Settings & Telemetry',
+      icon: Settings,
+    },
   ];
 
   const isCurrent = (item: typeof navItems[0]) => {
@@ -82,26 +95,15 @@ export const Sidebar: React.FC = () => {
         <Link
           href="/"
           className="h-16 flex items-center px-4 gap-3 border-b border-border/80 overflow-hidden hover:bg-panel transition-colors"
+          title="Canary Early-Warning Platform"
         >
-          {/* Canary Bird Glowing Emblem */}
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F2A33A] to-[#E8C14A] flex items-center justify-center flex-shrink-0 shadow-amber-glow">
-            <svg viewBox="0 0 24 24" className="w-6 h-6 text-canvas-deep fill-current" strokeWidth="0">
-              <path d="M12 2C8.5 2 5.5 4.5 5 8c-.3 2.5 1 5 3 6.5L7 19l4.5-2c.2 0 .3 0 .5.1 4.5 1.2 8-2 8-6.1C20 6.5 16.5 2 12 2zm1 4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zm-4 7c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" />
-            </svg>
-          </div>
-
-          <div
-            className={`flex flex-col overflow-hidden transition-opacity duration-200 ${
-              isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <span className="text-base font-bold text-canary-text tracking-wide uppercase">
-              Canary
-            </span>
-            <span className="text-[10px] text-canary-text-3 truncate font-medium">
-              Health Early-Warning
-            </span>
-          </div>
+          {isExpanded ? (
+            <div className="flex items-center gap-2">
+              <CanaryLogo variant="full" size="md" />
+            </div>
+          ) : (
+            <CanaryLogo variant="mark" size="md" />
+          )}
         </Link>
 
         {/* Navigation List */}

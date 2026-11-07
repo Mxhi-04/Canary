@@ -6,6 +6,7 @@ import { useDemoRole } from '@/context/RoleContext';
 import { DEMO_ROLES } from '@/lib/data/seededData';
 import { ScrollFrameCanvas } from '@/components/landing/ScrollFrameCanvas';
 import { ScrollVideoScrubber } from '@/components/landing/ScrollVideoScrubber';
+import { CanaryLogo } from '@/components/shared/CanaryLogo';
 import {
   ShieldAlert,
   ArrowRight,
@@ -93,20 +94,8 @@ export default function LandingPage() {
       {/* Fixed Top Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-canvas-deep/80 backdrop-blur-md border-b border-border/80 px-6 py-3.5 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#F2A33A] to-[#E8C14A] flex items-center justify-center shadow-amber-glow group-hover:scale-105 transition-transform">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-canvas-deep fill-current" strokeWidth="0">
-              <path d="M12 2C8.5 2 5.5 4.5 5 8c-.3 2.5 1 5 3 6.5L7 19l4.5-2c.2 0 .3 0 .5.1 4.5 1.2 8-2 8-6.1C20 6.5 16.5 2 12 2zm1 4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zm-4 7c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" />
-            </svg>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-base font-bold text-canary-text tracking-wider uppercase leading-none">
-              Canary
-            </span>
-            <span className="text-[10px] text-canary-text-3 font-medium tracking-normal mt-0.5">
-              Population &amp; Workforce Early-Warning
-            </span>
-          </div>
+        <Link href="/" className="flex items-center gap-3 group" title="Canary Home">
+          <CanaryLogo variant="full" size="md" />
         </Link>
 
         {/* Center Navigation Links */}
@@ -264,15 +253,17 @@ export default function LandingPage() {
                 : 'opacity-0 -translate-y-8 pointer-events-none'
             }`}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-4 text-xs font-semibold uppercase tracking-wider text-canary-amber">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-6 text-xs font-semibold uppercase tracking-wider text-canary-amber">
               <Sparkles className="w-3.5 h-3.5 text-canary-amber animate-pulse" />
               <span>Future Health Challenge 06</span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-canary-text uppercase">
-              CANARY
-            </h1>
-            <p className="text-lg md:text-xl font-light text-[#EDCB63] mt-2">
+            {/* Authentic Brand Wordmark with Bird on Branch */}
+            <div className="mb-4">
+              <CanaryLogo variant="full" size="hero" priority />
+            </div>
+
+            <p className="text-lg md:text-xl font-light text-[#EDCB63] mt-1">
               Population &amp; Workforce Health Early-Warning Platform
             </p>
             <p className="text-sm md:text-base text-canary-text-2 mt-4 max-w-xl leading-relaxed">
@@ -559,10 +550,13 @@ export default function LandingPage() {
 
         {/* Footer */}
         <footer className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-canary-text-3">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-canary-text">Canary Early-Warning Platform</span>
-            <span>•</span>
-            <span>Future Health Challenge 06</span>
+          <div className="flex items-center gap-3">
+            <CanaryLogo variant="mark" size="sm" />
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-canary-text">Canary Early-Warning Platform</span>
+              <span>•</span>
+              <span>Challenge 06 Future Health</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">
