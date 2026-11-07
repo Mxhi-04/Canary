@@ -360,3 +360,4 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
     </div>
   );
 };
+

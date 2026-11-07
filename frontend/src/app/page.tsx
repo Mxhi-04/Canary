@@ -9,6 +9,7 @@ import { ScrollVideoScrubber } from '@/components/landing/ScrollVideoScrubber';
 import { CanaryLogo } from '@/components/shared/CanaryLogo';
 import { GlassmorphismTelemetryHUD } from '@/components/landing/GlassmorphismTelemetryHUD';
 import { EmpowermentEmblems } from '@/components/landing/EmpowermentEmblems';
+import { SurveillanceRoomSection } from '@/components/dashboard/SurveillanceRoomSection';
 import {
   ShieldAlert,
   ArrowRight,
@@ -404,61 +405,10 @@ export default function LandingPage() {
             ========================================================================= */}
         <EmpowermentEmblems />
 
-        {/* Hero Entry Card */}
-        <div className="canary-panel p-8 bg-gradient-to-br from-panel-raised to-panel border-2 border-canary-amber/50 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-12">
-          <div className="space-y-3 flex-1">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-canary-amber">
-              <span className="w-2.5 h-2.5 rounded-full bg-canary-amber shadow-amber-glow" />
-              <span>Active Prototype Operational Session</span>
-            </div>
-
-            <h2 className="text-2xl md:text-3xl font-extrabold text-canary-text tracking-tight">
-              Enter Canary Surveillance Room
-            </h2>
-
-            <p className="text-sm text-canary-text-2 leading-relaxed max-w-2xl">
-              Select your demonstration profile to inspect real-time regional monitoring across Abu Dhabi, Musaffah, Al Ain, and Dubai South. Roles enforce strict backend scoping and small-cell privacy suppression.
-            </p>
-
-            {/* Quick Role Switcher Buttons */}
-            <div className="pt-2 flex items-center flex-wrap gap-2 text-xs">
-              <span className="text-canary-text-3 font-semibold mr-1">Demo Role:</span>
-              {DEMO_ROLES.map((r) => (
-                <button
-                  key={r.id}
-                  onClick={() => setRole(r.id)}
-                  className={`px-3 py-1.5 rounded-control font-medium transition-all ${
-                    activeRole === r.id
-                      ? 'bg-canary-amber text-canvas-deep font-bold shadow-amber-glow'
-                      : 'bg-panel-inset text-canary-text-2 hover:bg-panel border border-border'
-                  }`}
-                >
-                  {r.shortName}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Launch Buttons */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0 w-full lg:w-auto">
-            <Link
-              href="/dashboard"
-              className="flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-sm shadow-amber-glow transition-all"
-            >
-              <Compass className="w-4 h-4" />
-              <span>Open Surveillance Map</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              href="/alerts"
-              className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-control bg-panel-raised hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
-            >
-              <ShieldAlert className="w-4 h-4 text-[#F08A2E]" />
-              <span>Alert Inbox (3 Active)</span>
-            </Link>
-          </div>
-        </div>
+        {/* =========================================================================
+            DISEASE SURVEILLANCE ROOM & REGIONAL MAP
+            ========================================================================= */}
+        <SurveillanceRoomSection />
 
         {/* 4 Pillars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
