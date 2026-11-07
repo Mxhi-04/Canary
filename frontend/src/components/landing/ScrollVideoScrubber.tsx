@@ -56,7 +56,7 @@ export const ScrollVideoScrubber: React.FC<ScrollVideoScrubberProps> = ({
       const diff = target - current;
 
       if (Math.abs(diff) > 0.0001) {
-        currentProgressRef.current += diff * 0.12;
+        currentProgressRef.current += diff * 0.32;
         const targetTime = currentProgressRef.current * durationRef.current;
 
         // All-intra keyframe seeking

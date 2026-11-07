@@ -24,8 +24,7 @@ interface GlassmorphismTelemetryHUDProps {
 }
 
 /**
- * Helper to compute smooth Hermite smoothstep (0.0 to 1.0)
- * over a normalized scroll window [start, end].
+ * Smooth Hermite cubic interpolation over a normalized scroll window [start, end].
  */
 function computeStep(scroll: number, start: number, end: number): number {
   if (scroll <= start) return 0;
@@ -56,55 +55,58 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
 
   // =========================================================================
   // SCROLL-DRIVEN SEQUENTIAL REVEAL STEPS (APPEAR ONE BY ONE)
-  // Step 0: Top Header (0.02 -> 0.08)
-  // Step 1: Card 1 - Thermal WBGT Arc Gauge (0.05 -> 0.20)
-  // Step 2: Card 2 - Air Quality PM2.5 Curve (0.20 -> 0.38)
-  // Step 3: Card 3 - Early Detection Horizon Timeline (0.38 -> 0.60)
-  // Step 4: Card 4 - Syndromic Fusion & Proportionate Action (0.60 -> 0.85)
+  // Step 0: Top Header (0.02 -> 0.07)
+  // Step 1: Card 1 - Thermal WBGT Arc Gauge (0.05 -> 0.18)
+  // Step 2: Card 2 - Air Quality PM2.5 Curve (0.18 -> 0.35)
+  // Step 3: Card 3 - Early Detection Horizon Timeline (0.35 -> 0.58)
+  // Step 4: Card 4 - Syndromic Fusion & Proportionate Action (0.58 -> 0.82)
   // =========================================================================
-  const pHeader = computeStep(scrollProgress, 0.02, 0.08);
-  const pCard1 = computeStep(scrollProgress, 0.05, 0.20);
-  const pCard2 = computeStep(scrollProgress, 0.20, 0.38);
-  const pCard3 = computeStep(scrollProgress, 0.38, 0.60);
-  const pCard4 = computeStep(scrollProgress, 0.60, 0.85);
+  const pHeader = computeStep(scrollProgress, 0.02, 0.07);
+  const pCard1 = computeStep(scrollProgress, 0.05, 0.18);
+  const pCard2 = computeStep(scrollProgress, 0.18, 0.35);
+  const pCard3 = computeStep(scrollProgress, 0.35, 0.58);
+  const pCard4 = computeStep(scrollProgress, 0.58, 0.82);
 
-  // Common ultra-glassmorphic style:
-  // Low alpha (26%-36%), high optical blur (28px), rich color saturation (170%),
-  // with specular top reflection and inner lighting so background scenery shows through!
+  // Reference-faithful sheer glassmorphism:
+  // Crystal clear optical transparency (>90% transparent), crisp defined borders (28% white),
+  // luminous specular upper bevel highlight (42% white reflection), and silky backdrop blur.
+  // Mountains, sunset gradients, and twinkling city lights glow vividly through the glass!
   const glassPanelStyle: React.CSSProperties = {
     background:
-      'linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(18, 22, 34, 0.28) 45%, rgba(10, 13, 22, 0.36) 100%)',
-    backdropFilter: 'blur(28px) saturate(170%)',
-    WebkitBackdropFilter: 'blur(28px) saturate(170%)',
+      'linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(12, 16, 26, 0.16) 100%)',
+    backdropFilter: 'blur(18px) saturate(190%)',
+    WebkitBackdropFilter: 'blur(18px) saturate(190%)',
+    border: '1px solid rgba(255, 255, 255, 0.28)',
     boxShadow:
-      'inset 0 1px 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35), 0 20px 48px -10px rgba(0, 0, 0, 0.45)',
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+      'inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.42), inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 20px 50px -10px rgba(0, 0, 0, 0.45)',
+    willChange: 'transform, opacity',
   };
 
   return (
     <div
-      className={`w-full max-w-xl xl:max-w-2xl flex flex-col gap-3 select-none transition-all duration-300 ${className}`}
+      className={`w-full max-w-xl xl:max-w-2xl flex flex-col gap-3 select-none ${className}`}
     >
       {/* =========================================================================
-          STEP 0: Top Floating Header (Appears first: 2% - 8% scroll)
+          STEP 0: Top Floating Header (Appears first: 2% - 7% scroll)
           ========================================================================= */}
       <div
-        className="flex items-center justify-between px-1 transition-all duration-500 ease-out"
+        className="flex items-center justify-between px-1"
         style={{
           opacity: pHeader,
-          transform: `translateY(${(1 - pHeader) * -14}px)`,
+          transform: `translate3d(0, ${(1 - pHeader) * -12}px, 0)`,
           pointerEvents: pHeader > 0.2 ? 'auto' : 'none',
+          willChange: 'transform, opacity',
         }}
       >
         {/* Live Surveillance Indicator */}
         <div
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-lg text-[11px] text-canary-text-2 transition-all"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-lg text-[11px] text-canary-text-2"
           style={{
             background:
-              'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 22, 32, 0.30) 100%)',
-            backdropFilter: 'blur(24px) saturate(160%)',
-            borderColor: 'rgba(255, 255, 255, 0.18)',
-            boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
+              'linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%)',
+            backdropFilter: 'blur(18px) saturate(180%)',
+            borderColor: 'rgba(255, 255, 255, 0.28)',
+            boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35)',
           }}
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse" />
@@ -122,13 +124,13 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
         <div className="flex items-center gap-2">
           <Link
             href="/alerts"
-            className="relative p-2 rounded-2xl border text-canary-text-2 hover:text-canary-amber transition-all shadow-lg group hover:border-[#F2A33A]/40"
+            className="relative p-2 rounded-2xl border text-canary-text-2 hover:text-canary-amber transition-all shadow-lg group hover:border-[#F2A33A]/50"
             style={{
               background:
-                'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 22, 32, 0.30) 100%)',
-              backdropFilter: 'blur(24px) saturate(160%)',
-              borderColor: 'rgba(255, 255, 255, 0.18)',
-              boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%)',
+              backdropFilter: 'blur(18px) saturate(180%)',
+              borderColor: 'rgba(255, 255, 255, 0.28)',
+              boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35)',
             }}
             title="Active Surveillance Alerts"
           >
@@ -138,10 +140,10 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
             </span>
           </Link>
           <div
-            className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-[#F2A33A] to-[#EDCB63] p-0.5 shadow-lg border border-white/20 flex items-center justify-center overflow-hidden cursor-pointer"
+            className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-[#F2A33A] to-[#EDCB63] p-0.5 shadow-lg border border-white/30 flex items-center justify-center overflow-hidden cursor-pointer"
             title="Surveillance Officer (MOHAP Demo Role)"
           >
-            <div className="w-full h-full rounded-[14px] bg-[#161617]/90 flex items-center justify-center text-[10px] font-bold text-canary-amber">
+            <div className="w-full h-full rounded-[14px] bg-[#161617]/80 backdrop-blur-sm flex items-center justify-center text-[10px] font-bold text-canary-amber">
               SO
             </div>
           </div>
@@ -152,14 +154,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* =========================================================================
             STEP 1: CARD 1 - Semicircular Hazard Gauge (Thermal Stress WBGT)
-            Appears second: 5% - 20% scroll
+            Appears second: 5% - 18% scroll
             ========================================================================= */}
         <div
-          className="relative rounded-3xl border p-4 transition-all duration-500 ease-out overflow-hidden group hover:border-[#F2A33A]/50"
+          className="relative rounded-3xl p-4 overflow-hidden group hover:border-[#F2A33A]/50 transition-colors duration-200"
           style={{
             ...glassPanelStyle,
             opacity: pCard1,
-            transform: `translateY(${(1 - pCard1) * 28}px) scale(${0.95 + 0.05 * pCard1})`,
+            transform: `translate3d(0, ${(1 - pCard1) * 24}px, 0) scale(${0.96 + 0.04 * pCard1})`,
             pointerEvents: pCard1 > 0.2 ? 'auto' : 'none',
           }}
         >
@@ -178,8 +180,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               onClick={() => setWbgtActive(!wbgtActive)}
               className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 flex items-center ${
                 wbgtActive
-                  ? 'bg-gradient-to-r from-[#EDCB63] to-[#F2A33A] shadow-[0_0_12px_rgba(242,163,58,0.6)]'
-                  : 'bg-white/10 border border-white/15'
+                  ? 'bg-gradient-to-r from-[#EDCB63] to-[#F2A33A] shadow-[0_0_12px_rgba(242,163,58,0.7)]'
+                  : 'bg-white/10 border border-white/25'
               }`}
               title="Toggle WBGT Sensor Feed"
             >
@@ -206,7 +208,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <path
                 d="M 20 75 A 60 60 0 0 1 140 75"
                 fill="none"
-                stroke="rgba(255,255,255,0.12)"
+                stroke="rgba(255,255,255,0.18)"
                 strokeWidth="7"
                 strokeLinecap="round"
               />
@@ -219,13 +221,12 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
                   stroke="url(#wbgtGaugeGrad)"
                   strokeWidth="7"
                   strokeLinecap="round"
-                  className="transition-all duration-700"
                 />
               )}
 
               {/* Min and Max Markers */}
-              <text x="18" y="88" fill="#9BA1B0" fontSize="8" fontFamily="monospace" textAnchor="middle">0</text>
-              <text x="140" y="88" fill="#9BA1B0" fontSize="8" fontFamily="monospace" textAnchor="middle">50</text>
+              <text x="18" y="88" fill="#B4BAC8" fontSize="8" fontFamily="monospace" textAnchor="middle">0</text>
+              <text x="140" y="88" fill="#B4BAC8" fontSize="8" fontFamily="monospace" textAnchor="middle">50</text>
 
               {/* Needle Glow Indicator Dot at Current Reading */}
               {wbgtActive && (
@@ -254,7 +255,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
           </div>
 
           {/* Footnote Stats */}
-          <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] text-canary-text-3 font-mono">
+          <div className="flex items-center justify-between pt-2 border-t border-white/15 text-[11px] text-canary-text-3 font-mono">
             <span>Ambient: 41.5°C</span>
             <span className="text-canary-amber font-semibold">+2.4d Lead</span>
           </div>
@@ -262,14 +263,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
 
         {/* =========================================================================
             STEP 2: CARD 2 - Air Quality (PM2.5) Signal Sparkline with Grid & Toggle
-            Appears third: 20% - 38% scroll
+            Appears third: 18% - 35% scroll
             ========================================================================= */}
         <div
-          className="relative rounded-3xl border p-4 transition-all duration-500 ease-out overflow-hidden group hover:border-[#F2A33A]/50"
+          className="relative rounded-3xl p-4 overflow-hidden group hover:border-[#F2A33A]/50 transition-colors duration-200"
           style={{
             ...glassPanelStyle,
             opacity: pCard2,
-            transform: `translateY(${(1 - pCard2) * 28}px) scale(${0.95 + 0.05 * pCard2})`,
+            transform: `translate3d(0, ${(1 - pCard2) * 24}px, 0) scale(${0.96 + 0.04 * pCard2})`,
             pointerEvents: pCard2 > 0.2 ? 'auto' : 'none',
           }}
         >
@@ -287,8 +288,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               onClick={() => setPmActive(!pmActive)}
               className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 flex items-center ${
                 pmActive
-                  ? 'bg-gradient-to-r from-[#EDCB63] to-[#F2A33A] shadow-[0_0_12px_rgba(242,163,58,0.6)]'
-                  : 'bg-white/10 border border-white/15'
+                  ? 'bg-gradient-to-r from-[#EDCB63] to-[#F2A33A] shadow-[0_0_12px_rgba(242,163,58,0.7)]'
+                  : 'bg-white/10 border border-white/25'
               }`}
               title="Toggle PM2.5 Feed"
             >
@@ -311,14 +312,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               </defs>
 
               {/* Horizontal Grid lines */}
-              <line x1="24" y1="18" x2="215" y2="18" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" strokeDasharray="2 2" />
-              <line x1="24" y1="42" x2="215" y2="42" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" strokeDasharray="2 2" />
-              <line x1="24" y1="68" x2="215" y2="68" stroke="rgba(255,255,255,0.15)" strokeWidth="0.5" />
+              <line x1="24" y1="18" x2="215" y2="18" stroke="rgba(255,255,255,0.18)" strokeWidth="0.5" strokeDasharray="2 2" />
+              <line x1="24" y1="42" x2="215" y2="42" stroke="rgba(255,255,255,0.18)" strokeWidth="0.5" strokeDasharray="2 2" />
+              <line x1="24" y1="68" x2="215" y2="68" stroke="rgba(255,255,255,0.22)" strokeWidth="0.5" />
 
               {/* Y-Axis Labels */}
-              <text x="18" y="21" fill="#9BA1B0" fontSize="7" fontFamily="monospace" textAnchor="end">600</text>
-              <text x="18" y="45" fill="#9BA1B0" fontSize="7" fontFamily="monospace" textAnchor="end">400</text>
-              <text x="18" y="71" fill="#9BA1B0" fontSize="7" fontFamily="monospace" textAnchor="end">0</text>
+              <text x="18" y="21" fill="#B4BAC8" fontSize="7" fontFamily="monospace" textAnchor="end">600</text>
+              <text x="18" y="45" fill="#B4BAC8" fontSize="7" fontFamily="monospace" textAnchor="end">400</text>
+              <text x="18" y="71" fill="#B4BAC8" fontSize="7" fontFamily="monospace" textAnchor="end">0</text>
 
               {/* Area Fill */}
               {pmActive && (
@@ -332,7 +333,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <path
                 d="M 28 68 Q 60 66 85 45 T 135 22 T 175 48 T 215 30"
                 fill="none"
-                stroke={pmActive ? '#F2A33A' : 'rgba(255,255,255,0.2)'}
+                stroke={pmActive ? '#F2A33A' : 'rgba(255,255,255,0.25)'}
                 strokeWidth="2.4"
                 strokeLinecap="round"
               />
@@ -357,9 +358,9 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <div
                 className="absolute top-0 right-2 px-1.5 py-0.5 rounded border text-[9px] font-mono text-canary-amber shadow-md"
                 style={{
-                  background: 'rgba(18, 22, 34, 0.65)',
+                  background: 'rgba(255, 255, 255, 0.12)',
                   backdropFilter: 'blur(12px)',
-                  borderColor: 'rgba(242, 163, 58, 0.4)',
+                  borderColor: 'rgba(242, 163, 58, 0.5)',
                 }}
               >
                 Peak: 118 µg/m³
@@ -368,7 +369,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
           </div>
 
           {/* Time axis */}
-          <div className="flex items-center justify-between text-[9px] text-canary-text-3 font-mono pt-1 border-t border-white/10 pl-6">
+          <div className="flex items-center justify-between text-[9px] text-canary-text-3 font-mono pt-1 border-t border-white/15 pl-6">
             <span>10am</span>
             <span>3pm</span>
             <span>6pm</span>
@@ -377,14 +378,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
           </div>
 
           {/* Secondary Row with Second Toggle */}
-          <div className="flex items-center justify-between pt-2 mt-1.5 border-t border-white/10 text-[11px] text-canary-text-2">
+          <div className="flex items-center justify-between pt-2 mt-1.5 border-t border-white/15 text-[11px] text-canary-text-2">
             <span>Threshold Alert Trigger</span>
             <button
               onClick={() => setSecondaryTriggerActive(!secondaryTriggerActive)}
               className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 flex items-center ${
                 secondaryTriggerActive
                   ? 'bg-[#F2A33A]'
-                  : 'bg-white/10 border border-white/15'
+                  : 'bg-white/10 border border-white/25'
               }`}
               title="Toggle Threshold Trigger"
             >
@@ -400,14 +401,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
 
       {/* =========================================================================
           STEP 3: CARD 3 - Detection Horizon Timeline Card (Bell Curve + 7-Day Forecast)
-          Appears fourth: 38% - 60% scroll
+          Appears fourth: 35% - 58% scroll
           ========================================================================= */}
       <div
-        className="relative rounded-3xl border p-4 transition-all duration-500 ease-out overflow-hidden group hover:border-[#F2A33A]/50"
+        className="relative rounded-3xl p-4 overflow-hidden group hover:border-[#F2A33A]/50 transition-colors duration-200"
         style={{
           ...glassPanelStyle,
           opacity: pCard3,
-          transform: `translateY(${(1 - pCard3) * 32}px) scale(${0.96 + 0.04 * pCard3})`,
+          transform: `translate3d(0, ${(1 - pCard3) * 26}px, 0) scale(${0.96 + 0.04 * pCard3})`,
           pointerEvents: pCard3 > 0.2 ? 'auto' : 'none',
         }}
       >
@@ -425,8 +426,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
             onClick={() => setTimelineActive(!timelineActive)}
             className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 flex items-center ${
               timelineActive
-                ? 'bg-gradient-to-r from-[#EDCB63] to-[#F2A33A] shadow-[0_0_12px_rgba(242,163,58,0.6)]'
-                : 'bg-white/10 border border-white/15'
+                ? 'bg-gradient-to-r from-[#EDCB63] to-[#F2A33A] shadow-[0_0_12px_rgba(242,163,58,0.7)]'
+                : 'bg-white/10 border border-white/25'
             }`}
             title="Toggle Horizon Timeline"
           >
@@ -442,7 +443,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
         <div className="relative h-18 w-full my-1">
           <svg viewBox="0 0 320 65" className="w-full h-full overflow-visible">
             <defs>
-              <linearGradient id="horizonBellGrad" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="horizonBellGrad" x1="0%" y1="0%" x2="0%" y2="1">
                 <stop offset="0%" stopColor="#F2A33A" stopOpacity={timelineActive ? '0.45' : '0.05'} />
                 <stop offset="100%" stopColor="#F2A33A" stopOpacity="0.0" />
               </linearGradient>
@@ -460,7 +461,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
             <path
               d="M 10 60 C 60 60 110 54 160 16 C 210 54 260 60 310 60"
               fill="none"
-              stroke={timelineActive ? '#F2A33A' : 'rgba(255,255,255,0.2)'}
+              stroke={timelineActive ? '#F2A33A' : 'rgba(255,255,255,0.25)'}
               strokeWidth="2.5"
               strokeLinecap="round"
             />
@@ -485,9 +486,9 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full border text-[10px] font-mono text-canary-amber shadow-lg whitespace-nowrap"
               style={{
-                background: 'rgba(18, 22, 34, 0.70)',
+                background: 'rgba(255, 255, 255, 0.12)',
                 backdropFilter: 'blur(16px)',
-                borderColor: 'rgba(242, 163, 58, 0.5)',
+                borderColor: 'rgba(242, 163, 58, 0.55)',
               }}
             >
               +2.9 Days Lead Gain Peak
@@ -496,7 +497,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
         </div>
 
         {/* Time Markers */}
-        <div className="flex items-center justify-between text-[9px] text-canary-text-3 font-mono px-4 pb-2 border-b border-white/10">
+        <div className="flex items-center justify-between text-[9px] text-canary-text-3 font-mono px-4 pb-2 border-b border-white/15">
           <span>8am</span>
           <span>10am</span>
           <span className="text-canary-amber font-semibold">12pm</span>
@@ -524,15 +525,15 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
                 onClick={() => setSelectedDay(item.day)}
                 className={`py-1.5 px-1 rounded-2xl transition-all duration-200 flex flex-col items-center justify-center ${
                   isHighlight
-                    ? 'border shadow-lg scale-105'
-                    : 'bg-white/[0.03] border border-transparent hover:bg-white/[0.08]'
+                    ? 'shadow-lg scale-105'
+                    : 'bg-transparent border border-transparent hover:bg-white/10 hover:border-white/20'
                 }`}
                 style={
                   isHighlight
                     ? {
-                        background: 'rgba(255, 255, 255, 0.14)',
-                        borderColor: 'rgba(255, 255, 255, 0.35)',
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                        background: 'rgba(255, 255, 255, 0.16)',
+                        border: '1.5px solid rgba(255, 255, 255, 0.40)',
+                        boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3), 0 4px 16px rgba(0,0,0,0.3)',
                       }
                     : undefined
                 }
@@ -568,14 +569,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
 
       {/* =========================================================================
           STEP 4: CARD 4 - Synchronized Narrative & Multi-Signal Fusion Card
-          Appears fifth: 60% - 85% scroll
+          Appears fifth: 58% - 82% scroll
           ========================================================================= */}
       <div
-        className="relative rounded-3xl border p-4 transition-all duration-500 ease-out overflow-hidden hover:border-[#F2A33A]/50"
+        className="relative rounded-3xl p-4 overflow-hidden hover:border-[#F2A33A]/50 transition-colors duration-200"
         style={{
           ...glassPanelStyle,
           opacity: pCard4,
-          transform: `translateY(${(1 - pCard4) * 32}px) scale(${0.96 + 0.04 * pCard4})`,
+          transform: `translate3d(0, ${(1 - pCard4) * 26}px, 0) scale(${0.96 + 0.04 * pCard4})`,
           pointerEvents: pCard4 > 0.2 ? 'auto' : 'none',
         }}
       >
@@ -590,8 +591,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <span
                 className="text-[10px] font-mono text-emerald-400 px-2 py-0.5 rounded border"
                 style={{
-                  background: 'rgba(52, 211, 153, 0.12)',
-                  borderColor: 'rgba(52, 211, 153, 0.25)',
+                  background: 'rgba(52, 211, 153, 0.15)',
+                  borderColor: 'rgba(52, 211, 153, 0.35)',
                 }}
               >
                 +48h Precursor Active
@@ -616,8 +617,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <span
                 className="text-[10px] font-mono text-[#C58BD9] px-2 py-0.5 rounded border"
                 style={{
-                  background: 'rgba(197, 139, 217, 0.12)',
-                  borderColor: 'rgba(197, 139, 217, 0.25)',
+                  background: 'rgba(197, 139, 217, 0.15)',
+                  borderColor: 'rgba(197, 139, 217, 0.35)',
                 }}
               >
                 Fusion Engine Running
@@ -632,14 +633,14 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
             <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
               <div
                 className="px-2 py-1 rounded border flex justify-between"
-                style={{ background: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                style={{ background: 'rgba(255, 255, 255, 0.08)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
               >
                 <span className="text-canary-text-3 text-[10px]">Sensitivity:</span>
                 <span className="font-mono font-bold text-canary-text">91.8%</span>
               </div>
               <div
                 className="px-2 py-1 rounded border flex justify-between"
-                style={{ background: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                style={{ background: 'rgba(255, 255, 255, 0.08)', borderColor: 'rgba(255, 255, 255, 0.2)' }}
               >
                 <span className="text-canary-text-3 text-[10px]">Alert PPV:</span>
                 <span className="font-mono font-bold text-canary-text">86.4%</span>
@@ -658,8 +659,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <span
                 className="text-[10px] font-mono text-canary-amber px-2 py-0.5 rounded border font-bold"
                 style={{
-                  background: 'rgba(242, 163, 58, 0.15)',
-                  borderColor: 'rgba(242, 163, 58, 0.35)',
+                  background: 'rgba(242, 163, 58, 0.18)',
+                  borderColor: 'rgba(242, 163, 58, 0.45)',
                 }}
               >
                 +2.9 Days Lead Gain
@@ -684,8 +685,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
               <span
                 className="text-[10px] font-mono text-emerald-400 px-2 py-0.5 rounded border"
                 style={{
-                  background: 'rgba(52, 211, 153, 0.12)',
-                  borderColor: 'rgba(52, 211, 153, 0.25)',
+                  background: 'rgba(52, 211, 153, 0.15)',
+                  borderColor: 'rgba(52, 211, 153, 0.35)',
                 }}
               >
                 Playbooks Ready
@@ -706,8 +707,8 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
                 href="/alerts"
                 className="py-2 px-3 rounded-xl border text-xs text-canary-text font-semibold transition-colors"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.10)',
-                  borderColor: 'rgba(255, 255, 255, 0.20)',
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  borderColor: 'rgba(255, 255, 255, 0.28)',
                 }}
               >
                 View Alerts (3)
@@ -717,7 +718,7 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
         )}
 
         {/* Bottom Safety & Privacy Note */}
-        <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-canary-text-3">
+        <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between text-[10px] text-canary-text-3">
           <div className="flex items-center gap-1.5 text-emerald-400">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Aggregate k ≥ 5 Enforced</span>

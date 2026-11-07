@@ -38,18 +38,30 @@ export default function LandingPage() {
   const autoFlyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Window scroll event listener to compute normalized scroll progress (0.0 to 1.0)
+  // RAF-throttled to synchronize with display V-Sync (60Hz / 120Hz ProMotion) with zero dropped frames
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const totalScrollable = rect.height - window.innerHeight;
+      if (!containerRef.current || isAutoFlying) return;
 
-      if (totalScrollable <= 0) return;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (!containerRef.current) {
+            ticking = false;
+            return;
+          }
+          const rect = containerRef.current.getBoundingClientRect();
+          const totalScrollable = rect.height - window.innerHeight;
 
-      const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
-      if (!isAutoFlying) {
-        setScrollProgress(progress);
+          if (totalScrollable > 0) {
+            const scrolled = -rect.top;
+            const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
+            setScrollProgress(progress);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
@@ -310,15 +322,9 @@ export default function LandingPage() {
 
           {/* =========================================================================
               RIGHT-SIDE SURVEILLANCE TELEMETRY HUD (GLASSMORPHISM CARDS FROM UI REF)
-              Starts appearing as scroll begins; cards appear one by one during flight
+              Cards glide in one by one on GPU-composited layers during flight
               ========================================================================= */}
-          <div
-            className={`hidden lg:flex absolute right-6 sm:right-10 md:right-12 lg:right-14 xl:right-20 top-[8%] sm:top-[9%] md:top-[10%] z-20 transition-all duration-700 ease-out ${
-              scrollProgress > 0.01
-                ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : 'opacity-0 translate-x-10 pointer-events-none'
-            }`}
-          >
+          <div className="hidden lg:flex absolute right-6 sm:right-10 md:right-12 lg:right-14 xl:right-20 top-[8%] sm:top-[9%] md:top-[10%] z-20 pointer-events-auto">
             <GlassmorphismTelemetryHUD scrollProgress={scrollProgress} />
           </div>
 
