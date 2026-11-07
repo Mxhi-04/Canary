@@ -1,61 +1,129 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FileText, ExternalLink } from 'lucide-react';
+import { FileText, ExternalLink, Sparkles } from 'lucide-react';
 
 interface KeyMetricsCardProps {
+  monitoredSites?: number;
+  activeAlerts?: number;
+  actionRequired?: number;
+  // Legacy prop compatibility
   totalCases?: number;
   outbreaks?: number;
   criticalAlerts?: number;
 }
 
-export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
-  totalCases = 87462,
-  outbreaks = 26,
-  criticalAlerts = 419,
-}) => {
-  // Semicircular gauge arc math (220 deg sweep)
-  const radius = 54;
-  const strokeWidth = 8;
-  const center = 70;
-  const startAngle = 160;
-  const endAngle = 380;
-  const arcSweep = 220;
+// Smooth count-up animation hook on page load
+function useCounter(target: number, duration: number = 1800, delay: number = 150) {
+  const [count, setCount] = useState(0);
 
-  const polarToCartesian = (cx: number, cy: number, r: number, angleDeg: number) => {
+  useEffect(() => {
+    let start: number | null = null;
+    let animId: number;
+
+    const timeout = setTimeout(() => {
+      const step = (timestamp: number) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        // Exponential ease out for natural telemetry tick
+        const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        setCount(Math.round(ease * target));
+        if (progress < 1) {
+          animId = requestAnimationFrame(step);
+        }
+      };
+      animId = requestAnimationFrame(step);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(animId);
+    };
+  }, [target, duration, delay]);
+
+  return count;
+}
+
+export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
+  monitoredSites,
+  activeAlerts,
+  actionRequired,
+  totalCases,
+  outbreaks,
+  criticalAlerts,
+}) => {
+  // Support renamed metric values with robust fallbacks
+  const targetSites = monitoredSites ?? totalCases ?? 87462;
+  const targetAlerts = activeAlerts ?? outbreaks ?? 26;
+  const targetAction = actionRequired ?? criticalAlerts ?? 419;
+
+  // Animate counters on page load
+  const sitesCount = useCounter(targetSites, 1600, 100);
+  const alertsCount = useCounter(targetAlerts, 1700, 250);
+  const actionCount = useCounter(targetAction, 1800, 400);
+
+  // Animation trigger for SVG arcs
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 80);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Symmetrical arch geometry:
+  // Starts at 220° (bottom-left) and sweeps 220° clockwise through top (0°) to 140° (bottom-right)
+  const cx = 85;
+  const cy = 76;
+  const radius = 58;
+  const strokeWidth = 9;
+  const sweepAngle = 220; // degrees
+  const circumference = 2 * Math.PI * radius;
+  const arcLength = (sweepAngle / 360) * circumference; // ~222.7px
+
+  const polarToCartesian = (centerX: number, centerY: number, r: number, angleDeg: number) => {
     const rad = ((angleDeg - 90) * Math.PI) / 180.0;
     return {
-      x: cx + r * Math.cos(rad),
-      y: cy + r * Math.sin(rad),
+      x: centerX + r * Math.cos(rad),
+      y: centerY + r * Math.sin(rad),
     };
   };
 
-  const describeArc = (cx: number, cy: number, r: number, start: number, end: number) => {
-    const s = polarToCartesian(cx, cy, r, end);
-    const e = polarToCartesian(cx, cy, r, start);
-    const largeArc = end - start <= 180 ? '0' : '1';
-    return ['M', s.x, s.y, 'A', r, r, 0, largeArc, 0, e.x, e.y].join(' ');
+  // Base background track (full 220° horseshoe arch)
+  const startPt = polarToCartesian(cx, cy, radius, 220);
+  const endPt = polarToCartesian(cx, cy, radius, 140);
+  const bgTrack = `M ${startPt.x} ${startPt.y} A ${radius} ${radius} 0 1 1 ${endPt.x} ${endPt.y}`;
+
+  // Target progress fills
+  const fillSites = 0.76;
+  const fillAlerts = 0.58;
+  const fillAction = 0.86;
+
+  // Calculate tip coordinates for animated leading glow beacon
+  const getTipPoint = (fraction: number) => {
+    const angle = 220 + sweepAngle * fraction;
+    return polarToCartesian(cx, cy, radius, angle % 360);
   };
 
-  const bgTrack = describeArc(center, center, radius, startAngle, endAngle);
-
-  // Compute active arcs based on target percentages
-  const p1 = 0.72; // ~72% for total cases
-  const p2 = 0.58; // ~58% for outbreaks
-  const p3 = 0.84; // ~84% for critical alerts
-
-  const arc1 = describeArc(center, center, radius, startAngle, startAngle + arcSweep * p1);
-  const arc2 = describeArc(center, center, radius, startAngle, startAngle + arcSweep * p2);
-  const arc3 = describeArc(center, center, radius, startAngle, startAngle + arcSweep * p3);
+  const tipSites = getTipPoint(fillSites);
+  const tipAlerts = getTipPoint(fillAlerts);
+  const tipAction = getTipPoint(fillAction);
 
   return (
-    <div className="relative rounded-3xl p-6 overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between">
-      {/* Card Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-base sm:text-lg font-bold text-canary-text tracking-tight">
-          Key Metrics
-        </h2>
+    <div className="relative rounded-3xl p-6 sm:p-7 overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between">
+      {/* Top Header */}
+      <div className="flex items-center justify-between mb-4 sm:mb-5">
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-base sm:text-lg font-bold text-canary-text tracking-tight">
+            Key Metrics
+          </h2>
+          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-canary-amber/10 border border-canary-amber/30 text-[10px] font-mono font-bold text-canary-amber">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F2A33A] animate-pulse" />
+            LIVE TELEMETRY
+          </span>
+        </div>
 
         <Link
           href="/alerts"
@@ -66,113 +134,223 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
         </Link>
       </div>
 
-      {/* 3 Semicircular Gauges Grid */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-4 my-auto">
-        {/* Gauge 1: Total Cases */}
-        <div className="flex flex-col items-center text-center">
-          <div className="relative w-28 h-24 sm:w-32 sm:h-26 flex items-center justify-center">
-            <svg viewBox="0 0 140 110" className="w-full h-full overflow-visible">
+      {/* 3 Spacious Animated Gauges Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-4 my-auto items-center justify-items-center">
+        {/* ================= GAUGE 1: MONITORED SITES (ALL YELLOW) ================= */}
+        <div className="flex flex-col items-center text-center w-full max-w-[190px]">
+          <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
+            <svg viewBox="0 0 170 148" className="w-full h-full overflow-visible select-none">
               <defs>
-                <linearGradient id="metricGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#7FB45A" />
-                  <stop offset="60%" stopColor="#E8C14A" />
+                {/* Gauge 1 Gradient: Pure Yellow / Canary Gold */}
+                <linearGradient id="gradMonitoredSites" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#FFF2A3" />
+                  <stop offset="45%" stopColor="#FCD34D" />
                   <stop offset="100%" stopColor="#F2A33A" />
                 </linearGradient>
+
+                {/* Drop shadow filter for yellow glow */}
+                <filter id="yellowGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#F2A33A" floodOpacity="0.55" />
+                </filter>
               </defs>
-              <path d={bgTrack} fill="none" stroke="#25262B" strokeWidth={strokeWidth} strokeLinecap="round" />
+
+              {/* Background Inactive Arc Track */}
               <path
-                d={arc1}
+                d={bgTrack}
                 fill="none"
-                stroke="url(#metricGrad1)"
+                stroke="#22242B"
                 strokeWidth={strokeWidth}
                 strokeLinecap="round"
-                filter="drop-shadow(0 0 6px rgba(127,180,90,0.4))"
               />
+
+              {/* Animated Value Arc */}
+              <path
+                d={bgTrack}
+                fill="none"
+                stroke="url(#gradMonitoredSites)"
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                strokeDasharray={arcLength}
+                strokeDashoffset={isLoaded ? arcLength * (1 - fillSites) : arcLength}
+                filter="url(#yellowGlow)"
+                style={{
+                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
+                }}
+              />
+
+              {/* Glowing Leading Tip Dot */}
+              {isLoaded && (
+                <g className="transition-opacity duration-700" style={{ opacity: isLoaded ? 1 : 0 }}>
+                  <circle
+                    cx={tipSites.x}
+                    cy={tipSites.y}
+                    r="4"
+                    fill="#FFFDE0"
+                    stroke="#F2A33A"
+                    strokeWidth="2"
+                    className="animate-pulse"
+                  />
+                </g>
+              )}
             </svg>
 
-            {/* Inner Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pointer-events-none">
-              <span className="text-base sm:text-lg font-extrabold text-canary-text tracking-tight font-mono">
-                {totalCases.toLocaleString()}
+            {/* Inner Content: Uncongested & Well-Spaced */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pointer-events-none">
+              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono leading-none">
+                {sitesCount.toLocaleString()}
               </span>
-              <span className="text-[10px] text-canary-text-3 font-medium uppercase tracking-wider mt-0.5">
-                Total cases
+              <span className="text-[10px] sm:text-[11px] font-bold text-canary-text-2 uppercase tracking-wider mt-1 px-1">
+                Monitored Sites
               </span>
-              <span className="text-[10px] font-mono font-bold text-[#F2A33A] flex items-center gap-0.5 mt-0.5">
+              <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F2A33A]/15 text-[#F2A33A] border border-[#F2A33A]/30 flex items-center gap-0.5">
                 ▲ 11%
               </span>
             </div>
           </div>
         </div>
 
-        {/* Gauge 2: Outbreaks */}
-        <div className="flex flex-col items-center text-center">
-          <div className="relative w-28 h-24 sm:w-32 sm:h-26 flex items-center justify-center">
-            <svg viewBox="0 0 140 110" className="w-full h-full overflow-visible">
+        {/* ================= GAUGE 2: ACTIVE ALERTS (YELLOW TO ORANGE) ================= */}
+        <div className="flex flex-col items-center text-center w-full max-w-[190px]">
+          <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
+            <svg viewBox="0 0 170 148" className="w-full h-full overflow-visible select-none">
               <defs>
-                <linearGradient id="metricGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#E8C14A" />
-                  <stop offset="70%" stopColor="#F2A33A" />
-                  <stop offset="100%" stopColor="#F59A4A" />
+                {/* Gauge 2 Gradient: Starts Yellow, sweeps to Vibrant Orange */}
+                <linearGradient id="gradActiveAlerts" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#FFF2A3" />
+                  <stop offset="35%" stopColor="#F2A33A" />
+                  <stop offset="70%" stopColor="#F59E0B" />
+                  <stop offset="100%" stopColor="#EA580C" />
                 </linearGradient>
+
+                {/* Drop shadow filter for orange glow */}
+                <filter id="orangeGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="4.5" floodColor="#F97316" floodOpacity="0.55" />
+                </filter>
               </defs>
-              <path d={bgTrack} fill="none" stroke="#25262B" strokeWidth={strokeWidth} strokeLinecap="round" />
+
+              {/* Background Inactive Arc Track */}
               <path
-                d={arc2}
+                d={bgTrack}
                 fill="none"
-                stroke="url(#metricGrad2)"
+                stroke="#22242B"
                 strokeWidth={strokeWidth}
                 strokeLinecap="round"
-                filter="drop-shadow(0 0 6px rgba(242,163,58,0.4))"
               />
+
+              {/* Animated Value Arc */}
+              <path
+                d={bgTrack}
+                fill="none"
+                stroke="url(#gradActiveAlerts)"
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                strokeDasharray={arcLength}
+                strokeDashoffset={isLoaded ? arcLength * (1 - fillAlerts) : arcLength}
+                filter="url(#orangeGlow)"
+                style={{
+                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 250ms',
+                }}
+              />
+
+              {/* Glowing Leading Tip Dot */}
+              {isLoaded && (
+                <g className="transition-opacity duration-700" style={{ opacity: isLoaded ? 1 : 0 }}>
+                  <circle
+                    cx={tipAlerts.x}
+                    cy={tipAlerts.y}
+                    r="4"
+                    fill="#FFF6E5"
+                    stroke="#EA580C"
+                    strokeWidth="2"
+                    className="animate-pulse"
+                  />
+                </g>
+              )}
             </svg>
 
-            {/* Inner Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pointer-events-none">
-              <span className="text-base sm:text-lg font-extrabold text-canary-text tracking-tight font-mono">
-                {outbreaks}
+            {/* Inner Content: Uncongested & Well-Spaced */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pointer-events-none">
+              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono leading-none">
+                {alertsCount.toLocaleString()}
               </span>
-              <span className="text-[10px] text-canary-text-3 font-medium uppercase tracking-wider mt-0.5">
-                Outbreaks
+              <span className="text-[10px] sm:text-[11px] font-bold text-canary-text-2 uppercase tracking-wider mt-1 px-1">
+                Active Alerts
               </span>
-              <span className="text-[10px] font-mono font-bold text-[#EDCB63] flex items-center gap-0.5 mt-0.5">
+              <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30 flex items-center gap-0.5">
                 ▲ 17%
               </span>
             </div>
           </div>
         </div>
 
-        {/* Gauge 3: Critical Alerts */}
-        <div className="flex flex-col items-center text-center">
-          <div className="relative w-28 h-24 sm:w-32 sm:h-26 flex items-center justify-center">
-            <svg viewBox="0 0 140 110" className="w-full h-full overflow-visible">
+        {/* ================= GAUGE 3: ACTION REQUIRED (YELLOW TO RED) ================= */}
+        <div className="flex flex-col items-center text-center w-full max-w-[190px]">
+          <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
+            <svg viewBox="0 0 170 148" className="w-full h-full overflow-visible select-none">
               <defs>
-                <linearGradient id="metricGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#F2A33A" />
-                  <stop offset="60%" stopColor="#F08A2E" />
+                {/* Gauge 3 Gradient: Starts Yellow, sweeps through Orange to Crimson Red */}
+                <linearGradient id="gradActionRequired" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#FFF2A3" />
+                  <stop offset="25%" stopColor="#F2A33A" />
+                  <stop offset="60%" stopColor="#F97316" />
                   <stop offset="100%" stopColor="#E5483D" />
                 </linearGradient>
+
+                {/* Drop shadow filter for red glow */}
+                <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#E5483D" floodOpacity="0.65" />
+                </filter>
               </defs>
-              <path d={bgTrack} fill="none" stroke="#25262B" strokeWidth={strokeWidth} strokeLinecap="round" />
+
+              {/* Background Inactive Arc Track */}
               <path
-                d={arc3}
+                d={bgTrack}
                 fill="none"
-                stroke="url(#metricGrad3)"
+                stroke="#22242B"
                 strokeWidth={strokeWidth}
                 strokeLinecap="round"
-                filter="drop-shadow(0 0 8px rgba(229,72,61,0.5))"
               />
+
+              {/* Animated Value Arc */}
+              <path
+                d={bgTrack}
+                fill="none"
+                stroke="url(#gradActionRequired)"
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                strokeDasharray={arcLength}
+                strokeDashoffset={isLoaded ? arcLength * (1 - fillAction) : arcLength}
+                filter="url(#redGlow)"
+                style={{
+                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 400ms',
+                }}
+              />
+
+              {/* Glowing Leading Tip Dot */}
+              {isLoaded && (
+                <g className="transition-opacity duration-700" style={{ opacity: isLoaded ? 1 : 0 }}>
+                  <circle
+                    cx={tipAction.x}
+                    cy={tipAction.y}
+                    r="4.5"
+                    fill="#FFD8D4"
+                    stroke="#E5483D"
+                    strokeWidth="2.2"
+                    className="animate-pulse"
+                  />
+                </g>
+              )}
             </svg>
 
-            {/* Inner Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pointer-events-none">
-              <span className="text-base sm:text-lg font-extrabold text-canary-text tracking-tight font-mono">
-                {criticalAlerts}
+            {/* Inner Content: Uncongested & Well-Spaced */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pointer-events-none">
+              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono leading-none">
+                {actionCount.toLocaleString()}
               </span>
-              <span className="text-[10px] text-canary-text-3 font-medium uppercase tracking-wider mt-0.5">
-                Critical alerts
+              <span className="text-[10px] sm:text-[11px] font-bold text-canary-text-2 uppercase tracking-wider mt-1 px-1">
+                Action Required
               </span>
-              <span className="text-[10px] font-mono font-bold text-[#F06B5E] flex items-center gap-0.5 mt-0.5">
+              <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E5483D]/15 text-[#FF9085] border border-[#E5483D]/30 flex items-center gap-0.5">
                 ▲ 23%
               </span>
             </div>
@@ -181,7 +359,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
       </div>
 
       {/* Bottom Full Report Action Pill */}
-      <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-center">
+      <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-center">
         <Link
           href="/validation"
           className="w-full py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-canary-amber/40 text-xs font-semibold text-canary-text text-center flex items-center justify-center gap-1.5 transition-all shadow-sm group"
@@ -193,4 +371,3 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
     </div>
   );
 };
-

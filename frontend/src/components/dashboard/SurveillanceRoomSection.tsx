@@ -64,11 +64,11 @@ export const SurveillanceRoomSection: React.FC<SurveillanceRoomSectionProps> = (
 
         {/* Right Column: Key Metrics, Breakdown, Geographic Spread & Sources (5 of 12 cols) */}
         <div className="xl:col-span-5 flex flex-col gap-6">
-          {/* Top Right: Key Metrics with 3 Semicircular Gauges (87,462 | 26 | 419) */}
+          {/* Top Right: Key Metrics with 3 Semicircular Gauges (Monitored Sites | Active Alerts | Action Required) */}
           <KeyMetricsCard
-            totalCases={87462}
-            outbreaks={26}
-            criticalAlerts={419}
+            monitoredSites={87462}
+            activeAlerts={26}
+            actionRequired={419}
           />
 
           {/* Middle Right: Disease Trends (Ranked horizontal bars with status dots) */}
