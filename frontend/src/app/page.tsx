@@ -9,6 +9,13 @@ import { ScrollVideoScrubber } from '@/components/landing/ScrollVideoScrubber';
 import { CanaryLogo } from '@/components/shared/CanaryLogo';
 import { GlassmorphismTelemetryHUD } from '@/components/landing/GlassmorphismTelemetryHUD';
 import {
+  WorkforceProtectionEmblem,
+  OperationalDisruptionEmblem,
+  EvidenceDecisionEmblem,
+  ProactiveSafetyEmblem,
+  PrivacyTrustEmblem
+} from '@/components/landing/EmpowermentEmblems';
+import {
   ShieldAlert,
   ArrowRight,
   Play,
@@ -424,7 +431,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Box 1 */}
               <div
-                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.22)] flex flex-col justify-between"
                 style={{
                   background:
                     'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
@@ -436,15 +443,17 @@ export default function LandingPage() {
                 }}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="relative">
+                      {/* Ambient backlight halo behind emblem */}
+                      <div className="absolute inset-0 bg-[#F2A33A]/25 blur-xl rounded-full pointer-events-none group-hover:bg-[#F2A33A]/40 transition-all duration-300" />
+                      <WorkforceProtectionEmblem size={76} className="relative z-10 group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 shadow-sm">
                       01
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-[#F2A33A]/15 border border-[#F2A33A]/30 flex items-center justify-center text-[#F2A33A] group-hover:scale-110 transition-transform">
-                      <ShieldAlert className="w-4 h-4" />
-                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-2 group-hover:text-canary-amber transition-colors leading-snug">
                     Protect your workforce before risks escalate.
                   </h3>
                   <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
@@ -455,7 +464,7 @@ export default function LandingPage() {
 
               {/* Box 2 */}
               <div
-                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.22)] flex flex-col justify-between"
                 style={{
                   background:
                     'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
@@ -467,15 +476,17 @@ export default function LandingPage() {
                 }}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="relative">
+                      {/* Ambient backlight halo behind emblem */}
+                      <div className="absolute inset-0 bg-[#F2A33A]/25 blur-xl rounded-full pointer-events-none group-hover:bg-[#F2A33A]/40 transition-all duration-300" />
+                      <OperationalDisruptionEmblem size={76} className="relative z-10 group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 shadow-sm">
                       02
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 flex items-center justify-center text-[#6FA8C7] group-hover:scale-110 transition-transform">
-                      <TrendingDown className="w-4 h-4" />
-                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-2 group-hover:text-canary-amber transition-colors leading-snug">
                     Reduce operational disruptions and unexpected costs.
                   </h3>
                   <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
@@ -486,7 +497,7 @@ export default function LandingPage() {
 
               {/* Box 3 */}
               <div
-                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.22)] flex flex-col justify-between"
                 style={{
                   background:
                     'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
@@ -498,15 +509,17 @@ export default function LandingPage() {
                 }}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="relative">
+                      {/* Ambient backlight halo behind emblem */}
+                      <div className="absolute inset-0 bg-[#F2A33A]/25 blur-xl rounded-full pointer-events-none group-hover:bg-[#F2A33A]/40 transition-all duration-300" />
+                      <EvidenceDecisionEmblem size={76} className="relative z-10 group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 shadow-sm">
                       03
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-[#C58BD9]/15 border border-[#C58BD9]/30 flex items-center justify-center text-[#C58BD9] group-hover:scale-110 transition-transform">
-                      <CheckCircle2 className="w-4 h-4" />
-                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-2 group-hover:text-canary-amber transition-colors leading-snug">
                     Make decisions backed by evidence, not guesswork.
                   </h3>
                   <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
@@ -520,7 +533,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Box 4 */}
               <div
-                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.22)] flex flex-col justify-between"
                 style={{
                   background:
                     'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
@@ -532,15 +545,17 @@ export default function LandingPage() {
                 }}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="relative">
+                      {/* Ambient backlight halo behind emblem */}
+                      <div className="absolute inset-0 bg-[#F2A33A]/25 blur-xl rounded-full pointer-events-none group-hover:bg-[#F2A33A]/40 transition-all duration-300" />
+                      <ProactiveSafetyEmblem size={76} className="relative z-10 group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 shadow-sm">
                       04
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-[#EDCB63]/15 border border-[#EDCB63]/30 flex items-center justify-center text-[#EDCB63] group-hover:scale-110 transition-transform">
-                      <Compass className="w-4 h-4" />
-                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-2 group-hover:text-canary-amber transition-colors leading-snug">
                     Stay one step ahead with a proactive safety strategy.
                   </h3>
                   <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
@@ -551,7 +566,7 @@ export default function LandingPage() {
 
               {/* Box 5 */}
               <div
-                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.22)] flex flex-col justify-between"
                 style={{
                   background:
                     'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
@@ -563,15 +578,17 @@ export default function LandingPage() {
                 }}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="relative">
+                      {/* Ambient backlight halo behind emblem */}
+                      <div className="absolute inset-0 bg-[#F2A33A]/25 blur-xl rounded-full pointer-events-none group-hover:bg-[#F2A33A]/40 transition-all duration-300" />
+                      <PrivacyTrustEmblem size={76} className="relative z-10 group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 shadow-sm">
                       05
                     </span>
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-                      <Lock className="w-4 h-4" />
-                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-2 group-hover:text-canary-amber transition-colors leading-snug">
                     Build trust through responsible, privacy-first monitoring.
                   </h3>
                   <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
