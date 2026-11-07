@@ -101,16 +101,6 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
   const fillAlerts = 0.58;
   const fillAction = 0.86;
 
-  // Calculate tip coordinates for animated leading glow beacon
-  const getTipPoint = (fraction: number) => {
-    const angle = 220 + sweepAngle * fraction;
-    return polarToCartesian(cx, cy, radius, angle % 360);
-  };
-
-  const tipSites = getTipPoint(fillSites);
-  const tipAlerts = getTipPoint(fillAlerts);
-  const tipAction = getTipPoint(fillAction);
-
   return (
     <div className="relative rounded-3xl p-6 sm:p-7 overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between">
       {/* Top Header */}
@@ -178,21 +168,6 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                   transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
                 }}
               />
-
-              {/* Glowing Leading Tip Dot */}
-              {isLoaded && (
-                <g className="transition-opacity duration-700" style={{ opacity: isLoaded ? 1 : 0 }}>
-                  <circle
-                    cx={tipSites.x}
-                    cy={tipSites.y}
-                    r="4"
-                    fill="#FFFDE0"
-                    stroke="#F2A33A"
-                    strokeWidth="2"
-                    className="animate-pulse"
-                  />
-                </g>
-              )}
             </svg>
 
             {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
@@ -257,21 +232,6 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                   transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 250ms',
                 }}
               />
-
-              {/* Glowing Leading Tip Dot */}
-              {isLoaded && (
-                <g className="transition-opacity duration-700" style={{ opacity: isLoaded ? 1 : 0 }}>
-                  <circle
-                    cx={tipAlerts.x}
-                    cy={tipAlerts.y}
-                    r="4"
-                    fill="#FFF6E5"
-                    stroke="#EA580C"
-                    strokeWidth="2"
-                    className="animate-pulse"
-                  />
-                </g>
-              )}
             </svg>
 
             {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
@@ -336,21 +296,6 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                   transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 400ms',
                 }}
               />
-
-              {/* Glowing Leading Tip Dot */}
-              {isLoaded && (
-                <g className="transition-opacity duration-700" style={{ opacity: isLoaded ? 1 : 0 }}>
-                  <circle
-                    cx={tipAction.x}
-                    cy={tipAction.y}
-                    r="4.5"
-                    fill="#FFD8D4"
-                    stroke="#E5483D"
-                    strokeWidth="2.2"
-                    className="animate-pulse"
-                  />
-                </g>
-              )}
             </svg>
 
             {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
