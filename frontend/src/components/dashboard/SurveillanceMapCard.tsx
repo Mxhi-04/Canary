@@ -2,406 +2,41 @@
 
 import React, { useState, useMemo } from 'react';
 import { MonitoringUnit } from '@/lib/types/domain';
+import { DubaiPlace, DUBAI_PLACES, placeToMonitoringUnit } from './DubaiMapData';
 import {
   ChevronDown,
   Building2,
   FlaskConical,
   Activity,
   Wind,
-  MapPin,
-  Layers,
-  Sparkles,
-  AlertTriangle,
-  Flame,
-  ShieldCheck,
-  Compass,
-  ArrowUpRight,
-  Filter,
-  CheckCircle2,
-  Info,
-  Maximize2
+  Sparkles
 } from 'lucide-react';
 
-export interface DubaiPlace {
-  id: string;
-  name: string;
-  arabicName?: string;
-  category: 'industrial' | 'worker_zone' | 'urban' | 'logistics' | 'coastal';
-  categoryLabel: string;
-  x: number;
-  y: number;
-  tier: 'ACTION' | 'ALERT' | 'WATCH' | 'NORMAL';
-  cases: number;
-  caseTrend: string;
-  primaryRisk: string;
-  workforceCount: string;
-  leadTimeGain: string;
-  playbook: string;
-  isHotspot: boolean;
-  hotspotRadius?: number;
-}
-
-const DUBAI_PLACES: DubaiPlace[] = [
-  {
-    id: 'dxb-jafza',
-    name: 'Jebel Ali Port & JAFZA',
-    arabicName: 'جبل علي',
-    category: 'industrial',
-    categoryLabel: 'Industrial Free Zone & Deepwater Port',
-    x: 160,
-    y: 375,
-    tier: 'ACTION',
-    cases: 4850,
-    caseTrend: '+18% (7d)',
-    primaryRisk: 'WBGT Heat Strain (34.8°C) + PM2.5 Inversion',
-    workforceCount: '185,000 workers',
-    leadTimeGain: '+2.8d Early Warning',
-    playbook: 'Deploy 14 Hydration Stations & Enforce Mandatory 15m Shade Rotations',
-    isHotspot: true,
-    hotspotRadius: 28,
-  },
-  {
-    id: 'dxb-dip',
-    name: 'Dubai Investment Park (DIP)',
-    arabicName: 'مجمع دبي للاستثمار',
-    category: 'worker_zone',
-    categoryLabel: 'Light Manufacturing & Worker Accommodations',
-    x: 245,
-    y: 405,
-    tier: 'ALERT',
-    cases: 2340,
-    caseTrend: '+12% (7d)',
-    primaryRisk: 'Thermal Index Surge & Ambient Particulate Dust',
-    workforceCount: '110,000 workers',
-    leadTimeGain: '+2.4d Early Warning',
-    playbook: 'Activate Electrolyte Hubs & Inspect Residence HVAC Filtration',
-    isHotspot: true,
-    hotspotRadius: 22,
-  },
-  {
-    id: 'dxb-south',
-    name: 'Dubai South & Expo City',
-    arabicName: 'دبي الجنوب',
-    category: 'logistics',
-    categoryLabel: 'Al Maktoum Int Airport & Aviation Cargo',
-    x: 325,
-    y: 445,
-    tier: 'ALERT',
-    cases: 2860,
-    caseTrend: '+15% (7d)',
-    primaryRisk: 'WBGT Heat Wave Precursor (+2.9d Lead Horizon)',
-    workforceCount: '78,000 workers',
-    leadTimeGain: '+2.9d Early Warning',
-    playbook: 'Reschedule Tarmac Operations to Twilight Hours & Deploy Mobile Cooling',
-    isHotspot: true,
-    hotspotRadius: 24,
-  },
-  {
-    id: 'dxb-marina',
-    name: 'Dubai Marina & JBR',
-    arabicName: 'مرسى دبي',
-    category: 'coastal',
-    categoryLabel: 'Waterfront Commercial & Hospitality',
-    x: 295,
-    y: 285,
-    tier: 'NORMAL',
-    cases: 510,
-    caseTrend: '-3% (7d)',
-    primaryRisk: 'Nominal Baseline Operating Parameters',
-    workforceCount: '42,000 workers',
-    leadTimeGain: '+1.2d Early Warning',
-    playbook: 'Standard Environmental Monitoring Protocol',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-palm',
-    name: 'Palm Jumeirah',
-    arabicName: 'نخلة جميرا',
-    category: 'coastal',
-    categoryLabel: 'Coastal Tourism & Marine Recreation',
-    x: 320,
-    y: 195,
-    tier: 'NORMAL',
-    cases: 380,
-    caseTrend: '-1% (7d)',
-    primaryRisk: 'Within Normal Baseline Range',
-    workforceCount: '28,000 workers',
-    leadTimeGain: '+1.0d Early Warning',
-    playbook: 'Routine Marine Sensor & Health Telemetry Ingestion',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-barsha',
-    name: 'Al Barsha',
-    arabicName: 'البرشاء',
-    category: 'urban',
-    categoryLabel: 'Mixed Commercial & Retail Logistics',
-    x: 385,
-    y: 280,
-    tier: 'WATCH',
-    cases: 1120,
-    caseTrend: '+5% (7d)',
-    primaryRisk: 'Mild Syndromic Cough & Cold Index Rise',
-    workforceCount: '65,000 workers',
-    leadTimeGain: '+1.8d Early Warning',
-    playbook: 'Distribute Clinic Advisories & Monitor Retail Absence Ledgers',
-    isHotspot: true,
-    hotspotRadius: 16,
-  },
-  {
-    id: 'dxb-alquoz',
-    name: 'Al Quoz Industrial (1–4)',
-    arabicName: 'القوز الصناعية',
-    category: 'industrial',
-    categoryLabel: 'Heavy Fabrication & High-Density Worker Quarters',
-    x: 450,
-    y: 225,
-    tier: 'ACTION',
-    cases: 3420,
-    caseTrend: '+24% (7d)',
-    primaryRisk: 'Syndromic Gastrointestinal Cluster + Ambient Heat Load',
-    workforceCount: '145,000 workers',
-    leadTimeGain: '+2.5d Early Warning',
-    playbook: 'Immediate Water Testing Sweep & Central Dining Facility Disinfection',
-    isHotspot: true,
-    hotspotRadius: 26,
-  },
-  {
-    id: 'dxb-jumeirah',
-    name: 'Jumeirah',
-    arabicName: 'جميرا',
-    category: 'coastal',
-    categoryLabel: 'Coastal Heritage & Medical Enclaves',
-    x: 435,
-    y: 175,
-    tier: 'NORMAL',
-    cases: 490,
-    caseTrend: '+2% (7d)',
-    primaryRisk: 'Stable Baseline Telemetry',
-    workforceCount: '35,000 workers',
-    leadTimeGain: '+1.0d Early Warning',
-    playbook: 'Routine Monitoring',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-downtown',
-    name: 'Downtown Dubai & DIFC',
-    arabicName: 'وسط دبي',
-    category: 'urban',
-    categoryLabel: 'Financial Freezone & Burj Khalifa Commercial Core',
-    x: 530,
-    y: 145,
-    tier: 'NORMAL',
-    cases: 640,
-    caseTrend: '-2% (7d)',
-    primaryRisk: 'Corporate Indoor Baseline Nominal',
-    workforceCount: '92,000 workers',
-    leadTimeGain: '+1.1d Early Warning',
-    playbook: 'Indoor Air Quality Filtration Optimization',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-bizbay',
-    name: 'Business Bay',
-    arabicName: 'الخليج التجاري',
-    category: 'urban',
-    categoryLabel: 'Commercial High-Rise & Services',
-    x: 515,
-    y: 185,
-    tier: 'WATCH',
-    cases: 810,
-    caseTrend: '+4% (7d)',
-    primaryRisk: 'Tower HVAC Recirculation Flag & Mild Particulate',
-    workforceCount: '70,000 workers',
-    leadTimeGain: '+1.6d Early Warning',
-    playbook: 'Issue HVAC Filter Cleaning Advisory to Facilities Teams',
-    isHotspot: true,
-    hotspotRadius: 15,
-  },
-  {
-    id: 'dxb-burdubai',
-    name: 'Bur Dubai',
-    arabicName: 'بر دبي',
-    category: 'urban',
-    categoryLabel: 'Historic Creek South & High-Density Trade',
-    x: 610,
-    y: 120,
-    tier: 'WATCH',
-    cases: 1520,
-    caseTrend: '+8% (7d)',
-    primaryRisk: 'Early Seasonal Influenza Indicator in High-Density Retail',
-    workforceCount: '85,000 workers',
-    leadTimeGain: '+1.9d Early Warning',
-    playbook: 'Issue Community Pharmacy Alert & Syndromic Follow-up',
-    isHotspot: true,
-    hotspotRadius: 18,
-  },
-  {
-    id: 'dxb-deira',
-    name: 'Deira (Old Dubai)',
-    arabicName: 'ديرة',
-    category: 'urban',
-    categoryLabel: 'Wholesale Commerce, Gold Souk & Trading Docks',
-    x: 665,
-    y: 90,
-    tier: 'ALERT',
-    cases: 2180,
-    caseTrend: '+16% (7d)',
-    primaryRisk: 'Acute Respiratory (Influenza A) Cluster Expansion',
-    workforceCount: '120,000 workers',
-    leadTimeGain: '+2.2d Early Warning',
-    playbook: 'Targeted Merchant Health Outreach & Rapid Antigen Testing Kits',
-    isHotspot: true,
-    hotspotRadius: 22,
-  },
-  {
-    id: 'dxb-dxbairport',
-    name: 'DXB Aviation Hub',
-    arabicName: 'مطار دبي الدولي',
-    category: 'logistics',
-    categoryLabel: 'Global Passenger Hub & Air Cargo Terminal',
-    x: 720,
-    y: 110,
-    tier: 'WATCH',
-    cases: 1380,
-    caseTrend: '+6% (7d)',
-    primaryRisk: 'Transit Screening & Cross-Border Infectious Signals',
-    workforceCount: '60,000 workers',
-    leadTimeGain: '+1.8d Early Warning',
-    playbook: 'Coordinate with Airport Quarantine & Border Health Units',
-    isHotspot: true,
-    hotspotRadius: 18,
-  },
-  {
-    id: 'dxb-rasalkhor',
-    name: 'Ras Al Khor Industrial',
-    arabicName: 'رأس الخور',
-    category: 'industrial',
-    categoryLabel: 'Automotive Logistics & Light Fabrication',
-    x: 685,
-    y: 195,
-    tier: 'WATCH',
-    cases: 1290,
-    caseTrend: '+9% (7d)',
-    primaryRisk: 'Elevated Industrial PM2.5 (84 µg/m³ peak)',
-    workforceCount: '55,000 workers',
-    leadTimeGain: '+2.0d Early Warning',
-    playbook: 'Issue Mist Cannon Dust Suppression & Mandatory Particle Masks',
-    isHotspot: true,
-    hotspotRadius: 18,
-  },
-  {
-    id: 'dxb-warsan',
-    name: 'International City & Al Warsan',
-    arabicName: 'المدينة العالمية / ورسان',
-    category: 'worker_zone',
-    categoryLabel: 'Dense Worker Housing & Municipal Utilities',
-    x: 755,
-    y: 230,
-    tier: 'ALERT',
-    cases: 1840,
-    caseTrend: '+14% (7d)',
-    primaryRisk: 'Water Quality Vector Precursor & Thermal Strain',
-    workforceCount: '95,000 workers',
-    leadTimeGain: '+2.3d Early Warning',
-    playbook: 'Inspect Water Distribution Cisterns & Issue Boil Advisories',
-    isHotspot: true,
-    hotspotRadius: 20,
-  },
-  {
-    id: 'dxb-dso',
-    name: 'Dubai Silicon Oasis (DSO)',
-    arabicName: 'واحة دبي للسيليكون',
-    category: 'urban',
-    categoryLabel: 'Technology Freezone & Academic City',
-    x: 680,
-    y: 290,
-    tier: 'NORMAL',
-    cases: 520,
-    caseTrend: '-1% (7d)',
-    primaryRisk: 'Optimal Baseline Conditions',
-    workforceCount: '48,000 workers',
-    leadTimeGain: '+1.3d Early Warning',
-    playbook: 'Routine Telemetry Ingestion',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-mirdif',
-    name: 'Mirdif & Al Warqa',
-    arabicName: 'مردف',
-    category: 'urban',
-    categoryLabel: 'Established Residential & Community Healthcare',
-    x: 785,
-    y: 165,
-    tier: 'NORMAL',
-    cases: 610,
-    caseTrend: '+1% (7d)',
-    primaryRisk: 'Within Expected Baseline Envelope',
-    workforceCount: '32,000 workers',
-    leadTimeGain: '+1.2d Early Warning',
-    playbook: 'Standard Community Monitoring',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-khawaneej',
-    name: 'Al Khawaneej',
-    arabicName: 'الخوانيج',
-    category: 'urban',
-    categoryLabel: 'Agricultural Belt & Border Zone',
-    x: 850,
-    y: 170,
-    tier: 'NORMAL',
-    cases: 390,
-    caseTrend: '0% (7d)',
-    primaryRisk: 'Baseline Stable Agricultural Index',
-    workforceCount: '20,000 workers',
-    leadTimeGain: '+1.1d Early Warning',
-    playbook: 'Routine Environmental Telemetry',
-    isHotspot: false,
-  },
-  {
-    id: 'dxb-hatta',
-    name: 'Hatta Mountain Enclave',
-    arabicName: 'حتا (جبال الحجر)',
-    category: 'logistics',
-    categoryLabel: 'Hajar Mountains Outpost · Oman Border (110km SE)',
-    x: 875,
-    y: 430,
-    tier: 'WATCH',
-    cases: 180,
-    caseTrend: '+5% (7d)',
-    primaryRisk: 'Mountain Microclimate & Border Clinic Telemetry',
-    workforceCount: '14,000 workers',
-    leadTimeGain: '+1.5d Early Warning',
-    playbook: 'Monitor Mountain Hydration & Remote Clinic Reporting',
-    isHotspot: true,
-    hotspotRadius: 14,
-  },
-];
+export { DUBAI_PLACES, type DubaiPlace } from './DubaiMapData';
 
 interface SurveillanceMapCardProps {
   units?: MonitoringUnit[];
   onSelectUnit?: (unit: MonitoringUnit) => void;
   selectedUnitId?: string | null;
+  selectedPlaceId?: string | null;
+  onSelectPlace?: (place: DubaiPlace) => void;
 }
 
 export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
   units = [],
   onSelectUnit,
   selectedUnitId,
+  selectedPlaceId: controlledSelectedPlaceId,
+  onSelectPlace,
 }) => {
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<'all' | 'industrial' | 'worker_zone' | 'urban' | 'logistics' | 'critical'>('all');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>('dxb-alquoz');
+  const [internalSelectedPlaceId, setInternalSelectedPlaceId] = useState<string>('dxb-alquoz');
   const [hoveredPlaceId, setHoveredPlaceId] = useState<string | null>(null);
   const [showHighways, setShowHighways] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
 
-  // Active highlighted place
-  const activePlace = useMemo(() => {
-    const id = hoveredPlaceId || selectedPlaceId;
-    return DUBAI_PLACES.find((p) => p.id === id) || DUBAI_PLACES[0];
-  }, [hoveredPlaceId, selectedPlaceId]);
+  const activeSelectedPlaceId = controlledSelectedPlaceId ?? internalSelectedPlaceId;
 
   // Filtered places according to category
   const visiblePlaces = useMemo(() => {
@@ -413,31 +48,17 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
   }, [activeCategoryFilter]);
 
   const handlePlaceClick = (place: DubaiPlace) => {
-    setSelectedPlaceId(place.id);
+    setInternalSelectedPlaceId(place.id);
+    if (onSelectPlace) {
+      onSelectPlace(place);
+    }
     if (onSelectUnit) {
-      // Adapt to MonitoringUnit interface for the SiteDrawer
-      const adaptedUnit: MonitoringUnit = {
-        id: place.id,
-        name: place.name,
-        districtId: 'dis-dxb',
-        districtName: 'Dubai Emirate',
-        unitType: place.category === 'industrial' ? 'construction' : place.category === 'worker_zone' ? 'accommodation' : place.category === 'logistics' ? 'logistics' : 'office',
-        latitude: 25.0 + place.y / 1000,
-        longitude: 55.1 + place.x / 1000,
-        headcountBand: place.workforceCount,
-        currentTier: place.tier === 'NORMAL' ? null : place.tier,
-        completeness: 94,
-        openAlertCount: place.tier === 'ACTION' ? 2 : place.tier === 'ALERT' ? 1 : 0,
-        feedStatus: 'ok',
-        primaryRiskReason: place.primaryRisk,
-        observedTrendPercent: parseInt(place.caseTrend) || 12,
-      };
-      onSelectUnit(adaptedUnit);
+      onSelectUnit(placeToMonitoringUnit(place));
     }
   };
 
   return (
-    <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between">
+    <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between h-full min-h-[460px]">
       {/* Top Header inside Map */}
       <div className="relative z-20 px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/5 bg-panel/75 backdrop-blur-md">
         <div className="flex flex-wrap items-center gap-3">
@@ -568,7 +189,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
         </div>
       </div>
 
-      {/* Map Graphic Canvas */}
+      {/* Map Graphic Canvas - Completely Clean & Unobstructed */}
       <div className="relative w-full h-[400px] sm:h-[460px] lg:h-[500px] bg-[#0A0D12] overflow-hidden select-none">
         {/* Subtle coordinate grid lines */}
         <div
@@ -603,7 +224,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
 
             {/* Hotspot Amber Pulsing Radial Glow */}
             <radialGradient id="dxbAmberGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FFF2C2" stopOpacity="1" />
+              <stop offset="0%" stopColor="#FFF2A3" />
               <stop offset="25%" stopColor="#F2A33A" stopOpacity="0.9" />
               <stop offset="65%" stopColor="#F2A33A" stopOpacity="0.3" />
               <stop offset="100%" stopColor="#F2A33A" stopOpacity="0" />
@@ -611,7 +232,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
 
             {/* Hotspot Red Pulsing Radial Glow */}
             <radialGradient id="dxbRedGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FFD1CA" stopOpacity="1" />
+              <stop offset="0%" stopColor="#FFD1CA" />
               <stop offset="30%" stopColor="#E5483D" stopOpacity="0.9" />
               <stop offset="70%" stopColor="#E5483D" stopOpacity="0.35" />
               <stop offset="100%" stopColor="#E5483D" stopOpacity="0" />
@@ -619,7 +240,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
 
             {/* Hotspot Yellow Watch Radial Glow */}
             <radialGradient id="dxbYellowGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FFFDE0" stopOpacity="1" />
+              <stop offset="0%" stopColor="#FFFDE0" />
               <stop offset="35%" stopColor="#EDCB63" stopOpacity="0.75" />
               <stop offset="80%" stopColor="#EDCB63" stopOpacity="0.2" />
               <stop offset="100%" stopColor="#EDCB63" stopOpacity="0" />
@@ -664,7 +285,6 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
           {/* 2. Offshore Landmarks: The World Islands */}
           <g opacity="0.45" stroke="#3A4D60" strokeWidth="0.6" fill="#1C242E">
             <ellipse cx="475" cy="88" rx="42" ry="24" fill="none" stroke="#36495C" strokeDasharray="3 3" />
-            {/* The World islands sandbar dots */}
             <circle cx="455" cy="80" r="2.2" />
             <circle cx="465" cy="78" r="2.8" />
             <circle cx="478" cy="80" r="3" />
@@ -711,7 +331,6 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
           />
 
           {/* 4. Iconic Waterways carved into land: Dubai Creek & Dubai Water Canal */}
-          {/* Dubai Creek (Khor Dubai) S-curve separating Bur Dubai and Deira */}
           <path
             d="M 622,93 
                C 630,110 635,125 645,135 
@@ -771,7 +390,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
           {/* 6. Major Dubai Highway Arterial Corridors (Highways Layer) */}
           {showHighways && (
             <g className="transition-opacity duration-300">
-              {/* E11 - Sheikh Zayed Road (The Primary Glowing Spine) */}
+              {/* E11 - Sheikh Zayed Road */}
               <path
                 d="M 115,425 L 180,380 L 285,305 L 375,245 L 475,180 L 565,135 L 640,105 L 730,70 L 795,45"
                 fill="none"
@@ -859,7 +478,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
           {/* 8. Pulsing Glowing Hotspots & Location Markers */}
           {visiblePlaces.map((place) => {
             const isHovered = hoveredPlaceId === place.id;
-            const isSelected = selectedPlaceId === place.id;
+            const isSelected = activeSelectedPlaceId === place.id;
             const isAction = place.tier === 'ACTION';
             const isAlert = place.tier === 'ALERT';
             const isWatch = place.tier === 'WATCH';
@@ -870,7 +489,10 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
                 key={place.id}
                 className="cursor-pointer group"
                 onClick={() => handlePlaceClick(place)}
-                onMouseEnter={() => setHoveredPlaceId(place.id)}
+                onMouseEnter={() => {
+                  setHoveredPlaceId(place.id);
+                  if (onSelectPlace) onSelectPlace(place);
+                }}
                 onMouseLeave={() => setHoveredPlaceId(null)}
               >
                 {/* Outer Pulsing Glow */}
@@ -937,7 +559,6 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
                 {/* Town / Place Name Typography Labels */}
                 {showLabels && (
                   <g transform={`translate(${place.x}, ${place.y})`} className="pointer-events-none">
-                    {/* Shadow halo for text legibility */}
                     <text
                       x={place.x > 750 ? -12 : 12}
                       y={place.y > 420 ? -10 : 4}
@@ -952,7 +573,6 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
                     >
                       {place.name}
                     </text>
-                    {/* Actual Text Label */}
                     <text
                       x={place.x > 750 ? -12 : 12}
                       y={place.y > 420 ? -10 : 4}
@@ -973,7 +593,6 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
                       {place.name}
                     </text>
 
-                    {/* Arabic Subtitle for Key Districts */}
                     {place.arabicName && (isAction || isAlert || isHovered) && (
                       <text
                         x={place.x > 750 ? -12 : 12}
@@ -992,115 +611,6 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
             );
           })}
         </svg>
-
-        {/* 9. Floating Interactive HUD Telemetry Card for Selected/Hovered Place */}
-        {activePlace && (
-          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 w-[calc(100%-1.5rem)] sm:w-[380px] rounded-2xl bg-[#121317]/95 border border-white/15 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl z-30 transition-all duration-300">
-            <div className="flex items-start justify-between gap-2.5 mb-2.5 pb-2 border-b border-white/10">
-              <div className="min-w-0 pr-1">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`w-2 h-2 rounded-full shrink-0 ${
-                      activePlace.tier === 'ACTION'
-                        ? 'bg-[#E5483D] animate-ping'
-                        : activePlace.tier === 'ALERT'
-                        ? 'bg-[#F2A33A] animate-pulse'
-                        : activePlace.tier === 'WATCH'
-                        ? 'bg-[#EDCB63]'
-                        : 'bg-emerald-400'
-                    }`}
-                  />
-                  <h3 className="text-xs sm:text-sm font-black text-canary-text tracking-tight truncate flex items-center gap-1.5">
-                    <span className="truncate">{activePlace.name}</span>
-                    {activePlace.arabicName && (
-                      <span className="text-[11px] font-normal text-canary-amber opacity-75 shrink-0">
-                        ({activePlace.arabicName})
-                      </span>
-                    )}
-                  </h3>
-                </div>
-                <p className="text-[10px] text-canary-text-3 font-medium truncate mt-0.5">
-                  {activePlace.categoryLabel}
-                </p>
-              </div>
-
-              {/* Status Badge */}
-              <span
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider shrink-0 ${
-                  activePlace.tier === 'ACTION'
-                    ? 'bg-[#E5483D]/20 text-[#FF9085] border border-[#E5483D]/40'
-                    : activePlace.tier === 'ALERT'
-                    ? 'bg-[#F2A33A]/20 text-canary-amber border border-canary-amber/40'
-                    : activePlace.tier === 'WATCH'
-                    ? 'bg-[#EDCB63]/20 text-[#EDCB63] border border-[#EDCB63]/30'
-                    : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                }`}
-              >
-                {activePlace.tier} TIER
-              </span>
-            </div>
-
-            {/* Metrics Grid */}
-            <div className="grid grid-cols-3 gap-2 py-1 mb-2 text-center bg-black/30 rounded-xl p-2 border border-white/5">
-              <div>
-                <div className="text-[10px] uppercase font-mono text-canary-text-3">Active Cases</div>
-                <div className="text-xs sm:text-sm font-black text-canary-text font-mono">
-                  {activePlace.cases.toLocaleString()}
-                </div>
-                <div
-                  className={`text-[9px] font-mono font-semibold ${
-                    activePlace.caseTrend.startsWith('+') ? 'text-[#E5483D]' : 'text-emerald-400'
-                  }`}
-                >
-                  {activePlace.caseTrend}
-                </div>
-              </div>
-
-              <div>
-                <div className="text-[10px] uppercase font-mono text-canary-text-3">Workforce</div>
-                <div className="text-xs sm:text-sm font-bold text-canary-text-2">
-                  {activePlace.workforceCount.replace(' workers', '')}
-                </div>
-                <div className="text-[9px] text-canary-text-3">Protected</div>
-              </div>
-
-              <div>
-                <div className="text-[10px] uppercase font-mono text-canary-text-3">Early Lead</div>
-                <div className="text-xs sm:text-sm font-black text-canary-amber font-mono">
-                  {activePlace.leadTimeGain.replace(' Early Warning', '')}
-                </div>
-                <div className="text-[9px] text-canary-amber/80 font-mono">Ahead of Risk</div>
-              </div>
-            </div>
-
-            {/* Primary Risk Stream & Recommended Playbook */}
-            <div className="space-y-1 text-xs">
-              <div className="flex items-start gap-1.5 text-canary-text-2">
-                <Flame className="w-3.5 h-3.5 text-[#F2A33A] shrink-0 mt-0.5" />
-                <span className="line-clamp-1 font-medium">
-                  <strong className="text-canary-text">Signal:</strong> {activePlace.primaryRisk}
-                </span>
-              </div>
-              <div className="flex items-start gap-1.5 text-canary-text-3">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                <span className="line-clamp-1">
-                  <strong className="text-canary-text-2">Playbook:</strong> {activePlace.playbook}
-                </span>
-              </div>
-            </div>
-
-            {/* Open Drawer CTA */}
-            {onSelectUnit && (
-              <button
-                onClick={() => handlePlaceClick(activePlace)}
-                className="mt-3 w-full py-1.5 rounded-xl bg-gradient-to-r from-[#F2A33A] to-[#EDCB63] text-canvas-deep font-bold text-xs flex items-center justify-center gap-1.5 hover:brightness-110 transition-all shadow-md"
-              >
-                <span>Inspect District Dossier & Telemetry</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Integrated Bottom Data Sources Strip */}
