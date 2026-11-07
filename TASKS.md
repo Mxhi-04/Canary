@@ -52,3 +52,29 @@
 - [x] All 8 API endpoints operational (`/api/v1/units`, `/alerts`, `/alerts/[id]`, `/replay`, `/backtest/summary`, `/privacy/example`, `/audit`, `/ingest`)
 - [x] Documentation suite complete (`README.md`, `MODEL_CARD.md`, `DATA_GOVERNANCE.md`, `ASSUMPTIONS.md`, `TASKS.md`, `CHANGELOG.md`)
 
+
+## Phase 4 — Cinematic Landing Experience & Statistical Engine
+- [x] **Cinematic Landing Page (`/`):**
+  - [x] Extracted all 190 native 1080p frames from `ideas/scroll animation.mp4` into high-efficiency WebP and JPG.
+  - [x] Zero-ghosting single-frame canvas renderer with 60/120fps lerp damping.
+  - [x] Hardware-accelerated All-Intra H.264 video scrubber (`-g 1`).
+  - [x] 3-tier progressive loader (Instant paint -> 4x keyframes in 150ms -> full background fill).
+  - [x] Hands-free 24fps auto-play flight preview.
+  - [x] Dual-engine switcher (190-frame Canvas vs All-Intra Video).
+- [x] **Brand Visual Identity:**
+  - [x] Authentic amber calligraphy "Canary" wordmark with perched bird on branch.
+  - [x] Transparent square bird mark for sidebar emblem, headers, and app icons.
+  - [x] High-res favicon and apple-touch-icons.
+- [x] **Dedicated Map View (`/map`):**
+  - [x] Full-screen UAE geospatial surveillance map with real-time layer overlays (WBGT thermal stress, PM2.5 air quality, active outbreak clusters).
+  - [x] Interactive site nodes, timeline scrubber, and site deep-dive inspector.
+- [x] **Settings & Governance (`/settings`):**
+  - [x] Role-based surveillance boundaries and permission scoper.
+  - [x] Interactive $k$-anonymity small-cell suppression slider ($k=3$ to $10$).
+  - [x] Environmental & syndromic telemetry ingestion pipeline monitors.
+- [x] **Python Statistical Engine (`backend/app/engine/`):**
+  - [x] `baseline.py`: Negative-binomial GLM baseline with day-of-week seasonality, CDC EARS C2 (3-sigma, 2-day guard band), and CUSUM comparators.
+  - [x] `fusion.py`: Multi-signal Bayesian fusion combining hazard priors (+2.9d lead gain) with syndromic outcomes, 40% stream caps, and 15% correlation discounts.
+  - [x] `tiering.py`: 4-tier state machine (NORMAL, WATCH, ALERT, ACTION) with 2-of-3 days persistence and 3-day cooldown.
+  - [x] `privacy.py`: Aggregate-only contract validator and small-cell suppression engine.
+  - [x] `backend/tests/test_detection_engine.py`: 6/6 unit tests passing.
