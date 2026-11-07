@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useDemoRole } from '@/context/RoleContext';
 import { DEMO_ROLES } from '@/lib/data/seededData';
+import { ScrollFrameCanvas } from '@/components/landing/ScrollFrameCanvas';
 import {
   ShieldAlert,
   ArrowRight,
@@ -18,47 +19,19 @@ import {
   Compass,
   FileText,
   Building2,
-  Lock
+  Lock,
+  Sparkles
 } from 'lucide-react';
 
 export default function LandingPage() {
   const { activeRole, setRole, roleInfo } = useDemoRole();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isAutoFlying, setIsAutoFlying] = useState(false);
+  const autoFlyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const durationRef = useRef(7.93);
-  const targetProgressRef = useRef(0);
-  const currentProgressRef = useRef(0);
-
-  // Initialize and handle video metadata
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleLoadedMetadata = () => {
-      if (video.duration && !isNaN(video.duration)) {
-        durationRef.current = video.duration;
-      }
-      setIsVideoLoaded(true);
-      video.pause();
-      video.currentTime = 0;
-    };
-
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    if (video.readyState >= 1) {
-      handleLoadedMetadata();
-    }
-
-    return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    };
-  }, []);
-
-  // Window scroll event listener to compute scroll progress
+  // Window scroll event listener to compute normalized scroll progress (0.0 to 1.0)
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -69,8 +42,9 @@ export default function LandingPage() {
 
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
-      targetProgressRef.current = progress;
-      setScrollProgress(progress);
+      if (!isAutoFlying) {
+        setScrollProgress(progress);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -79,66 +53,36 @@ export default function LandingPage() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
-
-  // Smooth lerp loop to drive video.currentTime seamlessly without jitter
-  useEffect(() => {
-    let animationFrameId: number;
-
-    const smoothScrub = () => {
-      const video = videoRef.current;
-
-      if (video && durationRef.current) {
-        if (!isAutoFlying) {
-          // Normal scroll-controlled scrubbing
-          const diff = targetProgressRef.current - currentProgressRef.current;
-          // Smooth damping
-          currentProgressRef.current += diff * 0.18;
-
-          const targetTime = currentProgressRef.current * durationRef.current;
-          if (Math.abs(video.currentTime - targetTime) > 0.02) {
-            video.currentTime = Math.max(0, Math.min(durationRef.current, targetTime));
-          }
-        } else {
-          // Auto-play preview mode: update progress state as video plays
-          const progress = video.currentTime / durationRef.current;
-          setScrollProgress(progress);
-          currentProgressRef.current = progress;
-          targetProgressRef.current = progress;
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(smoothScrub);
-    };
-
-    animationFrameId = requestAnimationFrame(smoothScrub);
-    return () => cancelAnimationFrame(animationFrameId);
   }, [isAutoFlying]);
 
-  // Auto Fly Preview toggle
+  // Auto Fly Preview toggle (hands-free animation play)
   const toggleAutoFly = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
     if (isAutoFlying) {
-      video.pause();
       setIsAutoFlying(false);
+      if (autoFlyTimerRef.current) clearInterval(autoFlyTimerRef.current);
     } else {
-      video.play().then(() => {
-        setIsAutoFlying(true);
-      }).catch((e) => {
-        console.error('Video auto-play failed:', e);
-      });
+      setIsAutoFlying(true);
+      const stepDuration = 80; // ms per step for ~8 seconds total
+      const stepAmount = 0.01;
+
+      autoFlyTimerRef.current = setInterval(() => {
+        setScrollProgress((prev) => {
+          if (prev >= 1) {
+            setIsAutoFlying(false);
+            if (autoFlyTimerRef.current) clearInterval(autoFlyTimerRef.current);
+            return 1;
+          }
+          return prev + stepAmount;
+        });
+      }, stepDuration);
     }
   };
 
-  // Determine active story chapter based on scroll progress
-  // Flight Stages:
-  // 0.00 - 0.20: Stage 0 (Dawn landscape / Hero intro)
-  // 0.20 - 0.48: Stage 1 (Bird enters from left / Environmental Exposure)
-  // 0.48 - 0.74: Stage 2 (Bird traverses valley / Syndromic Outcomes)
-  // 0.74 - 0.95: Stage 3 (Bird exits to right / Proportionate Action)
-  // 0.95 - 1.00: Gateway Launch Section
+  useEffect(() => {
+    return () => {
+      if (autoFlyTimerRef.current) clearInterval(autoFlyTimerRef.current);
+    };
+  }, []);
 
   return (
     <div className="bg-canvas text-canary-text min-h-screen selection:bg-canary-amber selection:text-canvas-deep">
@@ -195,23 +139,18 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Main Scroll Animation Container (450vh tall scroll track) */}
-      <div id="flight-story" ref={containerRef} className="relative h-[450vh] w-full">
-        {/* Sticky 100vh Viewport Holding the Video Canvas */}
+      {/* Main Scroll Animation Track (400vh tall scroll track) */}
+      <div id="flight-story" ref={containerRef} className="relative h-[400vh] w-full">
+        {/* Sticky 100vh Viewport Holding the High-Speed Canvas */}
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
-          {/* Background Video Element (Scrubbed with Scroll) */}
+          {/* Hardware-Accelerated Canvas Element (Zero-Lag Frame Scrubbing) */}
           <div className="absolute inset-0 w-full h-full">
-            <video
-              ref={videoRef}
-              src="/videos/scroll-animation.mp4"
-              poster="/images/scene-poster.png"
-              playsInline
-              muted
-              preload="auto"
-              className="w-full h-full object-cover select-none pointer-events-none"
+            <ScrollFrameCanvas
+              progress={scrollProgress}
+              className="w-full h-full"
             />
 
-            {/* Cinematic Edge Gradients for Seamless Canvas Integration */}
+            {/* Seamless Vignette Gradients */}
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-canvas-deep/90 via-canvas-deep/40 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-canvas via-canvas/60 to-transparent pointer-events-none" />
             <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-canvas/60 to-transparent pointer-events-none" />
@@ -224,7 +163,7 @@ export default function LandingPage() {
             <button
               onClick={toggleAutoFly}
               className="p-1.5 rounded-full bg-panel hover:bg-panel-raised text-canary-amber transition-colors"
-              title={isAutoFlying ? 'Pause flight' : 'Auto play flight'}
+              title={isAutoFlying ? 'Pause auto flight' : 'Auto play flight'}
             >
               {isAutoFlying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
             </button>
@@ -286,14 +225,14 @@ export default function LandingPage() {
 
           {/* Chapter 0: Hero Intro (0% - 20% scroll) */}
           <div
-            className={`absolute z-20 max-w-2xl px-6 text-center transition-all duration-700 ease-out flex flex-col items-center ${
+            className={`absolute z-20 max-w-2xl px-6 text-center transition-all duration-500 ease-out flex flex-col items-center ${
               scrollProgress < 0.20
                 ? 'opacity-100 translate-y-0 pointer-events-auto'
-                : 'opacity-0 -translate-y-12 pointer-events-none'
+                : 'opacity-0 -translate-y-8 pointer-events-none'
             }`}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-4 text-xs font-semibold uppercase tracking-wider text-canary-amber">
-              <span className="w-2 h-2 rounded-full bg-canary-amber animate-pulse" />
+              <Sparkles className="w-3.5 h-3.5 text-canary-amber animate-pulse" />
               <span>Future Health Challenge 06</span>
             </div>
 
@@ -318,26 +257,24 @@ export default function LandingPage() {
               <button
                 onClick={() => {
                   window.scrollTo({
-                    top: window.innerHeight * 1.2,
+                    top: window.innerHeight * 1.1,
                     behavior: 'smooth',
                   });
                 }}
                 className="flex items-center gap-1.5 px-4 py-3 rounded-control bg-panel-raised/80 hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
               >
-                <span>Scroll to release canary</span>
+                <span>Scroll to start bird flight</span>
                 <ChevronDown className="w-4 h-4 animate-bounce" />
               </button>
             </div>
           </div>
 
-          {/* Chapter 1: Bird Enters from Left / Exposure Leads (22% - 46% scroll) */}
+          {/* Chapter 1: Birds Enter from Left / Exposure Leads (22% - 46% scroll) */}
           <div
-            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#F2A33A]/40 shadow-2xl transition-all duration-700 ease-out ${
+            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#F2A33A]/40 shadow-2xl transition-all duration-500 ease-out ${
               scrollProgress >= 0.22 && scrollProgress < 0.46
                 ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : scrollProgress < 0.22
-                ? 'opacity-0 -translate-x-16 pointer-events-none'
-                : 'opacity-0 -translate-x-16 pointer-events-none'
+                : 'opacity-0 -translate-x-12 pointer-events-none'
             }`}
           >
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-canary-amber mb-2">
@@ -363,14 +300,12 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Chapter 2: Bird Traverses Valley / Outcomes Confirm (48% - 72% scroll) */}
+          {/* Chapter 2: Birds Traverse Valley / Outcomes Confirm (48% - 72% scroll) */}
           <div
-            className={`absolute right-8 md:right-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#C58BD9]/40 shadow-2xl transition-all duration-700 ease-out ${
+            className={`absolute right-8 md:right-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#C58BD9]/40 shadow-2xl transition-all duration-500 ease-out ${
               scrollProgress >= 0.48 && scrollProgress < 0.72
                 ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : scrollProgress < 0.48
-                ? 'opacity-0 translate-x-16 pointer-events-none'
-                : 'opacity-0 translate-x-16 pointer-events-none'
+                : 'opacity-0 translate-x-12 pointer-events-none'
             }`}
           >
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C58BD9] mb-2">
@@ -398,14 +333,12 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Chapter 3: Bird Exits to Right / Proportionate Action (74% - 94% scroll) */}
+          {/* Chapter 3: Birds Exit to Right / Proportionate Action (74% - 94% scroll) */}
           <div
-            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#E5483D]/40 shadow-2xl transition-all duration-700 ease-out ${
+            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#E5483D]/40 shadow-2xl transition-all duration-500 ease-out ${
               scrollProgress >= 0.74 && scrollProgress < 0.94
                 ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : scrollProgress < 0.74
-                ? 'opacity-0 -translate-x-16 pointer-events-none'
-                : 'opacity-0 -translate-x-16 pointer-events-none'
+                : 'opacity-0 -translate-x-12 pointer-events-none'
             }`}
           >
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#F06B5E] mb-2">
