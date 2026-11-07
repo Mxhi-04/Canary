@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CanaryLogo } from '@/components/shared/CanaryLogo';
+import { CanaryLineArtLogo } from '@/components/shared/CanaryLineArtLogo';
 import { Sparkles, Palette } from 'lucide-react';
 
 interface EmpowermentPillar {
@@ -90,45 +90,47 @@ export const EmpowermentEmblems: React.FC = () => {
 
   return (
     <div className="relative mb-24">
-      {/* Luminous ambient background glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[480px] bg-gradient-to-r from-[#F2A33A]/12 via-[#EDCB63]/10 to-[#6FA8C7]/12 rounded-full blur-[140px] pointer-events-none" />
+      {/* Luminous ambient background glow behind left-aligned heading */}
+      <div className="absolute top-8 left-0 w-[700px] h-[450px] bg-gradient-to-r from-[#F2A33A]/15 via-[#EDCB63]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Top Header: Cursive Stylish Heading with Canary Logo */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center mb-16">
+      {/* Top Header: Left-Aligned Cursive Stylish Heading with Canary Animated Line Art Logo */}
+      <div className="relative z-10 flex flex-col items-start justify-start text-left mb-16 max-w-4xl">
         <span className="font-cursive-stylish text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-[#EDCB63] tracking-wide font-normal leading-tight drop-shadow-[0_2px_16px_rgba(237,203,99,0.4)]">
           How
         </span>
-        <div className="my-1 sm:my-2">
-          <CanaryLogo variant="full" size="hero" glow="metallic" priority />
+        <div className="my-2 sm:my-3">
+          <CanaryLineArtLogo size="hero" />
         </div>
         <span className="font-cursive-stylish text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-canary-text tracking-wide font-normal leading-tight drop-shadow-[0_2px_16px_rgba(255,255,255,0.2)]">
           Empowers Your Organisation
         </span>
 
-        {/* Theme Palette Switcher Pill */}
-        <div className="mt-6 inline-flex items-center gap-1.5 p-1 rounded-full bg-canvas-deep/80 border border-white/10 backdrop-blur-md shadow-lg">
-          <button
-            onClick={() => setColorMode('gold')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${
-              colorMode === 'gold'
-                ? 'bg-gradient-to-r from-[#F2A33A] to-[#EDCB63] text-canvas-deep shadow-md'
-                : 'text-canary-text-2 hover:text-canary-text'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Signature Canary Gold</span>
-          </button>
-          <button
-            onClick={() => setColorMode('themed')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${
-              colorMode === 'themed'
-                ? 'bg-white/20 text-canary-text shadow-md border border-white/20'
-                : 'text-canary-text-2 hover:text-canary-text'
-            }`}
-          >
-            <Palette className="w-3.5 h-3.5" />
-            <span>Pillar Chromatic</span>
-          </button>
+        {/* Theme Palette Switcher Pill (Left-aligned) */}
+        <div className="mt-8 flex items-center gap-3">
+          <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-canvas-deep/80 border border-white/10 backdrop-blur-md shadow-lg">
+            <button
+              onClick={() => setColorMode('gold')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${
+                colorMode === 'gold'
+                  ? 'bg-gradient-to-r from-[#F2A33A] to-[#EDCB63] text-canvas-deep shadow-md'
+                  : 'text-canary-text-2 hover:text-canary-text'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Signature Canary Gold</span>
+            </button>
+            <button
+              onClick={() => setColorMode('themed')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${
+                colorMode === 'themed'
+                  ? 'bg-white/20 text-canary-text shadow-md border border-white/20'
+                  : 'text-canary-text-2 hover:text-canary-text'
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>Pillar Chromatic</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -191,8 +193,8 @@ export const EmpowermentEmblems: React.FC = () => {
           ))}
         </div>
 
-        {/* Row 2: 2 Boxes (Centered & Balanced) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        {/* Row 2: 2 Boxes (Full Grid Width & Left-Flush) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {EMPOWERMENT_PILLARS.slice(3, 5).map((pillar) => (
             <div
               key={pillar.id}
@@ -250,3 +252,4 @@ export const EmpowermentEmblems: React.FC = () => {
     </div>
   );
 };
+
