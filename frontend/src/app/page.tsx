@@ -170,94 +170,6 @@ export default function LandingPage() {
             <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-canvas/60 to-transparent pointer-events-none" />
           </div>
 
-          {/* Floating Flight Path & Progress Indicator (Bottom Center) */}
-          <div className="absolute bottom-6 z-30 flex items-center gap-3 md:gap-4 bg-canvas-deep/90 backdrop-blur-md px-4 py-2 rounded-full border border-border-strong shadow-2xl">
-            {/* Auto-fly Toggle Button */}
-            <button
-              onClick={toggleAutoFly}
-              className="p-1.5 rounded-full bg-panel hover:bg-panel-raised text-canary-amber transition-colors flex items-center gap-1.5"
-              title={isAutoFlying ? 'Pause auto flight' : 'Auto play flight (24fps)'}
-            >
-              {isAutoFlying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
-              <span className="hidden sm:inline text-[11px] font-semibold text-canary-text pr-1">
-                {isAutoFlying ? 'Pause' : 'Auto Play'}
-              </span>
-            </button>
-
-            {/* Renderer Switcher Toggle */}
-            <button
-              onClick={() => setRenderEngine(renderEngine === 'canvas' ? 'video' : 'canvas')}
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-panel-inset hover:bg-panel border border-border text-[11px] text-canary-text-2 hover:text-canary-amber transition-colors"
-              title="Toggle between 190-Frame Canvas or All-Intra 1080p Video"
-            >
-              {renderEngine === 'canvas' ? (
-                <>
-                  <Layers className="w-3 h-3 text-canary-amber" />
-                  <span>Engine: 190-Frame Canvas</span>
-                </>
-              ) : (
-                <>
-                  <Film className="w-3 h-3 text-[#6FA8C7]" />
-                  <span>Engine: All-Intra 1080p Video</span>
-                </>
-              )}
-            </button>
-
-            {/* Flight Path Segment Markers */}
-            <div className="hidden sm:flex items-center gap-2 text-[11px] font-medium text-canary-text-2">
-              <span
-                className={`transition-colors ${
-                  scrollProgress < 0.25 ? 'text-canary-amber font-bold' : 'text-canary-text-3'
-                }`}
-              >
-                1. Dawn
-              </span>
-              <span className="text-canary-text-3">→</span>
-              <span
-                className={`transition-colors ${
-                  scrollProgress >= 0.25 && scrollProgress < 0.5
-                    ? 'text-canary-amber font-bold'
-                    : 'text-canary-text-3'
-                }`}
-              >
-                2. Left Arrival
-              </span>
-              <span className="text-canary-text-3">→</span>
-              <span
-                className={`transition-colors ${
-                  scrollProgress >= 0.5 && scrollProgress < 0.75
-                    ? 'text-canary-amber font-bold'
-                    : 'text-canary-text-3'
-                }`}
-              >
-                3. Valley Flight
-              </span>
-              <span className="text-canary-text-3">→</span>
-              <span
-                className={`transition-colors ${
-                  scrollProgress >= 0.75 ? 'text-canary-amber font-bold' : 'text-canary-text-3'
-                }`}
-              >
-                4. Right Exit
-              </span>
-            </div>
-
-            {/* Progress Bar Track */}
-            <div className="w-20 md:w-24 bg-panel-inset rounded-full h-1.5 overflow-hidden border border-border">
-              <div
-                className="h-full bg-gradient-to-r from-[#E8C14A] to-[#F2A33A] rounded-full transition-all duration-150"
-                style={{ width: `${Math.round(scrollProgress * 100)}%` }}
-              />
-            </div>
-            <span className="text-[11px] font-mono text-canary-amber tabular-nums font-bold">
-              {Math.round(scrollProgress * 100)}%
-            </span>
-          </div>
-
-          {/* =========================================================================
-              DYNAMIC NARRATIVE OVERLAYS (SYNCHRONIZED WITH SCROLL PROGRESS)
-              ========================================================================= */}
-
           {/* =========================================================================
               HERO IDENTITY (LEFT-ALIGNED) — STAYS ANCHORED AS SCROLLING OCCURS
               ========================================================================= */}
@@ -356,6 +268,66 @@ export default function LandingPage() {
           GATEWAY & FEATURE SHOWCASE SECTION (BELOW SCROLL TRACK)
           ========================================================================= */}
       <section className="relative z-30 bg-canvas px-6 md:px-12 py-16 max-w-[1440px] mx-auto border-t border-border">
+        {/* =========================================================================
+            WORKFORCE PROTECTION & PREVENTIVE RISK BANNER (REQUESTED SECTION)
+            ========================================================================= */}
+        <div className="relative rounded-3xl bg-gradient-to-br from-panel-raised/95 via-panel/85 to-canvas-deep border border-[#F2A33A]/30 p-8 sm:p-10 md:p-14 shadow-2xl mb-12 overflow-hidden">
+          {/* Subtle warm ambient glow in background */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#F2A33A]/12 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-[#EDCB63]/8 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 max-w-4xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F2A33A]/10 border border-[#F2A33A]/30 text-xs font-bold uppercase tracking-wider text-canary-amber shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-canary-amber" />
+              <span>Workforce Health &amp; Prevention</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-canary-text tracking-tight leading-tight">
+              Protect Your Workforce.{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EDCB63] via-[#F2A33A] to-[#E5483D]">
+                Stay Ahead of Risk.
+              </span>
+            </h2>
+
+            <p className="text-base sm:text-lg md:text-xl text-canary-text-2 leading-relaxed font-light pt-1">
+              Your people are your greatest asset. Don&apos;t wait for health risks to turn into workplace incidents. Canary brings environmental and health signals together to identify early warning signs, helping your organisation make smarter decisions, take preventive action, and build a safer, healthier workforce.
+            </p>
+
+            {/* Strategic Value Pillars Strip */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-border/60">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 flex items-center justify-center text-[#6FA8C7] shrink-0 mt-0.5">
+                  <Wind className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-canary-text">Environmental Precursors</h4>
+                  <p className="text-[11px] text-canary-text-3 mt-0.5">Detect acute heat and air quality anomalies 24–48h before symptoms rise.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-[#C58BD9]/15 border border-[#C58BD9]/30 flex items-center justify-center text-[#C58BD9] shrink-0 mt-0.5">
+                  <Activity className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-canary-text">Syndromic Fusion</h4>
+                  <p className="text-[11px] text-canary-text-3 mt-0.5">Correlate workplace sick leaves with clinic encounters with zero individual tracking.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-canary-text">Proportionate Playbooks</h4>
+                  <p className="text-[11px] text-canary-text-3 mt-0.5">Deploy hydration hubs, shift rotations, and early outreach before incidents happen.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Hero Entry Card */}
         <div className="canary-panel p-8 bg-gradient-to-br from-panel-raised to-panel border-2 border-canary-amber/50 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-12">
           <div className="space-y-3 flex-1">
