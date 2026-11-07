@@ -7,6 +7,7 @@ import { DEMO_ROLES } from '@/lib/data/seededData';
 import { ScrollFrameCanvas } from '@/components/landing/ScrollFrameCanvas';
 import { ScrollVideoScrubber } from '@/components/landing/ScrollVideoScrubber';
 import { CanaryLogo } from '@/components/shared/CanaryLogo';
+import { GlassmorphismTelemetryHUD } from '@/components/landing/GlassmorphismTelemetryHUD';
 import {
   ShieldAlert,
   ArrowRight,
@@ -245,32 +246,35 @@ export default function LandingPage() {
               DYNAMIC NARRATIVE OVERLAYS (SYNCHRONIZED WITH SCROLL PROGRESS)
               ========================================================================= */}
 
-          {/* Chapter 0: Hero Intro (0% - 20% scroll) - LEFT ALIGNED */}
+          {/* =========================================================================
+              HERO IDENTITY (LEFT-ALIGNED) — STAYS ANCHORED AS SCROLLING OCCURS
+              ========================================================================= */}
           <div
-            className={`absolute left-6 sm:left-12 md:left-20 lg:left-28 z-20 max-w-2xl px-4 sm:px-0 text-left transition-all duration-500 ease-out flex flex-col items-start ${
-              scrollProgress < 0.20
-                ? 'opacity-100 translate-y-0 pointer-events-auto'
-                : 'opacity-0 -translate-y-8 pointer-events-none'
-            }`}
+            className="absolute left-6 sm:left-10 md:left-14 lg:left-16 xl:left-24 top-[14%] sm:top-[16%] md:top-[18%] z-20 max-w-lg xl:max-w-xl px-4 sm:px-0 text-left transition-all duration-500 ease-out flex flex-col items-start pointer-events-auto"
           >
             {/* Future Health Challenge 06 Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-4 text-xs font-semibold uppercase tracking-wider text-canary-amber shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0D0F14]/70 border border-white/10 backdrop-blur-xl mb-3 text-xs font-semibold uppercase tracking-wider text-canary-amber shadow-lg">
               <Sparkles className="w-3.5 h-3.5 text-canary-amber animate-pulse" />
               <span>Future Health Challenge 06</span>
             </div>
 
             {/* Authentic Brand Wordmark with Metallic Glow & Increased Size */}
-            <div className="mb-3 -ml-2 sm:-ml-3">
+            <div className="mb-2 -ml-2 sm:-ml-3">
               <CanaryLogo variant="full" size="hero" glow="metallic" priority />
             </div>
 
             {/* Tagline */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-[#EDCB63] tracking-tight leading-snug max-w-xl mt-1">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-[#EDCB63] tracking-tight leading-snug max-w-xl mt-1 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
               A Healthier Tomorrow Starts with Early Detection.
             </h2>
 
+            {/* Subtext */}
+            <p className="text-xs sm:text-sm text-canary-text-2 mt-3 max-w-lg leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.7)]">
+              Sense emerging population and workforce health risks by combining environmental exposure leads with aggregated health-service and workplace outcomes.
+            </p>
+
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3.5 mt-8">
+            <div className="flex flex-wrap items-center gap-3.5 mt-6">
               <Link
                 href="/dashboard"
                 className="flex items-center gap-2 px-6 py-3 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-sm shadow-amber-glow hover:shadow-[0_0_24px_rgba(242,163,58,0.5)] transition-all"
@@ -285,112 +289,57 @@ export default function LandingPage() {
                     behavior: 'smooth',
                   });
                 }}
-                className="flex items-center gap-2 px-4 py-3 rounded-control bg-panel-raised/85 hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
+                className="flex items-center gap-2 px-4 py-3 rounded-control bg-[#0D0F14]/80 hover:bg-[#0D0F14] border border-white/15 text-xs font-semibold text-canary-text backdrop-blur-md transition-colors shadow-lg"
               >
                 <span>Scroll to start bird flight</span>
                 <ChevronDown className="w-4 h-4 animate-bounce" />
               </button>
             </div>
-          </div>
 
-          {/* Chapter 1: Birds Enter from Left / Exposure Leads (22% - 46% scroll) */}
-          <div
-            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#F2A33A]/40 shadow-2xl transition-all duration-500 ease-out ${
-              scrollProgress >= 0.22 && scrollProgress < 0.46
-                ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : 'opacity-0 -translate-x-12 pointer-events-none'
-            }`}
-          >
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-canary-amber mb-2">
-              <Wind className="w-4 h-4" />
-              <span>Core Principle 01 · Exposure Leads</span>
-            </div>
-
-            <h2 className="text-xl md:text-2xl font-bold text-canary-text tracking-tight mb-2">
-              Environmental Hazards Lead the Signal
-            </h2>
-
-            <p className="text-xs md:text-sm text-canary-text-2 leading-relaxed mb-4">
-              Continuous monitoring of particulate matter (PM2.5/PM10), ambient heat, and WBGT thermal stress indicators across UAE industrial facilities and accommodation villages detects acute risk <strong>24 to 48 hours before</strong> clinical visits spike.
-            </p>
-
-            <div className="flex items-center gap-3 pt-3 border-t border-border text-xs">
-              <div className="px-2.5 py-1 rounded bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 text-[#6FA8C7] font-semibold">
-                European CAMS PM2.5 (Real)
-              </div>
-              <div className="px-2.5 py-1 rounded bg-[#F2A33A]/15 border border-[#F2A33A]/30 text-[#F2A33A] font-semibold">
-                +2.9 Days Lead Gain
-              </div>
+            {/* Subtle Flight Story Phase Indicator */}
+            <div className="mt-5 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0D0F14]/60 backdrop-blur-md border border-white/5 text-[11px] text-canary-text-3 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F2A33A]" />
+              <span>
+                {scrollProgress < 0.25 && 'Story: 1. Dawn Precursor Detection'}
+                {scrollProgress >= 0.25 && scrollProgress < 0.50 && 'Story: 2. Valley Exposure & Bird Arrival'}
+                {scrollProgress >= 0.50 && scrollProgress < 0.75 && 'Story: 3. Syndromic Fusion Horizon'}
+                {scrollProgress >= 0.75 && 'Story: 4. Proportionate Action & Exit'}
+              </span>
             </div>
           </div>
 
-          {/* Chapter 2: Birds Traverse Valley / Outcomes Confirm (48% - 72% scroll) */}
+          {/* =========================================================================
+              RIGHT-SIDE SURVEILLANCE TELEMETRY HUD (GLASSMORPHISM CARDS FROM UI REF)
+              Starts appearing as scroll begins; stays on right side throughout flight
+              ========================================================================= */}
           <div
-            className={`absolute right-8 md:right-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#C58BD9]/40 shadow-2xl transition-all duration-500 ease-out ${
-              scrollProgress >= 0.48 && scrollProgress < 0.72
+            className={`hidden lg:flex absolute right-6 sm:right-10 md:right-12 lg:right-14 xl:right-20 top-[10%] sm:top-[12%] md:top-[13%] z-20 transition-all duration-700 ease-out ${
+              scrollProgress > 0.01
                 ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : 'opacity-0 translate-x-12 pointer-events-none'
+                : 'opacity-0 translate-x-10 pointer-events-none'
             }`}
           >
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C58BD9] mb-2">
-              <Activity className="w-4 h-4" />
-              <span>Core Principle 02 · Outcomes Confirm</span>
-            </div>
-
-            <h2 className="text-xl md:text-2xl font-bold text-canary-text tracking-tight mb-2">
-              Multi-Signal Syndromic Fusion
-            </h2>
-
-            <p className="text-xs md:text-sm text-canary-text-2 leading-relaxed mb-4">
-              Aggregating clinic presentations, regional teleconsultations, and sickness absences confirms developing clusters without jumping to premature alarms or correlation fallacies.
-            </p>
-
-            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border text-xs">
-              <div className="p-2 rounded bg-panel-inset border border-border">
-                <span className="text-[10px] text-canary-text-3 block">Event Sensitivity</span>
-                <span className="text-sm font-bold text-canary-text">91.8%</span>
-              </div>
-              <div className="p-2 rounded bg-panel-inset border border-border">
-                <span className="text-[10px] text-canary-text-3 block">Alert-Level PPV</span>
-                <span className="text-sm font-bold text-canary-text">86.4%</span>
-              </div>
-            </div>
+            <GlassmorphismTelemetryHUD scrollProgress={scrollProgress} />
           </div>
 
-          {/* Chapter 3: Birds Exit to Right / Proportionate Action (74% - 94% scroll) */}
+          {/* Mobile Telemetry Drawer / Teaser Pill */}
           <div
-            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#E5483D]/40 shadow-2xl transition-all duration-500 ease-out ${
-              scrollProgress >= 0.74 && scrollProgress < 0.94
-                ? 'opacity-100 translate-x-0 pointer-events-auto'
-                : 'opacity-0 -translate-x-12 pointer-events-none'
+            className={`lg:hidden absolute bottom-20 left-4 right-4 z-20 transition-all duration-500 ${
+              scrollProgress > 0.05 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
             }`}
           >
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#F06B5E] mb-2">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Core Principle 03 · Actionable Playbooks</span>
-            </div>
-
-            <h2 className="text-xl md:text-2xl font-bold text-canary-text tracking-tight mb-2">
-              Sense. Explain. Act Sooner.
-            </h2>
-
-            <p className="text-xs md:text-sm text-canary-text-2 leading-relaxed mb-4">
-              Canary explains <em>what changed, why the system raised the alert, and how reliable the data is</em>. Every alert connects to proportionate response playbooks, designated roles, and review-by milestones.
-            </p>
-
-            <div className="flex items-center gap-3 pt-3 border-t border-border">
+            <div className="rounded-2xl bg-[#0D0F14]/90 backdrop-blur-xl border border-white/10 p-3 shadow-2xl flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-semibold text-canary-text">Surveillance Active</span>
+                <span className="text-canary-amber font-mono font-bold">+2.9d Lead</span>
+              </div>
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 px-4 py-2 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-xs shadow-amber-glow transition-all"
+                className="px-3 py-1.5 rounded-lg bg-canary-amber text-canvas-deep font-bold text-[11px] shadow-sm flex items-center gap-1"
               >
-                <span>Launch Live Platform</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link
-                href="/alerts"
-                className="text-xs text-canary-text-2 hover:text-canary-amber underline"
-              >
-                View 3 Active Alerts
+                <span>Enter Room</span>
+                <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
           </div>

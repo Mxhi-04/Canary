@@ -147,3 +147,4 @@ class MultiSignalFusionEngine:
             "lead_time_gain_days": hazard_evidence.get("estimated_lead_days", 0.0),
             "waterfall": waterfall,
         }
+

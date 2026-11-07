@@ -136,3 +136,4 @@ def test_privacy_small_cell_suppression():
     normal_cell = privacy.apply_small_cell_suppression(count=8, k_threshold=5)
     assert normal_cell["suppressed"] is False
     assert normal_cell["display_value"] == "8"
+

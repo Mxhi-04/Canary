@@ -118,3 +118,4 @@ class CusumComparator:
             "cusum_stat": round(float(s_t), 2),
             "threshold": h,
         }
+
