@@ -269,59 +269,126 @@ export default function LandingPage() {
           ========================================================================= */}
       <section className="relative z-30 bg-canvas px-6 md:px-12 py-16 max-w-[1440px] mx-auto border-t border-border">
         {/* =========================================================================
-            WORKFORCE PROTECTION & PREVENTIVE RISK BANNER (REQUESTED SECTION)
+            WORKFORCE PROTECTION & PREVENTIVE RISK BANNER (GLASSMORPHISM EFFECT)
             ========================================================================= */}
-        <div className="relative rounded-3xl bg-gradient-to-br from-panel-raised/95 via-panel/85 to-canvas-deep border border-[#F2A33A]/30 p-8 sm:p-10 md:p-14 shadow-2xl mb-12 overflow-hidden">
-          {/* Subtle warm ambient glow in background */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#F2A33A]/12 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-[#EDCB63]/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative mb-14">
+          {/* Luminous ambient background glow for glassmorphism refraction */}
+          <div className="absolute -top-16 -left-12 w-[500px] h-[350px] bg-gradient-to-br from-[#F2A33A]/20 via-[#EDCB63]/12 to-transparent rounded-full blur-[90px] pointer-events-none" />
+          <div className="absolute -bottom-16 -right-12 w-[500px] h-[350px] bg-gradient-to-tl from-[#6FA8C7]/20 via-[#C58BD9]/12 to-transparent rounded-full blur-[90px] pointer-events-none" />
 
-          <div className="relative z-10 max-w-4xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F2A33A]/10 border border-[#F2A33A]/30 text-xs font-bold uppercase tracking-wider text-canary-amber shadow-sm">
-              <ShieldCheck className="w-3.5 h-3.5 text-canary-amber" />
-              <span>Workforce Health &amp; Prevention</span>
-            </div>
+          {/* Frosted Glassmorphism Panel */}
+          <div
+            className="relative rounded-3xl p-8 sm:p-10 md:p-14 overflow-hidden transition-all duration-300"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
+              backdropFilter: 'blur(32px) saturate(200%)',
+              WebkitBackdropFilter: 'blur(32px) saturate(200%)',
+              border: '1px solid rgba(255, 255, 255, 0.26)',
+              boxShadow:
+                'inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 70px -15px rgba(0, 0, 0, 0.65)',
+            }}
+          >
+            {/* Subtle internal specular sheen sweep */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] via-transparent to-transparent pointer-events-none" />
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-canary-text tracking-tight leading-tight">
-              Protect Your Workforce.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EDCB63] via-[#F2A33A] to-[#E5483D]">
-                Stay Ahead of Risk.
-              </span>
-            </h2>
-
-            <p className="text-base sm:text-lg md:text-xl text-canary-text-2 leading-relaxed font-light pt-1">
-              Your people are your greatest asset. Don&apos;t wait for health risks to turn into workplace incidents. Canary brings environmental and health signals together to identify early warning signs, helping your organisation make smarter decisions, take preventive action, and build a safer, healthier workforce.
-            </p>
-
-            {/* Strategic Value Pillars Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-border/60">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 flex items-center justify-center text-[#6FA8C7] shrink-0 mt-0.5">
-                  <Wind className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-canary-text">Environmental Precursors</h4>
-                  <p className="text-[11px] text-canary-text-3 mt-0.5">Detect acute heat and air quality anomalies 24–48h before symptoms rise.</p>
-                </div>
+            <div className="relative z-10 max-w-4xl space-y-4">
+              {/* Glass Tag Badge */}
+              <div
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-canary-amber shadow-sm"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.24)',
+                  boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35)',
+                }}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-canary-amber" />
+                <span>Workforce Health &amp; Prevention</span>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#C58BD9]/15 border border-[#C58BD9]/30 flex items-center justify-center text-[#C58BD9] shrink-0 mt-0.5">
-                  <Activity className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-canary-text">Syndromic Fusion</h4>
-                  <p className="text-[11px] text-canary-text-3 mt-0.5">Correlate workplace sick leaves with clinic encounters with zero individual tracking.</p>
-                </div>
-              </div>
+              {/* Headline with Specular Warm Gradient */}
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-canary-text tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+                Protect Your Workforce.{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EDCB63] via-[#F2A33A] to-[#E5483D]">
+                  Stay Ahead of Risk.
+                </span>
+              </h2>
 
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-                  <ShieldCheck className="w-4 h-4" />
+              {/* Prose Body */}
+              <p className="text-base sm:text-lg md:text-xl text-canary-text-2 leading-relaxed font-light pt-1 drop-shadow-sm">
+                Your people are your greatest asset. Don&apos;t wait for health risks to turn into workplace incidents. Canary brings environmental and health signals together to identify early warning signs, helping your organisation make smarter decisions, take preventive action, and build a safer, healthier workforce.
+              </p>
+
+              {/* Strategic Value Pillars: 3 Frosted Glass Mini-Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/15">
+                {/* Pillar 1 */}
+                <div
+                  className="p-4 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-white/30"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
+                  }}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-[#6FA8C7]/20 border border-[#6FA8C7]/35 flex items-center justify-center text-[#6FA8C7] shrink-0 mt-0.5 shadow-sm">
+                    <Wind className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                      Environmental Precursors
+                    </h4>
+                    <p className="text-[11px] text-canary-text-3 mt-1 leading-normal">
+                      Detect acute heat and air quality anomalies 24–48h before symptoms rise.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-canary-text">Proportionate Playbooks</h4>
-                  <p className="text-[11px] text-canary-text-3 mt-0.5">Deploy hydration hubs, shift rotations, and early outreach before incidents happen.</p>
+
+                {/* Pillar 2 */}
+                <div
+                  className="p-4 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-white/30"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
+                  }}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-[#C58BD9]/20 border border-[#C58BD9]/35 flex items-center justify-center text-[#C58BD9] shrink-0 mt-0.5 shadow-sm">
+                    <Activity className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                      Syndromic Fusion
+                    </h4>
+                    <p className="text-[11px] text-canary-text-3 mt-1 leading-normal">
+                      Correlate workplace sick leaves with clinic encounters with zero individual tracking.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Pillar 3 */}
+                <div
+                  className="p-4 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-white/30"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
+                  }}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/35 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-sm">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                      Proportionate Playbooks
+                    </h4>
+                    <p className="text-[11px] text-canary-text-3 mt-1 leading-normal">
+                      Deploy hydration hubs, shift rotations, and early outreach before incidents happen.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
