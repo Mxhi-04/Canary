@@ -1,0 +1,35 @@
+hazard: gastrointestinal
+tiers:
+  WATCH:
+    action: "Review residential camp kitchen hygiene logs and monitor water filtration pressure differential."
+    owner_role: "hse_officer"
+    evidence:
+      - "Slight syndromic uptick in evening gastrointestinal clinic presentations."
+    assumptions:
+      - "Single facility affected; no cross-network catering contamination."
+    escalation_path: "Escalate to ALERT if secondary cases appear in linked accommodation blocks."
+    review_by: "24 hours"
+    guidance_reference: "WHO Guidelines for Drinking-water Quality (4th ed.)"
+
+  ALERT:
+    action: "Conduct emergency microbiological testing of water storage tanks, inspect central dining hall food handling, and cohort symptomatic residents."
+    owner_role: "public_health"
+    evidence:
+      - "Gastrointestinal clinic presentations > 3.0x expected GLM baseline for 2 consecutive days."
+      - "Teleconsultation symptom queries surging across shared residential village."
+    assumptions:
+      - "Shared catering or bulk water supply represents common exposure point."
+    escalation_path: "Escalate to ACTION and notify Municipal Food Safety Authority if cases exceed 20/day."
+    review_by: "12 hours"
+    guidance_reference: "ILO Hygiene (Commerce and Offices) Convention (No. 120)"
+
+  ACTION:
+    action: "Isolate affected residential block water supply, switch to sealed bottled water distribution, and deploy rapid syndromic field team."
+    owner_role: "public_health"
+    evidence:
+      - "Persistent severe gastroenteritis presentations > 4.0x baseline across connected employer shifts."
+    assumptions:
+      - "Immediate water quarantine is required to arrest exponential transmission."
+    escalation_path: "Escalate to Regional Public Health Command Center."
+    review_by: "6 hours"
+    guidance_reference: "WHO Outbreak Response Framework in Closed Settings"

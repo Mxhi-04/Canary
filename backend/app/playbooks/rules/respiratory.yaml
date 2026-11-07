@@ -1,0 +1,36 @@
+hazard: respiratory
+tiers:
+  WATCH:
+    action: "Review environmental particulate trend and verify localized water-spraying dust suppression."
+    owner_role: "hse_officer"
+    evidence:
+      - "Regional PM2.5 or PM10 concentration exceeding seasonal upper baseline."
+      - "Clinic syndromic consultations currently nominal."
+    assumptions:
+      - "Wind patterns remain stable over next 24 hours."
+    escalation_path: "Escalate to ALERT if clinic visits exceed expected range for 2 consecutive days."
+    review_by: "48 hours"
+    guidance_reference: "ADPHC Occupational Dust Mitigation Code"
+
+  ALERT:
+    action: "Distribute FFP2/N95 masks, inspect fabrication bay exhaust ventilation, and reschedule high-dust outdoor operations."
+    owner_role: "hse_officer"
+    evidence:
+      - "Environmental PM2.5 > 100 µg/m³ for 48 hours."
+      - "Occupational clinic respiratory presentations > 2.0x expected GLM baseline."
+    assumptions:
+      - "Fabrication bay welding generates secondary metallic particulate."
+    escalation_path: "Escalate to ACTION and notify District Public-Health Officer if presentations exceed 20/day."
+    review_by: "24 hours"
+    guidance_reference: "WHO Global Air Quality Guidelines (2021) & UAE Federal Law No. 24"
+
+  ACTION:
+    action: "Mandate suspension of uncontained outdoor abrasive blasting and initiate district cohort surveillance."
+    owner_role: "oh_lead"
+    evidence:
+      - "Severe bronchospasm encounters and aerosol index at critical peak."
+    assumptions:
+      - "Workforce requires medical clearance before resuming high-exertion tasks."
+    escalation_path: "Escalate to Regional Public Health Command Center."
+    review_by: "12 hours"
+    guidance_reference: "ILO Occupational Health Services Convention (No. 161)"

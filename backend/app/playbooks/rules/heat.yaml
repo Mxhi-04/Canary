@@ -1,0 +1,36 @@
+hazard: heat_stress
+tiers:
+  WATCH:
+    action: "Review afternoon weather forecasts and inspect shade canopy integrity across open construction zones."
+    owner_role: "hse_officer"
+    evidence:
+      - "Derived WBGT heat stress index approaching 30°C."
+      - "First-aid hydration cases currently within baseline bounds."
+    assumptions:
+      - "Midday peak temperatures follow normal diurnal curve."
+    escalation_path: "Escalate to ALERT if WBGT exceeds 32.2°C or hydration incidents rise."
+    review_by: "24 hours"
+    guidance_reference: "UAE Ministry of Human Resources & Emiratisation (MOHRE) Midday Break Law"
+
+  ALERT:
+    action: "Enforce mandatory 15-minute shaded rest breaks per 45 minutes of heavy labour, audit chilled electrolyte water stations, and mandate buddy checks."
+    owner_role: "hse_officer"
+    evidence:
+      - "WBGT proxy reached 34.2°C during peak hours."
+      - "First-aid hydration consultations increased 3.1x over expected baseline."
+    assumptions:
+      - "Direct solar radiation on concrete floorplates amplifies ambient radiant heat."
+    escalation_path: "Escalate to ACTION and mandate suspension of unshaded work if severe heat hyperpyrexia occurs."
+    review_by: "12 hours"
+    guidance_reference: "OSHA-NIOSH Heat Safety Protocols & UAE Cabinet Decision on Occupational Heat Illness"
+
+  ACTION:
+    action: "Suspend all strenuous unshaded outdoor work, transition operations to night shift, and activate emergency cooling medical tent."
+    owner_role: "oh_lead"
+    evidence:
+      - "Critical thermal stress index (WBGT > 35°C) and cluster of acute heat stroke hospital transfers."
+    assumptions:
+      - "High ambient humidity prevents adequate evaporative sweat cooling."
+    escalation_path: "Immediate notification to Corporate Safety Director and Emergency Services."
+    review_by: "4 hours"
+    guidance_reference: "WHO Guidance on Heat Health Warning Systems"
