@@ -310,10 +310,10 @@ export default function LandingPage() {
 
           {/* =========================================================================
               RIGHT-SIDE SURVEILLANCE TELEMETRY HUD (GLASSMORPHISM CARDS FROM UI REF)
-              Starts appearing as scroll begins; stays on right side throughout flight
+              Starts appearing as scroll begins; cards appear one by one during flight
               ========================================================================= */}
           <div
-            className={`hidden lg:flex absolute right-6 sm:right-10 md:right-12 lg:right-14 xl:right-20 top-[10%] sm:top-[12%] md:top-[13%] z-20 transition-all duration-700 ease-out ${
+            className={`hidden lg:flex absolute right-6 sm:right-10 md:right-12 lg:right-14 xl:right-20 top-[8%] sm:top-[9%] md:top-[10%] z-20 transition-all duration-700 ease-out ${
               scrollProgress > 0.01
                 ? 'opacity-100 translate-x-0 pointer-events-auto'
                 : 'opacity-0 translate-x-10 pointer-events-none'
