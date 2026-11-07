@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FileText, ExternalLink } from 'lucide-react';
 
@@ -15,10 +15,15 @@ interface KeyMetricsCardProps {
 }
 
 // Smooth count-up animation hook on page load
-function useCounter(target: number, duration: number = 1800, delay: number = 150) {
+function useCounter(target: number, duration: number = 1800, delay: number = 150, enabled: boolean = false) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (!enabled) {
+      setCount(0);
+      return;
+    }
+
     let start: number | null = null;
     let animId: number;
 
@@ -40,7 +45,7 @@ function useCounter(target: number, duration: number = 1800, delay: number = 150
       clearTimeout(timeout);
       cancelAnimationFrame(animId);
     };
-  }, [target, duration, delay]);
+  }, [target, duration, delay, enabled]);
 
   return count;
 }
@@ -58,20 +63,38 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
   const targetAlerts = activeAlerts ?? outbreaks ?? 26;
   const targetAction = actionRequired ?? criticalAlerts ?? 419;
 
-  // Animate counters on page load
-  const sitesCount = useCounter(targetSites, 1600, 100);
-  const alertsCount = useCounter(targetAlerts, 1700, 250);
-  const actionCount = useCounter(targetAction, 1800, 400);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  // Animation trigger for SVG arcs
+  // Animation trigger: starts ONLY when scrolled into view (starts from no color at all)
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 80);
-    return () => clearTimeout(timer);
+    const el = cardRef.current;
+    if (!el) return;
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setIsLoaded(true);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.2 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    } else {
+      // Fallback
+      const timer = setTimeout(() => setIsLoaded(true), 150);
+      return () => clearTimeout(timer);
+    }
   }, []);
+
+  // Animate counters when card comes into view
+  const sitesCount = useCounter(targetSites, 1600, 100, isLoaded);
+  const alertsCount = useCounter(targetAlerts, 1700, 250, isLoaded);
+  const actionCount = useCounter(targetAction, 1800, 400, isLoaded);
 
   // Symmetrical arch geometry:
   // Starts at 220° (bottom-left) and sweeps 220° clockwise through top (0°) to 140° (bottom-right)
@@ -91,7 +114,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
     };
   };
 
-  // Base background track (full 220° horseshoe arch)
+  // Base background track (full 220° horseshoe arch in dark graphite)
   const startPt = polarToCartesian(cx, cy, radius, 220);
   const endPt = polarToCartesian(cx, cy, radius, 140);
   const bgTrack = `M ${startPt.x} ${startPt.y} A ${radius} ${radius} 0 1 1 ${endPt.x} ${endPt.y}`;
@@ -102,7 +125,10 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
   const fillAction = 0.86;
 
   return (
-    <div className="relative rounded-3xl p-6 sm:p-7 overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between">
+    <div
+      ref={cardRef}
+      className="relative rounded-3xl p-6 sm:p-7 overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between"
+    >
       {/* Top Header */}
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div className="flex items-center gap-2.5">
@@ -126,7 +152,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
 
       {/* 3 Gauges Grid: Numbers only inside, labels & deltas below */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4 my-auto items-start justify-items-center">
-        {/* ================= GAUGE 1: MONITORED SITES (ALL YELLOW) ================= */}
+        {/* ================= GAUGE 1: MONITORED SITES (STARTS FROM NO COLOR -> YELLOW) ================= */}
         <div className="flex flex-col items-center text-center w-full max-w-[190px]">
           {/* Gauge Graphic */}
           <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
@@ -145,7 +171,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 </filter>
               </defs>
 
-              {/* Background Inactive Arc Track */}
+              {/* Background Inactive Arc Track (always visible in dark neutral) */}
               <path
                 d={bgTrack}
                 fill="none"
@@ -154,7 +180,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 strokeLinecap="round"
               />
 
-              {/* Animated Value Arc */}
+              {/* Animated Value Arc: Starts from NO COLOR (opacity 0, offset 100%), sweeps in on load */}
               <path
                 d={bgTrack}
                 fill="none"
@@ -163,14 +189,15 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 strokeLinecap="round"
                 strokeDasharray={arcLength}
                 strokeDashoffset={isLoaded ? arcLength * (1 - fillSites) : arcLength}
-                filter="url(#yellowGlow)"
+                filter={isLoaded ? 'url(#yellowGlow)' : 'none'}
                 style={{
-                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
+                  opacity: isLoaded ? 1 : 0,
+                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 100ms, opacity 0.35s ease-out 100ms',
                 }}
               />
             </svg>
 
-            {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
+            {/* Inner Content: JUST THE NUMBER */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
               <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono">
                 {sitesCount.toLocaleString()}
@@ -183,13 +210,16 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
             <span className="text-xs sm:text-sm font-bold text-canary-text-2 uppercase tracking-wider">
               Monitored Sites
             </span>
-            <span className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F2A33A]/15 text-[#F2A33A] border border-[#F2A33A]/30 inline-flex items-center gap-0.5">
+            <span
+              className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F2A33A]/15 text-[#F2A33A] border border-[#F2A33A]/30 inline-flex items-center gap-0.5 transition-opacity duration-700"
+              style={{ opacity: isLoaded ? 1 : 0.4 }}
+            >
               ▲ 11%
             </span>
           </div>
         </div>
 
-        {/* ================= GAUGE 2: ACTIVE ALERTS (YELLOW TO ORANGE) ================= */}
+        {/* ================= GAUGE 2: ACTIVE ALERTS (STARTS FROM NO COLOR -> YELLOW TO ORANGE) ================= */}
         <div className="flex flex-col items-center text-center w-full max-w-[190px]">
           {/* Gauge Graphic */}
           <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
@@ -218,7 +248,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 strokeLinecap="round"
               />
 
-              {/* Animated Value Arc */}
+              {/* Animated Value Arc: Starts from NO COLOR (opacity 0, offset 100%), sweeps in on load */}
               <path
                 d={bgTrack}
                 fill="none"
@@ -227,14 +257,15 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 strokeLinecap="round"
                 strokeDasharray={arcLength}
                 strokeDashoffset={isLoaded ? arcLength * (1 - fillAlerts) : arcLength}
-                filter="url(#orangeGlow)"
+                filter={isLoaded ? 'url(#orangeGlow)' : 'none'}
                 style={{
-                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 250ms',
+                  opacity: isLoaded ? 1 : 0,
+                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 250ms, opacity 0.35s ease-out 250ms',
                 }}
               />
             </svg>
 
-            {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
+            {/* Inner Content: JUST THE NUMBER */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
               <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono">
                 {alertsCount.toLocaleString()}
@@ -247,13 +278,16 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
             <span className="text-xs sm:text-sm font-bold text-canary-text-2 uppercase tracking-wider">
               Active Alerts
             </span>
-            <span className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30 inline-flex items-center gap-0.5">
+            <span
+              className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30 inline-flex items-center gap-0.5 transition-opacity duration-700"
+              style={{ opacity: isLoaded ? 1 : 0.4 }}
+            >
               ▲ 17%
             </span>
           </div>
         </div>
 
-        {/* ================= GAUGE 3: ACTION REQUIRED (YELLOW TO RED) ================= */}
+        {/* ================= GAUGE 3: ACTION REQUIRED (STARTS FROM NO COLOR -> YELLOW TO RED) ================= */}
         <div className="flex flex-col items-center text-center w-full max-w-[190px]">
           {/* Gauge Graphic */}
           <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
@@ -282,7 +316,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 strokeLinecap="round"
               />
 
-              {/* Animated Value Arc */}
+              {/* Animated Value Arc: Starts from NO COLOR (opacity 0, offset 100%), sweeps in on load */}
               <path
                 d={bgTrack}
                 fill="none"
@@ -291,14 +325,15 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
                 strokeLinecap="round"
                 strokeDasharray={arcLength}
                 strokeDashoffset={isLoaded ? arcLength * (1 - fillAction) : arcLength}
-                filter="url(#redGlow)"
+                filter={isLoaded ? 'url(#redGlow)' : 'none'}
                 style={{
-                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 400ms',
+                  opacity: isLoaded ? 1 : 0,
+                  transition: 'stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) 400ms, opacity 0.35s ease-out 400ms',
                 }}
               />
             </svg>
 
-            {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
+            {/* Inner Content: JUST THE NUMBER */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
               <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono">
                 {actionCount.toLocaleString()}
@@ -311,7 +346,10 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
             <span className="text-xs sm:text-sm font-bold text-canary-text-2 uppercase tracking-wider">
               Action Required
             </span>
-            <span className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E5483D]/15 text-[#FF9085] border border-[#E5483D]/30 inline-flex items-center gap-0.5">
+            <span
+              className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E5483D]/15 text-[#FF9085] border border-[#E5483D]/30 inline-flex items-center gap-0.5 transition-opacity duration-700"
+              style={{ opacity: isLoaded ? 1 : 0.4 }}
+            >
               ▲ 23%
             </span>
           </div>
