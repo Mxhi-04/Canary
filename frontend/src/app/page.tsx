@@ -264,15 +264,10 @@ export default function LandingPage() {
               <CanaryLogo variant="full" size="hero" glow="metallic" priority />
             </div>
 
-            {/* Subtitle */}
-            <p className="text-xl sm:text-2xl md:text-3xl font-light text-[#EDCB63] tracking-tight">
-              Population &amp; Workforce Health Early-Warning Platform
-            </p>
-
-            {/* Description */}
-            <p className="text-sm sm:text-base text-canary-text-2 mt-3 max-w-xl leading-relaxed">
-              Sense emerging population and workforce health risks by combining environmental exposure leads with aggregated health-service and workplace outcomes.
-            </p>
+            {/* Tagline */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-[#EDCB63] tracking-tight leading-snug max-w-xl mt-1">
+              A Healthier Tomorrow Starts with Early Detection.
+            </h2>
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-3.5 mt-8">
