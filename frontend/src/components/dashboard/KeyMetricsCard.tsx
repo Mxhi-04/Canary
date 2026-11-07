@@ -197,7 +197,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
 
             {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
-              <span className="text-2xl sm:text-3xl font-black text-canary-text tracking-tight font-mono">
+              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono">
                 {sitesCount.toLocaleString()}
               </span>
             </div>
@@ -276,7 +276,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
 
             {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
-              <span className="text-2xl sm:text-3xl font-black text-canary-text tracking-tight font-mono">
+              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono">
                 {alertsCount.toLocaleString()}
               </span>
             </div>
@@ -355,7 +355,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
 
             {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
-              <span className="text-2xl sm:text-3xl font-black text-canary-text tracking-tight font-mono">
+              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono">
                 {actionCount.toLocaleString()}
               </span>
             </div>
