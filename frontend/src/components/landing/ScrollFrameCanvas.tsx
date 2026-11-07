@@ -255,13 +255,6 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
         className="w-full h-full block object-cover select-none pointer-events-none"
       />
 
-      {/* Frame Loading Telemetry Indicator (Subtle Top-Right Badge) */}
-      <div className="absolute top-20 right-6 z-20 pointer-events-none">
-        <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-canvas-deep/80 backdrop-blur-md border border-border text-[10px] font-mono text-canary-text-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-canary-amber animate-pulse" />
-          <span>1080p Video Sync: {loadedCount}/{TOTAL_FRAMES} frames</span>
-        </div>
-      </div>
 
       {/* Loading Overlay (Only if first frame is not ready yet) */}
       {!isReady && (

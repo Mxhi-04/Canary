@@ -324,7 +324,7 @@ export default function LandingPage() {
               RIGHT-SIDE SURVEILLANCE TELEMETRY HUD (GLASSMORPHISM CARDS FROM UI REF)
               Cards glide in one by one on GPU-composited layers during flight
               ========================================================================= */}
-          <div className="hidden lg:flex absolute right-6 sm:right-8 md:right-10 lg:right-12 xl:right-16 top-[7%] sm:top-[8%] z-20 pointer-events-auto w-[440px] max-w-[440px]">
+          <div className="hidden lg:flex absolute right-6 sm:right-8 md:right-10 lg:right-12 xl:right-16 top-20 sm:top-24 md:top-28 z-20 pointer-events-auto w-[440px] max-w-[440px]">
             <GlassmorphismTelemetryHUD scrollProgress={scrollProgress} />
           </div>
 

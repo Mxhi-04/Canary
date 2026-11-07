@@ -55,13 +55,11 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
 
   // =========================================================================
   // SCROLL-DRIVEN SEQUENTIAL REVEAL STEPS (APPEAR ONE BY ONE)
-  // Step 0: Top Header (0.02 -> 0.07)
   // Step 1: Card 1 - Thermal WBGT Arc Gauge (0.05 -> 0.18)
   // Step 2: Card 2 - Air Quality PM2.5 Curve (0.18 -> 0.35)
   // Step 3: Card 3 - Early Detection Horizon Timeline (0.35 -> 0.58)
   // Step 4: Card 4 - Syndromic Fusion & Proportionate Action (0.58 -> 0.82)
   // =========================================================================
-  const pHeader = computeStep(scrollProgress, 0.02, 0.07);
   const pCard1 = computeStep(scrollProgress, 0.05, 0.18);
   const pCard2 = computeStep(scrollProgress, 0.18, 0.35);
   const pCard3 = computeStep(scrollProgress, 0.35, 0.58);
@@ -87,70 +85,6 @@ export const GlassmorphismTelemetryHUD: React.FC<GlassmorphismTelemetryHUDProps>
       className={`w-[440px] max-w-[440px] flex flex-col gap-2.5 select-none ${className}`}
       style={{ width: '440px', maxWidth: '440px' }}
     >
-      {/* =========================================================================
-          STEP 0: Top Floating Header (Appears first: 2% - 7% scroll)
-          ========================================================================= */}
-      <div
-        className="flex items-center justify-between px-1"
-        style={{
-          opacity: pHeader,
-          transform: `translate3d(0, ${(1 - pHeader) * -10}px, 0)`,
-          pointerEvents: pHeader > 0.2 ? 'auto' : 'none',
-          willChange: 'transform, opacity',
-        }}
-      >
-        {/* Live Surveillance Indicator */}
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full border shadow-lg text-[11px] text-canary-text-2"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%)',
-            backdropFilter: 'blur(18px) saturate(180%)',
-            borderColor: 'rgba(255, 255, 255, 0.28)',
-            boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35)',
-          }}
-        >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse" />
-          <span className="font-semibold text-canary-text">Live Telemetry</span>
-          <span className="text-canary-text-3">·</span>
-          <span className="text-canary-amber font-mono font-medium">
-            {isPhase1 && 'Phase 1: Environmental Lead (1/4)'}
-            {isPhase2 && 'Phase 2: Syndromic Fusion (2/4)'}
-            {isPhase3 && 'Phase 3: Lead-Time Zenith (3/4)'}
-            {isPhase4 && 'Phase 4: Action Playbooks (4/4)'}
-          </span>
-        </div>
-
-        {/* Right Notification Bell + User Avatar */}
-        <div className="flex items-center gap-2">
-          <Link
-            href="/alerts"
-            className="relative p-1.5 rounded-2xl border text-canary-text-2 hover:text-canary-amber transition-all shadow-lg group hover:border-[#F2A33A]/50"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%)',
-              backdropFilter: 'blur(18px) saturate(180%)',
-              borderColor: 'rgba(255, 255, 255, 0.28)',
-              boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35)',
-            }}
-            title="Active Surveillance Alerts"
-          >
-            <Bell className="w-3.5 h-3.5" />
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#F2A33A] text-canvas-deep text-[9px] font-bold flex items-center justify-center shadow-[0_0_8px_rgba(242,163,58,0.8)]">
-              3
-            </span>
-          </Link>
-          <div
-            className="w-7 h-7 rounded-2xl bg-gradient-to-tr from-[#F2A33A] to-[#EDCB63] p-0.5 shadow-lg border border-white/30 flex items-center justify-center overflow-hidden cursor-pointer"
-            title="Surveillance Officer (MOHAP Demo Role)"
-          >
-            <div className="w-full h-full rounded-[14px] bg-[#161617]/80 backdrop-blur-sm flex items-center justify-center text-[9px] font-bold text-canary-amber">
-              SO
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Top Row: Cards 1 and 2 (Appear sequentially in flight) */}
       <div className="grid grid-cols-2 gap-2.5">
         {/* =========================================================================
