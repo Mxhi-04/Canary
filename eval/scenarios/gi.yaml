@@ -1,0 +1,8 @@
+title: Gastrointestinal cluster in shared accommodation
+syndrome: gi
+sites: [site-01, site-02]
+start: 2026-09-08
+duration_days: 11
+severity: 1.70
+outcome_lag_days: 1
+ramp: stepped

@@ -1,0 +1,298 @@
+{
+  "id": "respiratory",
+  "title": "Dust episode and respiratory visits",
+  "syndrome": "respiratory",
+  "data": "simulated",
+  "day": 16,
+  "date": "2026-08-21",
+  "max_day": 21,
+  "event_start_day": 5,
+  "unit_ids": [
+    "site-07",
+    "site-09"
+  ],
+  "signals": {
+    "site-07": {
+      "clinic_respiratory": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 19,
+        "expected": 3.61190855229173,
+        "dispersion": 0.1326606275992439,
+        "p_value": 1.6559522049010065e-05,
+        "z": 6.657468097450663,
+        "expected_band": [
+          0,
+          8
+        ]
+      },
+      "absence": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 48,
+        "expected": 9.918320915892071,
+        "dispersion": 0.22345487495530805,
+        "p_value": 2.5382449026919324e-05,
+        "z": 6.742468516022858,
+        "expected_band": [
+          2,
+          20
+        ]
+      },
+      "pm2_5": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 79.681
+      },
+      "pm10": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 183.879
+      },
+      "dust": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 120.935
+      },
+      "wbgt_proxy": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 29.646
+      }
+    },
+    "site-09": {
+      "clinic_respiratory": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 19,
+        "expected": 4.432073220013233,
+        "dispersion": 0.24346064221348107,
+        "p_value": 0.0008882614619486916,
+        "z": 4.7991391833383386,
+        "expected_band": [
+          1,
+          10
+        ]
+      },
+      "absence": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 36,
+        "expected": 12.25922120575648,
+        "dispersion": 0.2526689574487316,
+        "p_value": 0.006935694417682298,
+        "z": 3.349675476554108,
+        "expected_band": [
+          3,
+          26
+        ]
+      },
+      "pm2_5": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 79.681
+      },
+      "pm10": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 183.879
+      },
+      "dust": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 120.935
+      },
+      "wbgt_proxy": {
+        "date": "2026-08-21",
+        "status": "available",
+        "observed": 29.646
+      }
+    }
+  },
+  "markers": {
+    "canary": [
+      {
+        "day": 5,
+        "id": "site-07.respiratory.2026-08-10.Watch",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Watch",
+        "start": "2026-08-10"
+      },
+      {
+        "day": 9,
+        "id": "site-07.respiratory.2026-08-14.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-14"
+      },
+      {
+        "day": 9,
+        "id": "site-09.respiratory.2026-08-14.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-14"
+      },
+      {
+        "day": 12,
+        "id": "site-07.respiratory.2026-08-17.Action",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Action",
+        "start": "2026-08-17"
+      },
+      {
+        "day": 12,
+        "id": "site-09.respiratory.2026-08-17.Action",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Action",
+        "start": "2026-08-17"
+      }
+    ],
+    "ears_c2": [
+      {
+        "day": 5,
+        "id": "site-07.any.2026-08-10.Alert",
+        "unit_id": "site-07",
+        "syndrome": "any",
+        "tier": "Alert",
+        "start": "2026-08-10"
+      },
+      {
+        "day": 12,
+        "id": "site-07.any.2026-08-17.Alert",
+        "unit_id": "site-07",
+        "syndrome": "any",
+        "tier": "Alert",
+        "start": "2026-08-17"
+      },
+      {
+        "day": 15,
+        "id": "site-07.any.2026-08-20.Alert",
+        "unit_id": "site-07",
+        "syndrome": "any",
+        "tier": "Alert",
+        "start": "2026-08-20"
+      },
+      {
+        "day": 9,
+        "id": "site-09.any.2026-08-14.Alert",
+        "unit_id": "site-09",
+        "syndrome": "any",
+        "tier": "Alert",
+        "start": "2026-08-14"
+      }
+    ],
+    "clinic_cusum": [
+      {
+        "day": 9,
+        "id": "site-07.respiratory.2026-08-14.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-14"
+      },
+      {
+        "day": 12,
+        "id": "site-07.respiratory.2026-08-17.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-17"
+      },
+      {
+        "day": 15,
+        "id": "site-07.respiratory.2026-08-20.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-20"
+      },
+      {
+        "day": 10,
+        "id": "site-09.respiratory.2026-08-15.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-15"
+      },
+      {
+        "day": 13,
+        "id": "site-09.respiratory.2026-08-18.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-18"
+      }
+    ],
+    "fixed_hazard": [
+      {
+        "day": 5,
+        "id": "site-07.respiratory.2026-08-10.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-10"
+      },
+      {
+        "day": 8,
+        "id": "site-07.respiratory.2026-08-13.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-13"
+      },
+      {
+        "day": 11,
+        "id": "site-07.respiratory.2026-08-16.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-16"
+      },
+      {
+        "day": 14,
+        "id": "site-07.respiratory.2026-08-19.Alert",
+        "unit_id": "site-07",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-19"
+      },
+      {
+        "day": 5,
+        "id": "site-09.respiratory.2026-08-10.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-10"
+      },
+      {
+        "day": 8,
+        "id": "site-09.respiratory.2026-08-13.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-13"
+      },
+      {
+        "day": 11,
+        "id": "site-09.respiratory.2026-08-16.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-16"
+      },
+      {
+        "day": 14,
+        "id": "site-09.respiratory.2026-08-19.Alert",
+        "unit_id": "site-09",
+        "syndrome": "respiratory",
+        "tier": "Alert",
+        "start": "2026-08-19"
+      }
+    ]
+  }
+}

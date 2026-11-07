@@ -1,0 +1,26 @@
+[
+  {
+    "unit_id": "abu-dhabi",
+    "date": "2026-10-30",
+    "scheduled_report_received": true,
+    "suppression_policy_active": true
+  },
+  {
+    "unit_id": "mussafah",
+    "date": "2026-10-30",
+    "scheduled_report_received": true,
+    "suppression_policy_active": true
+  },
+  {
+    "unit_id": "al-ain",
+    "date": "2026-10-30",
+    "scheduled_report_received": true,
+    "suppression_policy_active": true
+  },
+  {
+    "unit_id": "dubai",
+    "date": "2026-10-30",
+    "scheduled_report_received": false,
+    "suppression_policy_active": true
+  }
+]

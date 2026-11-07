@@ -1,0 +1,56 @@
+[
+  {
+    "id": "site-07.heat.2026-08-21.Alert",
+    "unit_id": "site-07",
+    "syndrome": "heat",
+    "tier": "Alert",
+    "start": "2026-08-21",
+    "completeness": 1.0,
+    "confidence": "higher"
+  },
+  {
+    "id": "site-07.respiratory.2026-08-14.Alert",
+    "unit_id": "site-07",
+    "syndrome": "respiratory",
+    "tier": "Alert",
+    "start": "2026-08-14",
+    "completeness": 1.0,
+    "confidence": "higher"
+  },
+  {
+    "id": "site-07.heat.2026-06-05.Alert",
+    "unit_id": "site-07",
+    "syndrome": "heat",
+    "tier": "Alert",
+    "start": "2026-06-05",
+    "completeness": 1.0,
+    "confidence": "higher"
+  },
+  {
+    "id": "site-07.respiratory.2026-04-26.Alert",
+    "unit_id": "site-07",
+    "syndrome": "respiratory",
+    "tier": "Alert",
+    "start": "2026-04-26",
+    "completeness": 1.0,
+    "confidence": "higher"
+  },
+  {
+    "id": "site-07.gi.2026-03-03.Alert",
+    "unit_id": "site-07",
+    "syndrome": "gi",
+    "tier": "Alert",
+    "start": "2026-03-03",
+    "completeness": 1.0,
+    "confidence": "higher"
+  },
+  {
+    "id": "site-07.gi.2025-12-14.Alert",
+    "unit_id": "site-07",
+    "syndrome": "gi",
+    "tier": "Alert",
+    "start": "2025-12-14",
+    "completeness": 1.0,
+    "confidence": "higher"
+  }
+]

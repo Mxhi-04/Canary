@@ -1,0 +1,8 @@
+title: Dust episode and respiratory visits
+syndrome: respiratory
+sites: [site-07, site-09]
+start: 2026-08-10
+duration_days: 12
+severity: 1.65
+outcome_lag_days: 2
+ramp: gradual

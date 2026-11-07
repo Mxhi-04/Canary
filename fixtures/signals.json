@@ -1,0 +1,205 @@
+{
+  "unit_id": "site-07",
+  "stream": "clinic_respiratory",
+  "source": "synthetic",
+  "points": [
+    {
+      "date": "2026-08-07",
+      "status": "suppressed",
+      "observed": null,
+      "observed_band": null,
+      "expected": null,
+      "expected_band": null,
+      "p_value": null,
+      "z": null,
+      "dispersion": null,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-08",
+      "status": "suppressed",
+      "observed": null,
+      "observed_band": null,
+      "expected": null,
+      "expected_band": null,
+      "p_value": null,
+      "z": null,
+      "dispersion": null,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-09",
+      "status": "suppressed",
+      "observed": null,
+      "observed_band": null,
+      "expected": null,
+      "expected_band": null,
+      "p_value": null,
+      "z": null,
+      "dispersion": null,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-10",
+      "status": "suppressed",
+      "observed": null,
+      "observed_band": null,
+      "expected": null,
+      "expected_band": null,
+      "p_value": null,
+      "z": null,
+      "dispersion": null,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-11",
+      "status": "available",
+      "observed": 6,
+      "observed_band": null,
+      "expected": 3.160724081819271,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 0.13425432210520055,
+      "z": 1.3405303404049702,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-12",
+      "status": "available",
+      "observed": 5,
+      "observed_band": null,
+      "expected": 3.1465049050958314,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 0.23193954261146252,
+      "z": 0.877664167148885,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-13",
+      "status": "available",
+      "observed": 12,
+      "observed_band": null,
+      "expected": 3.4460672261383105,
+      "expected_band": [
+        0,
+        8
+      ],
+      "p_value": 0.0031844206813372257,
+      "z": 3.8172510292487165,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-14",
+      "status": "available",
+      "observed": 11,
+      "observed_band": null,
+      "expected": 3.5843534207962655,
+      "expected_band": [
+        0,
+        8
+      ],
+      "p_value": 0.008405141301002882,
+      "z": 3.2245834852879636,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-15",
+      "status": "available",
+      "observed": 17,
+      "observed_band": null,
+      "expected": 3.1421652402494544,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 2.2077598506514066e-05,
+      "z": 6.567804496774085,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-16",
+      "status": "available",
+      "observed": 22,
+      "observed_band": null,
+      "expected": 3.2461180471397935,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 3.027585163480593e-07,
+      "z": 8.702520343658627,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-17",
+      "status": "available",
+      "observed": 20,
+      "observed_band": null,
+      "expected": 3.1999142676153163,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 1.6700934861987965e-06,
+      "z": 7.868839698757579,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-18",
+      "status": "available",
+      "observed": 23,
+      "observed_band": null,
+      "expected": 3.18127911326752,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 8.723363585203904e-08,
+      "z": 9.317947971675995,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-19",
+      "status": "available",
+      "observed": 11,
+      "observed_band": null,
+      "expected": 3.1682157344253334,
+      "expected_band": [
+        0,
+        7
+      ],
+      "p_value": 0.004079075095363402,
+      "z": 3.692016924604795,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    },
+    {
+      "date": "2026-08-20",
+      "status": "available",
+      "observed": 22,
+      "observed_band": null,
+      "expected": 3.471205616070992,
+      "expected_band": [
+        0,
+        8
+      ],
+      "p_value": 7.406421824914259e-07,
+      "z": 8.229195007130587,
+      "dispersion": 0.1326606275992439,
+      "reported_late": null
+    }
+  ]
+}
