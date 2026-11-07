@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FileText, ExternalLink, Sparkles } from 'lucide-react';
+import { FileText, ExternalLink } from 'lucide-react';
 
 interface KeyMetricsCardProps {
   monitoredSites?: number;
@@ -114,7 +114,7 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
   return (
     <div className="relative rounded-3xl p-6 sm:p-7 overflow-hidden bg-gradient-to-br from-[#1A1A1C] via-[#141416] to-[#0D0D0E] border border-white/10 shadow-2xl flex flex-col justify-between">
       {/* Top Header */}
-      <div className="flex items-center justify-between mb-4 sm:mb-5">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div className="flex items-center gap-2.5">
           <h2 className="text-base sm:text-lg font-bold text-canary-text tracking-tight">
             Key Metrics
@@ -134,10 +134,11 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
         </Link>
       </div>
 
-      {/* 3 Spacious Animated Gauges Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-4 my-auto items-center justify-items-center">
+      {/* 3 Gauges Grid: Numbers only inside, labels & deltas below */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4 my-auto items-start justify-items-center">
         {/* ================= GAUGE 1: MONITORED SITES (ALL YELLOW) ================= */}
         <div className="flex flex-col items-center text-center w-full max-w-[190px]">
+          {/* Gauge Graphic */}
           <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
             <svg viewBox="0 0 170 148" className="w-full h-full overflow-visible select-none">
               <defs>
@@ -194,23 +195,28 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
               )}
             </svg>
 
-            {/* Inner Content: Uncongested & Well-Spaced */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pointer-events-none">
-              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono leading-none">
+            {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
+              <span className="text-2xl sm:text-3xl font-black text-canary-text tracking-tight font-mono">
                 {sitesCount.toLocaleString()}
               </span>
-              <span className="text-[10px] sm:text-[11px] font-bold text-canary-text-2 uppercase tracking-wider mt-1 px-1">
-                Monitored Sites
-              </span>
-              <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F2A33A]/15 text-[#F2A33A] border border-[#F2A33A]/30 flex items-center gap-0.5">
-                ▲ 11%
-              </span>
             </div>
+          </div>
+
+          {/* Text SHIFTED BELOW the graph */}
+          <div className="mt-2.5 flex flex-col items-center">
+            <span className="text-xs sm:text-sm font-bold text-canary-text-2 uppercase tracking-wider">
+              Monitored Sites
+            </span>
+            <span className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F2A33A]/15 text-[#F2A33A] border border-[#F2A33A]/30 inline-flex items-center gap-0.5">
+              ▲ 11%
+            </span>
           </div>
         </div>
 
         {/* ================= GAUGE 2: ACTIVE ALERTS (YELLOW TO ORANGE) ================= */}
         <div className="flex flex-col items-center text-center w-full max-w-[190px]">
+          {/* Gauge Graphic */}
           <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
             <svg viewBox="0 0 170 148" className="w-full h-full overflow-visible select-none">
               <defs>
@@ -268,23 +274,28 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
               )}
             </svg>
 
-            {/* Inner Content: Uncongested & Well-Spaced */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pointer-events-none">
-              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono leading-none">
+            {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
+              <span className="text-2xl sm:text-3xl font-black text-canary-text tracking-tight font-mono">
                 {alertsCount.toLocaleString()}
               </span>
-              <span className="text-[10px] sm:text-[11px] font-bold text-canary-text-2 uppercase tracking-wider mt-1 px-1">
-                Active Alerts
-              </span>
-              <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30 flex items-center gap-0.5">
-                ▲ 17%
-              </span>
             </div>
+          </div>
+
+          {/* Text SHIFTED BELOW the graph */}
+          <div className="mt-2.5 flex flex-col items-center">
+            <span className="text-xs sm:text-sm font-bold text-canary-text-2 uppercase tracking-wider">
+              Active Alerts
+            </span>
+            <span className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F97316]/15 text-[#F97316] border border-[#F97316]/30 inline-flex items-center gap-0.5">
+              ▲ 17%
+            </span>
           </div>
         </div>
 
         {/* ================= GAUGE 3: ACTION REQUIRED (YELLOW TO RED) ================= */}
         <div className="flex flex-col items-center text-center w-full max-w-[190px]">
+          {/* Gauge Graphic */}
           <div className="relative w-36 h-32 sm:w-40 sm:h-36 flex items-center justify-center">
             <svg viewBox="0 0 170 148" className="w-full h-full overflow-visible select-none">
               <defs>
@@ -342,24 +353,28 @@ export const KeyMetricsCard: React.FC<KeyMetricsCardProps> = ({
               )}
             </svg>
 
-            {/* Inner Content: Uncongested & Well-Spaced */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pointer-events-none">
-              <span className="text-xl sm:text-2xl font-black text-canary-text tracking-tight font-mono leading-none">
+            {/* Inner Content: JUST THE NUMBER, Spacious & Centered */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-2">
+              <span className="text-2xl sm:text-3xl font-black text-canary-text tracking-tight font-mono">
                 {actionCount.toLocaleString()}
               </span>
-              <span className="text-[10px] sm:text-[11px] font-bold text-canary-text-2 uppercase tracking-wider mt-1 px-1">
-                Action Required
-              </span>
-              <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E5483D]/15 text-[#FF9085] border border-[#E5483D]/30 flex items-center gap-0.5">
-                ▲ 23%
-              </span>
             </div>
+          </div>
+
+          {/* Text SHIFTED BELOW the graph */}
+          <div className="mt-2.5 flex flex-col items-center">
+            <span className="text-xs sm:text-sm font-bold text-canary-text-2 uppercase tracking-wider">
+              Action Required
+            </span>
+            <span className="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E5483D]/15 text-[#FF9085] border border-[#E5483D]/30 inline-flex items-center gap-0.5">
+              ▲ 23%
+            </span>
           </div>
         </div>
       </div>
 
       {/* Bottom Full Report Action Pill */}
-      <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-center">
+      <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-center">
         <Link
           href="/validation"
           className="w-full py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-canary-amber/40 text-xs font-semibold text-canary-text text-center flex items-center justify-center gap-1.5 transition-all shadow-sm group"
