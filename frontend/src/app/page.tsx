@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useDemoRole } from '@/context/RoleContext';
 import { DEMO_ROLES } from '@/lib/data/seededData';
 import { ScrollFrameCanvas } from '@/components/landing/ScrollFrameCanvas';
+import { ScrollVideoScrubber } from '@/components/landing/ScrollVideoScrubber';
 import {
   ShieldAlert,
   ArrowRight,
@@ -20,7 +21,9 @@ import {
   FileText,
   Building2,
   Lock,
-  Sparkles
+  Sparkles,
+  Film,
+  Layers
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -29,6 +32,7 @@ export default function LandingPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAutoFlying, setIsAutoFlying] = useState(false);
+  const [renderEngine, setRenderEngine] = useState<'canvas' | 'video'>('canvas');
   const autoFlyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Window scroll event listener to compute normalized scroll progress (0.0 to 1.0)
@@ -55,15 +59,15 @@ export default function LandingPage() {
     };
   }, [isAutoFlying]);
 
-  // Auto Fly Preview toggle (hands-free animation play)
+  // Auto Fly Preview toggle (hands-free animation play matching native 8s video duration)
   const toggleAutoFly = () => {
     if (isAutoFlying) {
       setIsAutoFlying(false);
       if (autoFlyTimerRef.current) clearInterval(autoFlyTimerRef.current);
     } else {
       setIsAutoFlying(true);
-      const stepDuration = 80; // ms per step for ~8 seconds total
-      const stepAmount = 0.01;
+      const stepDuration = 40; // ms per step for native 24fps cadence
+      const stepAmount = 0.005; // 200 steps * 40ms = 8.0 seconds total
 
       autoFlyTimerRef.current = setInterval(() => {
         setScrollProgress((prev) => {
@@ -141,14 +145,21 @@ export default function LandingPage() {
 
       {/* Main Scroll Animation Track (400vh tall scroll track) */}
       <div id="flight-story" ref={containerRef} className="relative h-[400vh] w-full">
-        {/* Sticky 100vh Viewport Holding the High-Speed Canvas */}
+        {/* Sticky 100vh Viewport Holding the High-Speed Canvas / All-Intra Video */}
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
-          {/* Hardware-Accelerated Canvas Element (Zero-Lag Frame Scrubbing) */}
+          {/* Hardware-Accelerated Animation Element (Zero-Lag Frame Scrubbing) */}
           <div className="absolute inset-0 w-full h-full">
-            <ScrollFrameCanvas
-              progress={scrollProgress}
-              className="w-full h-full"
-            />
+            {renderEngine === 'canvas' ? (
+              <ScrollFrameCanvas
+                progress={scrollProgress}
+                className="w-full h-full"
+              />
+            ) : (
+              <ScrollVideoScrubber
+                progress={scrollProgress}
+                className="w-full h-full"
+              />
+            )}
 
             {/* Seamless Vignette Gradients */}
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-canvas-deep/90 via-canvas-deep/40 to-transparent pointer-events-none" />
@@ -158,24 +169,46 @@ export default function LandingPage() {
           </div>
 
           {/* Floating Flight Path & Progress Indicator (Bottom Center) */}
-          <div className="absolute bottom-6 z-30 flex items-center gap-4 bg-canvas-deep/85 backdrop-blur-md px-4 py-2 rounded-full border border-border-strong shadow-2xl">
+          <div className="absolute bottom-6 z-30 flex items-center gap-3 md:gap-4 bg-canvas-deep/90 backdrop-blur-md px-4 py-2 rounded-full border border-border-strong shadow-2xl">
             {/* Auto-fly Toggle Button */}
             <button
               onClick={toggleAutoFly}
-              className="p-1.5 rounded-full bg-panel hover:bg-panel-raised text-canary-amber transition-colors"
-              title={isAutoFlying ? 'Pause auto flight' : 'Auto play flight'}
+              className="p-1.5 rounded-full bg-panel hover:bg-panel-raised text-canary-amber transition-colors flex items-center gap-1.5"
+              title={isAutoFlying ? 'Pause auto flight' : 'Auto play flight (24fps)'}
             >
               {isAutoFlying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+              <span className="hidden sm:inline text-[11px] font-semibold text-canary-text pr-1">
+                {isAutoFlying ? 'Pause' : 'Auto Play'}
+              </span>
+            </button>
+
+            {/* Renderer Switcher Toggle */}
+            <button
+              onClick={() => setRenderEngine(renderEngine === 'canvas' ? 'video' : 'canvas')}
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-panel-inset hover:bg-panel border border-border text-[11px] text-canary-text-2 hover:text-canary-amber transition-colors"
+              title="Toggle between 190-Frame Canvas or All-Intra 1080p Video"
+            >
+              {renderEngine === 'canvas' ? (
+                <>
+                  <Layers className="w-3 h-3 text-canary-amber" />
+                  <span>Engine: 190-Frame Canvas</span>
+                </>
+              ) : (
+                <>
+                  <Film className="w-3 h-3 text-[#6FA8C7]" />
+                  <span>Engine: All-Intra 1080p Video</span>
+                </>
+              )}
             </button>
 
             {/* Flight Path Segment Markers */}
-            <div className="flex items-center gap-2 text-[11px] font-medium text-canary-text-2">
+            <div className="hidden sm:flex items-center gap-2 text-[11px] font-medium text-canary-text-2">
               <span
                 className={`transition-colors ${
                   scrollProgress < 0.25 ? 'text-canary-amber font-bold' : 'text-canary-text-3'
                 }`}
               >
-                1. Dawn Intro
+                1. Dawn
               </span>
               <span className="text-canary-text-3">→</span>
               <span
@@ -208,7 +241,7 @@ export default function LandingPage() {
             </div>
 
             {/* Progress Bar Track */}
-            <div className="w-24 bg-panel-inset rounded-full h-1.5 overflow-hidden border border-border">
+            <div className="w-20 md:w-24 bg-panel-inset rounded-full h-1.5 overflow-hidden border border-border">
               <div
                 className="h-full bg-gradient-to-r from-[#E8C14A] to-[#F2A33A] rounded-full transition-all duration-150"
                 style={{ width: `${Math.round(scrollProgress * 100)}%` }}
