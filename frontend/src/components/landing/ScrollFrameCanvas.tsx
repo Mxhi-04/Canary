@@ -23,6 +23,7 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
   const currentProgressRef = useRef(0);
   const targetProgressRef = useRef(progress);
   const animFrameRef = useRef<number | null>(null);
+  const needsRenderRef = useRef<boolean>(true);
 
   targetProgressRef.current = progress;
 
@@ -35,16 +36,16 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
       const frameNum = String(i).padStart(3, '0');
-      // Use high-quality 95% JPG for instant streaming, falling back to PNG if needed
+      // High-quality JPG for rapid streaming with PNG fallback
       img.src = `/frames/frame_${frameNum}.jpg`;
 
       img.onload = () => {
         if (!mounted) return;
         loaded++;
         setLoadedCount(loaded);
-        if (loaded === 1) {
-          // Immediately draw first frame so there's never a blank screen
-          drawFrame(0, 0);
+        needsRenderRef.current = true;
+
+        if (i === 1 || loaded === 1) {
           setIsReady(true);
         }
         if (loaded === TOTAL_FRAMES) {
@@ -67,7 +68,7 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
       mounted = false;
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, []);
+  }, [onFramesLoaded]);
 
   // Draw frame with object-cover aspect ratio scaling and sub-frame alpha blending
   const drawFrame = (baseIdx: number, nextIdx: number, blend: number = 0) => {
@@ -76,11 +77,19 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const baseImg = imagesRef.current[baseIdx];
-    if (!baseImg || !baseImg.complete) return;
+    let baseImg = imagesRef.current[baseIdx];
+    if (!baseImg || !baseImg.complete || baseImg.naturalWidth === 0) {
+      // Use any currently loaded image as fallback
+      const fallback = imagesRef.current.find(
+        (img) => img && img.complete && img.naturalWidth > 0
+      );
+      if (!fallback) return;
+      baseImg = fallback;
+    }
 
     const w = canvas.width;
     const h = canvas.height;
+    if (w === 0 || h === 0) return;
 
     // Calculate aspect-ratio covering dimensions (object-cover)
     const imgRatio = baseImg.width / baseImg.height;
@@ -107,7 +116,7 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
     // Cross-fade with next frame for fluid cinematic interpolation
     if (blend > 0.005 && nextIdx !== baseIdx) {
       const nextImg = imagesRef.current[nextIdx];
-      if (nextImg && nextImg.complete) {
+      if (nextImg && nextImg.complete && nextImg.naturalWidth > 0) {
         ctx.globalAlpha = blend;
         ctx.drawImage(nextImg, renderX, renderY, renderW, renderH);
         ctx.globalAlpha = 1.0;
@@ -122,24 +131,20 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
       if (!canvas) return;
 
       const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
       const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
 
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
-
-      // Re-render current frame immediately after resize
-      const floatIndex = currentProgressRef.current * (TOTAL_FRAMES - 1);
-      const baseIndex = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.floor(floatIndex)));
-      const nextIndex = Math.min(TOTAL_FRAMES - 1, baseIndex + 1);
-      const blend = floatIndex - baseIndex;
-      drawFrame(baseIndex, nextIndex, blend);
+      needsRenderRef.current = true;
     };
 
     window.addEventListener('resize', handleResize);
     handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
-  }, [isReady]);
+  }, []);
 
   // Buttery smooth lerp animation loop (runs at native 60fps/120fps display refresh)
   useEffect(() => {
@@ -151,13 +156,20 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
       if (Math.abs(diff) > 0.0001) {
         // Damping factor (0.16) gives instant responsiveness with subtle momentum
         currentProgressRef.current += diff * 0.16;
+        needsRenderRef.current = true;
+      }
 
+      if (needsRenderRef.current) {
         const floatIndex = currentProgressRef.current * (TOTAL_FRAMES - 1);
         const baseIndex = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.floor(floatIndex)));
         const nextIndex = Math.min(TOTAL_FRAMES - 1, baseIndex + 1);
         const blend = floatIndex - baseIndex;
 
         drawFrame(baseIndex, nextIndex, blend);
+
+        if (Math.abs(diff) <= 0.0001) {
+          needsRenderRef.current = false;
+        }
       }
 
       animFrameRef.current = requestAnimationFrame(loop);
@@ -167,7 +179,7 @@ export const ScrollFrameCanvas: React.FC<ScrollFrameCanvasProps> = ({
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [isReady]);
+  }, []);
 
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
