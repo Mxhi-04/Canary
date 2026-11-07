@@ -41,3 +41,4 @@ export async function GET(request: NextRequest) {
     boundaryNotice: 'Canary strictly enforces aggregate-only ingestion. No individual-level records or employment profiles are ever collected or stored.',
   });
 }
+

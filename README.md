@@ -146,3 +146,4 @@ Canary/
 ## License & Responsible Use
 
 Canary is designed for the Future Health Digital Innovation Challenge. It is an early-warning decision-support system requiring human clinical and HSE review before interventions are enacted. It is not approved for automated clinical diagnosis, individual profiling, or employee disciplinary action.
+

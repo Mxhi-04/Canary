@@ -62,3 +62,4 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({
     </span>
   );
 };
+

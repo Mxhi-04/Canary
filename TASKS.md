@@ -51,3 +51,4 @@
 - [x] End-to-end Next.js build verification (`npm run build` succeeds with 0 errors)
 - [x] All 8 API endpoints operational (`/api/v1/units`, `/alerts`, `/alerts/[id]`, `/replay`, `/backtest/summary`, `/privacy/example`, `/audit`, `/ingest`)
 - [x] Documentation suite complete (`README.md`, `MODEL_CARD.md`, `DATA_GOVERNANCE.md`, `ASSUMPTIONS.md`, `TASKS.md`, `CHANGELOG.md`)
+

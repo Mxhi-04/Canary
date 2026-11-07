@@ -46,3 +46,4 @@ Every view of an active alert, protected site detail, or role-switch event gener
 - `eventType`: `VIEW_ALERT`, `VIEW_PROTECTED_UNIT`, `ROLE_SWITCH`, etc.
 - `resourceId`: Targeted entity.
 - `ipMasked`: Anonymized subnet IP address.
+

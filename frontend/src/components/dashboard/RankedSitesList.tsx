@@ -74,3 +74,4 @@ export const RankedSitesList: React.FC<RankedSitesListProps> = ({ units, onSelec
     </div>
   );
 };
+

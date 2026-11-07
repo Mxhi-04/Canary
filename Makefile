@@ -17,3 +17,4 @@ test:
 
 clean:
 	rm -rf frontend/.next frontend/node_modules
+

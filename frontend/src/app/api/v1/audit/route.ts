@@ -39,3 +39,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to record audit event' }, { status: 400 });
   }
 }
+

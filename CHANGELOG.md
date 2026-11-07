@@ -20,3 +20,4 @@ All notable changes to the Canary platform are documented in this file.
   - 8 REST endpoints under `/api/v1/` (`units`, `alerts`, `alerts/[id]`, `backtest/summary`, `replay/[scenario]`, `privacy/example`, `audit`, `ingest`).
 - **Response Playbooks:**
   - YAML rule templates for Respiratory Dust, Gastrointestinal Accommodation Clusters, and Thermal Stress.
+

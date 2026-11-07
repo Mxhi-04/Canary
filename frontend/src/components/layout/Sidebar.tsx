@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  Home,
   LayoutDashboard,
   AlertTriangle,
   PlaySquare,
@@ -21,6 +22,12 @@ export const Sidebar: React.FC = () => {
   const navItems = [
     {
       href: '/',
+      label: 'Landing Story',
+      icon: Home,
+      exact: true,
+    },
+    {
+      href: '/dashboard',
       label: 'Overview & Map',
       icon: LayoutDashboard,
       exact: true,
@@ -72,11 +79,13 @@ export const Sidebar: React.FC = () => {
         }`}
       >
         {/* Brand / Logo */}
-        <div className="h-16 flex items-center px-4 gap-3 border-b border-border/80 overflow-hidden">
+        <Link
+          href="/"
+          className="h-16 flex items-center px-4 gap-3 border-b border-border/80 overflow-hidden hover:bg-panel transition-colors"
+        >
           {/* Canary Bird Glowing Emblem */}
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F2A33A] to-[#E8C14A] flex items-center justify-center flex-shrink-0 shadow-amber-glow">
             <svg viewBox="0 0 24 24" className="w-6 h-6 text-canvas-deep fill-current" strokeWidth="0">
-              {/* Stylized Canary Silhouette */}
               <path d="M12 2C8.5 2 5.5 4.5 5 8c-.3 2.5 1 5 3 6.5L7 19l4.5-2c.2 0 .3 0 .5.1 4.5 1.2 8-2 8-6.1C20 6.5 16.5 2 12 2zm1 4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zm-4 7c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" />
             </svg>
           </div>
@@ -93,7 +102,7 @@ export const Sidebar: React.FC = () => {
               Health Early-Warning
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Navigation List */}
         <nav className="flex-1 py-4 flex flex-col gap-1.5 px-2">

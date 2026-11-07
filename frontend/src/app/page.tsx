@@ -1,201 +1,617 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { AppShell } from '@/components/layout/AppShell';
-import { Panel } from '@/components/shared/Panel';
-import { SemicircularGauge } from '@/components/shared/SemicircularGauge';
-import { UnitMap } from '@/components/map/UnitMap';
-import { SiteDrawer } from '@/components/map/SiteDrawer';
-import { RankedSitesList } from '@/components/dashboard/RankedSitesList';
-import { HazardTrendChart } from '@/components/dashboard/HazardTrendChart';
-import { FeedHealthPanel } from '@/components/dashboard/FeedHealthPanel';
-import { DataSourcesFooter } from '@/components/dashboard/DataSourcesFooter';
-import { fetchUnits } from '@/lib/api/client';
-import { useDemoRole } from '@/context/RoleContext';
-import { MonitoringUnit, District } from '@/lib/types/domain';
-import { ShieldAlert, ExternalLink, RefreshCw } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useDemoRole } from '@/context/RoleContext';
+import { DEMO_ROLES } from '@/lib/data/seededData';
+import {
+  ShieldAlert,
+  ArrowRight,
+  Play,
+  Pause,
+  ChevronDown,
+  Activity,
+  Wind,
+  ShieldCheck,
+  BarChart3,
+  Users,
+  Compass,
+  FileText,
+  Building2,
+  Lock
+} from 'lucide-react';
 
-export default function OverviewPage() {
-  const { activeRole } = useDemoRole();
-  const [units, setUnits] = useState<MonitoringUnit[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [completeness, setCompleteness] = useState(94);
-  const [sitesAtAlert, setSitesAtAlert] = useState(3);
-  const [openActions, setOpenActions] = useState(1);
-  const [deltas, setDeltas] = useState({
-    completenessDelta: 2,
-    sitesAtAlertDelta: 1,
-    openActionsDelta: 1,
-    comparisonPeriod: 'vs previous 7 days',
-  });
-  const [selectedUnit, setSelectedUnit] = useState<MonitoringUnit | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function LandingPage() {
+  const { activeRole, setRole, roleInfo } = useDemoRole();
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isAutoFlying, setIsAutoFlying] = useState(false);
+
+  const durationRef = useRef(7.93);
+  const targetProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
+
+  // Initialize and handle video metadata
   useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    fetchUnits(activeRole)
-      .then((data) => {
-        if (!isMounted) return;
-        setUnits(data.units);
-        setDistricts(data.districts);
-        setCompleteness(data.overallCompleteness);
-        setSitesAtAlert(data.sitesAtAlertOrAbove);
-        setOpenActions(data.openActionAlerts);
-        if (data.deltas) setDeltas(data.deltas);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to load overview data:', err);
-        setLoading(false);
-      });
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleLoadedMetadata = () => {
+      if (video.duration && !isNaN(video.duration)) {
+        durationRef.current = video.duration;
+      }
+      setIsVideoLoaded(true);
+      video.pause();
+      video.currentTime = 0;
+    };
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    if (video.readyState >= 1) {
+      handleLoadedMetadata();
+    }
 
     return () => {
-      isMounted = false;
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
     };
-  }, [activeRole]);
+  }, []);
+
+  // Window scroll event listener to compute scroll progress
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
+
+      if (totalScrollable <= 0) return;
+
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
+      targetProgressRef.current = progress;
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Smooth lerp loop to drive video.currentTime seamlessly without jitter
+  useEffect(() => {
+    let animationFrameId: number;
+
+    const smoothScrub = () => {
+      const video = videoRef.current;
+
+      if (video && durationRef.current) {
+        if (!isAutoFlying) {
+          // Normal scroll-controlled scrubbing
+          const diff = targetProgressRef.current - currentProgressRef.current;
+          // Smooth damping
+          currentProgressRef.current += diff * 0.18;
+
+          const targetTime = currentProgressRef.current * durationRef.current;
+          if (Math.abs(video.currentTime - targetTime) > 0.02) {
+            video.currentTime = Math.max(0, Math.min(durationRef.current, targetTime));
+          }
+        } else {
+          // Auto-play preview mode: update progress state as video plays
+          const progress = video.currentTime / durationRef.current;
+          setScrollProgress(progress);
+          currentProgressRef.current = progress;
+          targetProgressRef.current = progress;
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(smoothScrub);
+    };
+
+    animationFrameId = requestAnimationFrame(smoothScrub);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isAutoFlying]);
+
+  // Auto Fly Preview toggle
+  const toggleAutoFly = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isAutoFlying) {
+      video.pause();
+      setIsAutoFlying(false);
+    } else {
+      video.play().then(() => {
+        setIsAutoFlying(true);
+      }).catch((e) => {
+        console.error('Video auto-play failed:', e);
+      });
+    }
+  };
+
+  // Determine active story chapter based on scroll progress
+  // Flight Stages:
+  // 0.00 - 0.20: Stage 0 (Dawn landscape / Hero intro)
+  // 0.20 - 0.48: Stage 1 (Bird enters from left / Environmental Exposure)
+  // 0.48 - 0.74: Stage 2 (Bird traverses valley / Syndromic Outcomes)
+  // 0.74 - 0.95: Stage 3 (Bird exits to right / Proportionate Action)
+  // 0.95 - 1.00: Gateway Launch Section
 
   return (
-    <AppShell
-      title="POPULATION & WORKFORCE HEALTH SURVEILLANCE"
-      description="Sense emerging population and workforce health risk across UAE industrial and accommodation districts."
-    >
-      {/* Top Banner Alert Pill */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-panel bg-panel border border-[#F08A2E]/30 shadow-md">
-        <div className="flex items-center gap-3">
-          <span className="flex h-3 w-3 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E5483D] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#E5483D]"></span>
-          </span>
-          <div className="text-xs text-canary-text">
-            <span className="font-semibold text-[#F59A4A]">3 Active Alerts Detected: </span>
-            <span className="text-canary-text-2">
-              1 Gastrointestinal (Action), 1 Respiratory PM2.5 (Alert), 1 Thermal Stress (Alert).
+    <div className="bg-canvas text-canary-text min-h-screen selection:bg-canary-amber selection:text-canvas-deep">
+      {/* Fixed Top Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-canvas-deep/80 backdrop-blur-md border-b border-border/80 px-6 py-3.5 flex items-center justify-between">
+        {/* Brand */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#F2A33A] to-[#E8C14A] flex items-center justify-center shadow-amber-glow group-hover:scale-105 transition-transform">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-canvas-deep fill-current" strokeWidth="0">
+              <path d="M12 2C8.5 2 5.5 4.5 5 8c-.3 2.5 1 5 3 6.5L7 19l4.5-2c.2 0 .3 0 .5.1 4.5 1.2 8-2 8-6.1C20 6.5 16.5 2 12 2zm1 4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zm-4 7c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" />
+            </svg>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-base font-bold text-canary-text tracking-wider uppercase leading-none">
+              Canary
             </span>
+            <span className="text-[10px] text-canary-text-3 font-medium tracking-normal mt-0.5">
+              Population &amp; Workforce Early-Warning
+            </span>
+          </div>
+        </Link>
+
+        {/* Center Navigation Links */}
+        <div className="hidden md:flex items-center gap-6 text-xs text-canary-text-2 font-medium">
+          <a href="#flight-story" className="hover:text-canary-amber transition-colors">
+            Flight Story
+          </a>
+          <Link href="/dashboard" className="hover:text-canary-amber transition-colors">
+            Surveillance Map
+          </Link>
+          <Link href="/alerts" className="hover:text-canary-amber transition-colors">
+            Alert Inbox
+          </Link>
+          <Link href="/replay" className="hover:text-canary-amber transition-colors">
+            Scenario Replay
+          </Link>
+          <Link href="/validation" className="hover:text-canary-amber transition-colors">
+            Validation
+          </Link>
+          <Link href="/privacy" className="hover:text-canary-amber transition-colors">
+            Privacy &amp; Governance
+          </Link>
+        </div>
+
+        {/* Right CTA */}
+        <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 px-4 py-2 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-xs shadow-amber-glow transition-all"
+          >
+            <span>Enter Monitoring Room</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </nav>
+
+      {/* Main Scroll Animation Container (450vh tall scroll track) */}
+      <div id="flight-story" ref={containerRef} className="relative h-[450vh] w-full">
+        {/* Sticky 100vh Viewport Holding the Video Canvas */}
+        <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
+          {/* Background Video Element (Scrubbed with Scroll) */}
+          <div className="absolute inset-0 w-full h-full">
+            <video
+              ref={videoRef}
+              src="/videos/scroll-animation.mp4"
+              poster="/images/scene-poster.png"
+              playsInline
+              muted
+              preload="auto"
+              className="w-full h-full object-cover select-none pointer-events-none"
+            />
+
+            {/* Cinematic Edge Gradients for Seamless Canvas Integration */}
+            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-canvas-deep/90 via-canvas-deep/40 to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-canvas via-canvas/60 to-transparent pointer-events-none" />
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-canvas/60 to-transparent pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-canvas/60 to-transparent pointer-events-none" />
+          </div>
+
+          {/* Floating Flight Path & Progress Indicator (Bottom Center) */}
+          <div className="absolute bottom-6 z-30 flex items-center gap-4 bg-canvas-deep/85 backdrop-blur-md px-4 py-2 rounded-full border border-border-strong shadow-2xl">
+            {/* Auto-fly Toggle Button */}
+            <button
+              onClick={toggleAutoFly}
+              className="p-1.5 rounded-full bg-panel hover:bg-panel-raised text-canary-amber transition-colors"
+              title={isAutoFlying ? 'Pause flight' : 'Auto play flight'}
+            >
+              {isAutoFlying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+            </button>
+
+            {/* Flight Path Segment Markers */}
+            <div className="flex items-center gap-2 text-[11px] font-medium text-canary-text-2">
+              <span
+                className={`transition-colors ${
+                  scrollProgress < 0.25 ? 'text-canary-amber font-bold' : 'text-canary-text-3'
+                }`}
+              >
+                1. Dawn Intro
+              </span>
+              <span className="text-canary-text-3">→</span>
+              <span
+                className={`transition-colors ${
+                  scrollProgress >= 0.25 && scrollProgress < 0.5
+                    ? 'text-canary-amber font-bold'
+                    : 'text-canary-text-3'
+                }`}
+              >
+                2. Left Arrival
+              </span>
+              <span className="text-canary-text-3">→</span>
+              <span
+                className={`transition-colors ${
+                  scrollProgress >= 0.5 && scrollProgress < 0.75
+                    ? 'text-canary-amber font-bold'
+                    : 'text-canary-text-3'
+                }`}
+              >
+                3. Valley Flight
+              </span>
+              <span className="text-canary-text-3">→</span>
+              <span
+                className={`transition-colors ${
+                  scrollProgress >= 0.75 ? 'text-canary-amber font-bold' : 'text-canary-text-3'
+                }`}
+              >
+                4. Right Exit
+              </span>
+            </div>
+
+            {/* Progress Bar Track */}
+            <div className="w-24 bg-panel-inset rounded-full h-1.5 overflow-hidden border border-border">
+              <div
+                className="h-full bg-gradient-to-r from-[#E8C14A] to-[#F2A33A] rounded-full transition-all duration-150"
+                style={{ width: `${Math.round(scrollProgress * 100)}%` }}
+              />
+            </div>
+            <span className="text-[11px] font-mono text-canary-amber tabular-nums font-bold">
+              {Math.round(scrollProgress * 100)}%
+            </span>
+          </div>
+
+          {/* =========================================================================
+              DYNAMIC NARRATIVE OVERLAYS (SYNCHRONIZED WITH SCROLL PROGRESS)
+              ========================================================================= */}
+
+          {/* Chapter 0: Hero Intro (0% - 20% scroll) */}
+          <div
+            className={`absolute z-20 max-w-2xl px-6 text-center transition-all duration-700 ease-out flex flex-col items-center ${
+              scrollProgress < 0.20
+                ? 'opacity-100 translate-y-0 pointer-events-auto'
+                : 'opacity-0 -translate-y-12 pointer-events-none'
+            }`}
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel/80 border border-border backdrop-blur-md mb-4 text-xs font-semibold uppercase tracking-wider text-canary-amber">
+              <span className="w-2 h-2 rounded-full bg-canary-amber animate-pulse" />
+              <span>Future Health Challenge 06</span>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-canary-text uppercase">
+              CANARY
+            </h1>
+            <p className="text-lg md:text-xl font-light text-[#EDCB63] mt-2">
+              Population &amp; Workforce Health Early-Warning Platform
+            </p>
+            <p className="text-sm md:text-base text-canary-text-2 mt-4 max-w-xl leading-relaxed">
+              Sense emerging population and workforce health risks by combining environmental exposure leads with aggregated health-service and workplace outcomes.
+            </p>
+
+            <div className="flex items-center gap-4 mt-8">
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 px-6 py-3 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-sm shadow-amber-glow transition-all"
+              >
+                <span>Launch Monitoring Room</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <button
+                onClick={() => {
+                  window.scrollTo({
+                    top: window.innerHeight * 1.2,
+                    behavior: 'smooth',
+                  });
+                }}
+                className="flex items-center gap-1.5 px-4 py-3 rounded-control bg-panel-raised/80 hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
+              >
+                <span>Scroll to release canary</span>
+                <ChevronDown className="w-4 h-4 animate-bounce" />
+              </button>
+            </div>
+          </div>
+
+          {/* Chapter 1: Bird Enters from Left / Exposure Leads (22% - 46% scroll) */}
+          <div
+            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#F2A33A]/40 shadow-2xl transition-all duration-700 ease-out ${
+              scrollProgress >= 0.22 && scrollProgress < 0.46
+                ? 'opacity-100 translate-x-0 pointer-events-auto'
+                : scrollProgress < 0.22
+                ? 'opacity-0 -translate-x-16 pointer-events-none'
+                : 'opacity-0 -translate-x-16 pointer-events-none'
+            }`}
+          >
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-canary-amber mb-2">
+              <Wind className="w-4 h-4" />
+              <span>Core Principle 01 · Exposure Leads</span>
+            </div>
+
+            <h2 className="text-xl md:text-2xl font-bold text-canary-text tracking-tight mb-2">
+              Environmental Hazards Lead the Signal
+            </h2>
+
+            <p className="text-xs md:text-sm text-canary-text-2 leading-relaxed mb-4">
+              Continuous monitoring of particulate matter (PM2.5/PM10), ambient heat, and WBGT thermal stress indicators across UAE industrial facilities and accommodation villages detects acute risk <strong>24 to 48 hours before</strong> clinical visits spike.
+            </p>
+
+            <div className="flex items-center gap-3 pt-3 border-t border-border text-xs">
+              <div className="px-2.5 py-1 rounded bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 text-[#6FA8C7] font-semibold">
+                European CAMS PM2.5 (Real)
+              </div>
+              <div className="px-2.5 py-1 rounded bg-[#F2A33A]/15 border border-[#F2A33A]/30 text-[#F2A33A] font-semibold">
+                +2.9 Days Lead Gain
+              </div>
+            </div>
+          </div>
+
+          {/* Chapter 2: Bird Traverses Valley / Outcomes Confirm (48% - 72% scroll) */}
+          <div
+            className={`absolute right-8 md:right-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#C58BD9]/40 shadow-2xl transition-all duration-700 ease-out ${
+              scrollProgress >= 0.48 && scrollProgress < 0.72
+                ? 'opacity-100 translate-x-0 pointer-events-auto'
+                : scrollProgress < 0.48
+                ? 'opacity-0 translate-x-16 pointer-events-none'
+                : 'opacity-0 translate-x-16 pointer-events-none'
+            }`}
+          >
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C58BD9] mb-2">
+              <Activity className="w-4 h-4" />
+              <span>Core Principle 02 · Outcomes Confirm</span>
+            </div>
+
+            <h2 className="text-xl md:text-2xl font-bold text-canary-text tracking-tight mb-2">
+              Multi-Signal Syndromic Fusion
+            </h2>
+
+            <p className="text-xs md:text-sm text-canary-text-2 leading-relaxed mb-4">
+              Aggregating clinic presentations, regional teleconsultations, and sickness absences confirms developing clusters without jumping to premature alarms or correlation fallacies.
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border text-xs">
+              <div className="p-2 rounded bg-panel-inset border border-border">
+                <span className="text-[10px] text-canary-text-3 block">Event Sensitivity</span>
+                <span className="text-sm font-bold text-canary-text">91.8%</span>
+              </div>
+              <div className="p-2 rounded bg-panel-inset border border-border">
+                <span className="text-[10px] text-canary-text-3 block">Alert-Level PPV</span>
+                <span className="text-sm font-bold text-canary-text">86.4%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Chapter 3: Bird Exits to Right / Proportionate Action (74% - 94% scroll) */}
+          <div
+            className={`absolute left-8 md:left-16 z-20 max-w-lg p-6 canary-panel bg-panel-raised/90 backdrop-blur-md border border-[#E5483D]/40 shadow-2xl transition-all duration-700 ease-out ${
+              scrollProgress >= 0.74 && scrollProgress < 0.94
+                ? 'opacity-100 translate-x-0 pointer-events-auto'
+                : scrollProgress < 0.74
+                ? 'opacity-0 -translate-x-16 pointer-events-none'
+                : 'opacity-0 -translate-x-16 pointer-events-none'
+            }`}
+          >
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#F06B5E] mb-2">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Core Principle 03 · Actionable Playbooks</span>
+            </div>
+
+            <h2 className="text-xl md:text-2xl font-bold text-canary-text tracking-tight mb-2">
+              Sense. Explain. Act Sooner.
+            </h2>
+
+            <p className="text-xs md:text-sm text-canary-text-2 leading-relaxed mb-4">
+              Canary explains <em>what changed, why the system raised the alert, and how reliable the data is</em>. Every alert connects to proportionate response playbooks, designated roles, and review-by milestones.
+            </p>
+
+            <div className="flex items-center gap-3 pt-3 border-t border-border">
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 px-4 py-2 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-xs shadow-amber-glow transition-all"
+              >
+                <span>Launch Live Platform</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/alerts"
+                className="text-xs text-canary-text-2 hover:text-canary-amber underline"
+              >
+                View 3 Active Alerts
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          GATEWAY & FEATURE SHOWCASE SECTION (BELOW SCROLL TRACK)
+          ========================================================================= */}
+      <section className="relative z-30 bg-canvas px-6 md:px-12 py-16 max-w-[1440px] mx-auto border-t border-border">
+        {/* Hero Entry Card */}
+        <div className="canary-panel p-8 bg-gradient-to-br from-panel-raised to-panel border-2 border-canary-amber/50 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-12">
+          <div className="space-y-3 flex-1">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-canary-amber">
+              <span className="w-2.5 h-2.5 rounded-full bg-canary-amber shadow-amber-glow" />
+              <span>Active Prototype Operational Session</span>
+            </div>
+
+            <h2 className="text-2xl md:text-3xl font-extrabold text-canary-text tracking-tight">
+              Enter Canary Surveillance Room
+            </h2>
+
+            <p className="text-sm text-canary-text-2 leading-relaxed max-w-2xl">
+              Select your demonstration profile to inspect real-time regional monitoring across Abu Dhabi, Musaffah, Al Ain, and Dubai South. Roles enforce strict backend scoping and small-cell privacy suppression.
+            </p>
+
+            {/* Quick Role Switcher Buttons */}
+            <div className="pt-2 flex items-center flex-wrap gap-2 text-xs">
+              <span className="text-canary-text-3 font-semibold mr-1">Demo Role:</span>
+              {DEMO_ROLES.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setRole(r.id)}
+                  className={`px-3 py-1.5 rounded-control font-medium transition-all ${
+                    activeRole === r.id
+                      ? 'bg-canary-amber text-canvas-deep font-bold shadow-amber-glow'
+                      : 'bg-panel-inset text-canary-text-2 hover:bg-panel border border-border'
+                  }`}
+                >
+                  {r.shortName}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Launch Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0 w-full lg:w-auto">
+            <Link
+              href="/dashboard"
+              className="flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-control bg-canary-amber hover:bg-canary-amber/90 text-canvas-deep font-bold text-sm shadow-amber-glow transition-all"
+            >
+              <Compass className="w-4 h-4" />
+              <span>Open Surveillance Map</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link
+              href="/alerts"
+              className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-control bg-panel-raised hover:bg-panel border border-border text-xs font-semibold text-canary-text transition-colors"
+            >
+              <ShieldAlert className="w-4 h-4 text-[#F08A2E]" />
+              <span>Alert Inbox (3 Active)</span>
+            </Link>
           </div>
         </div>
 
-        <Link
-          href="/alerts"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-control bg-panel-raised hover:bg-panel-inset border border-border text-xs font-semibold text-canary-amber transition-colors self-start sm:self-auto"
-        >
-          <ShieldAlert className="w-3.5 h-3.5" />
-          <span>Open Alert Inbox</span>
-          <ExternalLink className="w-3 h-3" />
-        </Link>
-      </div>
-
-      {/* Main 12-Column Bento Grid */}
-      <div className="grid grid-cols-12 gap-6 mb-6">
-        {/* Left Column: UAE Spatial Map (Span 12 on mobile, 8 on desktop) */}
-        <div className="col-span-12 lg:col-span-8 flex flex-col">
-          <Panel
-            title="UAE Regional Surveillance Map"
-            subtitle="Geospatial distribution across Abu Dhabi Central, Musaffah, Al Ain, and Dubai South"
-            provenance="real"
-            sourceName="CAMS & Local Geodata"
-            trailingAction={
-              <button
-                onClick={() => fetchUnits(activeRole).then((d) => setUnits(d.units))}
-                className="text-xs text-canary-text-3 hover:text-canary-amber flex items-center gap-1"
-                title="Refresh Map Coordinates"
-              >
-                <RefreshCw className="w-3 h-3" />
-                <span>Refresh</span>
-              </button>
-            }
+        {/* 4 Pillars Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* Pillar 1 */}
+          <Link
+            href="/dashboard"
+            className="canary-panel p-5 hover:border-canary-amber/60 transition-all flex flex-col justify-between group"
           >
-            <UnitMap
-              units={units}
-              onSelectUnit={(u) => setSelectedUnit(u)}
-              selectedUnitId={selectedUnit?.id}
-            />
-          </Panel>
-        </div>
-
-        {/* Right Column: Key Metrics Gauges & Ranked Sites (Span 12 on mobile, 4 on desktop) */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-          {/* Key Metrics Panel */}
-          <Panel
-            title="Key Operational Metrics"
-            subtitle="System confidence, risk concentration, and immediate response queue"
-          >
-            <div className="grid grid-cols-3 gap-2">
-              <SemicircularGauge
-                value={completeness}
-                label="Data Complete"
-                variant="neutral"
-                deltaText={`+${deltas.completenessDelta}% ${deltas.comparisonPeriod}`}
-                deltaDirection="up"
-                deltaColor="ok"
-              />
-              <SemicircularGauge
-                value={Math.round((sitesAtAlert / (units.length || 14)) * 100)}
-                label="Sites at Alert+"
-                variant="warning"
-                deltaText={`+${deltas.sitesAtAlertDelta} site ${deltas.comparisonPeriod}`}
-                deltaDirection="up"
-                deltaColor="amber"
-              />
-              <SemicircularGauge
-                value={openActions}
-                maxValue={5}
-                unit=" active"
-                label="Open Actions"
-                variant="critical"
-                deltaText={`+${deltas.openActionsDelta} action`}
-                deltaDirection="up"
-                deltaColor="amber"
-              />
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 flex items-center justify-center text-[#6FA8C7]">
+                <Wind className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                Dual-Stage Fusion
+              </h3>
+              <p className="text-xs text-canary-text-3 leading-relaxed">
+                Negative-binomial GLM baseline modeling combined with environmental hazard leads to sense anomalies 48h before absence ledgers.
+              </p>
             </div>
-          </Panel>
+            <div className="pt-4 flex items-center text-xs text-canary-amber font-semibold gap-1">
+              <span>View Map</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
 
-          {/* Sites by Tier (Ranked Horizontal Bars) */}
-          <Panel
-            title="Monitoring Units by Risk Tier"
-            subtitle="Ranked by anomaly severity and observed deviation from expected baseline"
-            trailingAction={
-              <Link href="/alerts" className="text-xs text-canary-amber hover:underline">
-                View All
-              </Link>
-            }
+          {/* Pillar 2 */}
+          <Link
+            href="/replay"
+            className="canary-panel p-5 hover:border-canary-amber/60 transition-all flex flex-col justify-between group"
           >
-            <RankedSitesList units={units} onSelectUnit={(u) => setSelectedUnit(u)} />
-          </Panel>
-        </div>
-      </div>
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-[#C58BD9]/15 border border-[#C58BD9]/30 flex items-center justify-center text-[#C58BD9]">
+                <Play className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                Scenario Replay
+              </h3>
+              <p className="text-xs text-canary-text-3 leading-relaxed">
+                Step day-by-day through 3 simulated scenarios with zero future leakage. Track Canary against EARS C2 and CUSUM.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center text-xs text-canary-amber font-semibold gap-1">
+              <span>Replay Scenarios</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
 
-      {/* Bottom Row: Hazard vs Outcome Trends and Feed Health */}
-      <div className="grid grid-cols-12 gap-6 mb-6">
-        {/* Trend Analysis Chart */}
-        <div className="col-span-12 lg:col-span-7 flex flex-col">
-          <Panel
-            title="Exposure vs Confirmatory Outcomes Trend"
-            subtitle="Core principle: Environmental hazard leads; health-service encounters confirm"
-            provenance="real"
-            sourceName="European CAMS vs Site Clinic (Sim)"
+          {/* Pillar 3 */}
+          <Link
+            href="/validation"
+            className="canary-panel p-5 hover:border-canary-amber/60 transition-all flex flex-col justify-between group"
           >
-            <HazardTrendChart />
-          </Panel>
-        </div>
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-[#7FB45A]/15 border border-[#7FB45A]/30 flex items-center justify-center text-[#7FB45A]">
+                <BarChart3 className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                Validation Benchmarks
+              </h3>
+              <p className="text-xs text-canary-text-3 leading-relaxed">
+                Held-out synthetic test seeds reporting 91.8% sensitivity, 86.4% PPV, and ablation stress test results.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center text-xs text-canary-amber font-semibold gap-1">
+              <span>Inspect Metrics</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
 
-        {/* Feed Health Panel */}
-        <div className="col-span-12 lg:col-span-5 flex flex-col">
-          <Panel
-            title="Data Quality & Stream Health"
-            subtitle="Identifies delayed, stale or missing feeds. Missing feeds are never zero-filled."
+          {/* Pillar 4 */}
+          <Link
+            href="/privacy"
+            className="canary-panel p-5 hover:border-canary-amber/60 transition-all flex flex-col justify-between group"
           >
-            <FeedHealthPanel />
-          </Panel>
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-[#E5483D]/15 border border-[#E5483D]/30 flex items-center justify-center text-[#E5483D]">
+                <Lock className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-canary-text group-hover:text-canary-amber transition-colors">
+                Privacy by Design
+              </h3>
+              <p className="text-xs text-canary-text-3 leading-relaxed">
+                Canonical 4-field aggregate contract, interactive k-suppression slider (k=5), and strict prohibition of disciplinary profiling.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center text-xs text-canary-amber font-semibold gap-1">
+              <span>Review Privacy</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
         </div>
-      </div>
 
-      {/* Connected Data Sources Footer Strip */}
-      <DataSourcesFooter />
+        {/* Footer */}
+        <footer className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-canary-text-3">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-canary-text">Canary Early-Warning Platform</span>
+            <span>•</span>
+            <span>Future Health Challenge 06</span>
+          </div>
 
-      {/* Selected Site Drawer Modal */}
-      <SiteDrawer unit={selectedUnit} onClose={() => setSelectedUnit(null)} />
-    </AppShell>
+          <div className="flex items-center gap-4 text-[11px]">
+            <Link href="/privacy" className="hover:text-canary-text underline">
+              Data Governance &amp; Contract
+            </Link>
+            <Link href="/validation" className="hover:text-canary-text underline">
+              Model Card
+            </Link>
+            <Link href="/impact" className="hover:text-canary-text underline">
+              Impact Estimator
+            </Link>
+          </div>
+        </footer>
+      </section>
+    </div>
   );
 }

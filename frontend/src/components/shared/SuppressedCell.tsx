@@ -27,3 +27,4 @@ export const SuppressedCell: React.FC<SuppressedCellProps> = ({
     </div>
   );
 };
+

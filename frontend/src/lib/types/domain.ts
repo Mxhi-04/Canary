@@ -148,3 +148,4 @@ export interface AuditEvent {
   details: string;
   ipMasked: string;
 }
+

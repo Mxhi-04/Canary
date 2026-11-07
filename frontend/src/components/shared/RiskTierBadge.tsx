@@ -60,3 +60,4 @@ export const RiskTierBadge: React.FC<RiskTierBadgeProps> = ({
     </span>
   );
 };
+

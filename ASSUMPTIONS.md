@@ -26,3 +26,4 @@
 | **Environmental Coverage** | Open-Meteo European CAMS air quality and ECMWF atmospheric forecasts for Abu Dhabi, Al Ain, and Dubai. | National Centre of Meteorology (NCM) official telemetry feeds. |
 | **Spatial Cluster Method** | District roll-up and facility graph links with Poisson space-time scan fallback. | Full Monte Carlo spatial scan statistic with high-performance C/NumPy acceleration. |
 | **Clinical Significance Threshold** | Defined as observed encounters exceeding the 95th percentile GLM forecast upper bound for $\ge 2$ consecutive days. | Calibrated against MOHAP / ADPHC syndromic surveillance thresholds. |
+

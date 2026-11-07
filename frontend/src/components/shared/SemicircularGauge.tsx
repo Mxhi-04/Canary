@@ -127,3 +127,4 @@ export const SemicircularGauge: React.FC<SemicircularGaugeProps> = ({
     </div>
   );
 };
+

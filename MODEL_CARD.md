@@ -51,3 +51,4 @@ Evaluated against single-signal baselines on held-out synthetic test seeds (Cali
 - **Simulated Outcome Ground Truth:** Syndromic health encounters in the prototype are simulated to enable repeatable, privacy-safe benchmarking in the absence of private EHR operational feeds.
 - **Sparse Site Strength Borrowing:** Smaller sites with headcount <200 borrow statistical dispersion parameters from sector aggregates, which may widen uncertainty bounds.
 - **Missing Feeds:** Feeds delayed by >24 hours are removed from fusion calculations rather than imputed, causing a temporary reduction in overall confidence score.
+

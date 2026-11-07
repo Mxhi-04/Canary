@@ -37,3 +37,4 @@ export const CompletenessMeter: React.FC<CompletenessMeterProps> = ({
     </div>
   );
 };
+

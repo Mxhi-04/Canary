@@ -175,3 +175,4 @@ export const HazardTrendChart: React.FC<HazardTrendChartProps> = ({ className = 
     </div>
   );
 };
+
