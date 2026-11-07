@@ -25,7 +25,10 @@ import {
   Lock,
   Sparkles,
   Film,
-  Layers
+  Layers,
+  TrendingDown,
+  CheckCircle2,
+  Shield
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -389,6 +392,191 @@ export default function LandingPage() {
                       Deploy hydration hubs, shift rotations, and early outreach before incidents happen.
                     </p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            HOW CANARY EMPOWERS YOUR ORGANISATION (5 BOXES SECTION)
+            ========================================================================= */}
+        <div className="relative mb-20">
+          {/* Luminous ambient background glows */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-r from-[#F2A33A]/10 via-[#EDCB63]/8 to-[#6FA8C7]/10 rounded-full blur-[120px] pointer-events-none" />
+
+          {/* Heading with Cursive Stylish Font & Canary Logo */}
+          <div className="relative z-10 flex flex-col items-center justify-center text-center mb-16">
+            <span className="font-cursive-stylish text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-[#EDCB63] tracking-wide font-normal leading-tight drop-shadow-[0_2px_16px_rgba(237,203,99,0.4)]">
+              How
+            </span>
+            <div className="my-1 sm:my-2">
+              <CanaryLogo variant="full" size="hero" glow="metallic" priority />
+            </div>
+            <span className="font-cursive-stylish text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-canary-text tracking-wide font-normal leading-tight drop-shadow-[0_2px_16px_rgba(255,255,255,0.2)]">
+              Empowers Your Organisation
+            </span>
+          </div>
+
+          {/* 5 Glassmorphism Boxes */}
+          <div className="relative z-10 space-y-6">
+            {/* Row 1: 3 Boxes */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Box 1 */}
+              <div
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  boxShadow:
+                    'inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35), 0 20px 48px -10px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                      01
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-[#F2A33A]/15 border border-[#F2A33A]/30 flex items-center justify-center text-[#F2A33A] group-hover:scale-110 transition-transform">
+                      <ShieldAlert className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                    Protect your workforce before risks escalate.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
+                    A sudden increase in heat exposure, pollution or illness can put workers at risk before organisations realise something is wrong. Canary identifies unusual patterns early, giving companies an opportunity to investigate and take preventive action before situations become more serious.
+                  </p>
+                </div>
+              </div>
+
+              {/* Box 2 */}
+              <div
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  boxShadow:
+                    'inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35), 0 20px 48px -10px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                      02
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-[#6FA8C7]/15 border border-[#6FA8C7]/30 flex items-center justify-center text-[#6FA8C7] group-hover:scale-110 transition-transform">
+                      <TrendingDown className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                    Reduce operational disruptions and unexpected costs.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
+                    Health incidents can lead to increased absenteeism, reduced productivity, emergency responses and workforce shortages. By highlighting emerging risks, Canary helps organisations plan ahead, minimise avoidable disruptions and make better use of their resources.
+                  </p>
+                </div>
+              </div>
+
+              {/* Box 3 */}
+              <div
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  boxShadow:
+                    'inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35), 0 20px 48px -10px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                      03
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-[#C58BD9]/15 border border-[#C58BD9]/30 flex items-center justify-center text-[#C58BD9] group-hover:scale-110 transition-transform">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                    Make decisions backed by evidence, not guesswork.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
+                    Instead of relying on scattered reports or isolated warning signs, Canary brings multiple data sources together. It shows what changed, where the risk is emerging and which signals contributed, allowing decision-makers to respond with greater clarity and confidence.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: 2 Boxes (Balanced & Centered) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {/* Box 4 */}
+              <div
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  boxShadow:
+                    'inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35), 0 20px 48px -10px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                      04
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-[#EDCB63]/15 border border-[#EDCB63]/30 flex items-center justify-center text-[#EDCB63] group-hover:scale-110 transition-transform">
+                      <Compass className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                    Stay one step ahead with a proactive safety strategy.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
+                    Traditional responses often begin after incidents have already occurred. Canary encourages organisations to move from reactive problem-solving to preventive risk management, helping safety teams identify patterns, prioritise locations and plan timely interventions.
+                  </p>
+                </div>
+              </div>
+
+              {/* Box 5 */}
+              <div
+                className="relative rounded-3xl p-7 sm:p-8 overflow-hidden transition-all duration-300 group hover:border-[#F2A33A]/50 hover:shadow-[0_24px_54px_-8px_rgba(242,163,58,0.18)] flex flex-col justify-between"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  boxShadow:
+                    'inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35), 0 20px 48px -10px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-canary-amber px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15">
+                      05
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                      <Lock className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-canary-text tracking-tight mt-5 group-hover:text-canary-amber transition-colors leading-snug">
+                    Build trust through responsible, privacy-first monitoring.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-canary-text-2 leading-relaxed font-light mt-3">
+                    Workforce health should never come at the cost of employee privacy. Canary works with aggregated data rather than individual health records, allowing organisations to monitor broader health trends while respecting employee confidentiality.
+                  </p>
                 </div>
               </div>
             </div>

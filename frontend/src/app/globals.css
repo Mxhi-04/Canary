@@ -2,7 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Alex+Brush&family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@1,400;1,600;1,700&display=swap');
 
 :root {
   /* Surfaces */
@@ -55,6 +55,16 @@ body {
 /* Tabular numbers across all metric displays */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Calligraphic and cursive stylish typography matching Canary logo */
+.font-cursive-stylish {
+  font-family: 'Alex Brush', 'Pinyon Script', 'Cormorant Garamond', cursive;
+  font-style: normal;
+}
+
+.font-script-flourish {
+  font-family: 'Alex Brush', 'Pinyon Script', cursive;
 }
 
 /* Panel base elevation styling */
