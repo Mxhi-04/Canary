@@ -270,133 +270,166 @@ export default function LandingPage() {
       </div>
 
       {/* =========================================================================
-          GATEWAY & FEATURE SHOWCASE SECTION (BELOW SCROLL TRACK)
+          GATEWAY & FEATURE SHOWCASE SECTION (BELOW SCROLL TRACK - FITTED TO EDGES)
           ========================================================================= */}
-      <section className="relative z-30 bg-canvas px-6 md:px-12 py-16 max-w-[1440px] mx-auto border-t border-border">
+      <section className="relative z-30 bg-canvas px-3.5 sm:px-6 md:px-8 py-16 w-full max-w-[1680px] mx-auto border-t border-border">
         {/* =========================================================================
-            WORKFORCE PROTECTION & PREVENTIVE RISK BANNER (GLASSMORPHISM EFFECT)
+            WORKFORCE PROTECTION & PREVENTIVE RISK BANNER (EXACT MATCH TO INSPIRATION)
             ========================================================================= */}
-        <div className="relative mb-14">
-          {/* Luminous ambient background glow for glassmorphism refraction */}
-          <div className="absolute -top-16 -left-12 w-[500px] h-[350px] bg-gradient-to-br from-[#F2A33A]/20 via-[#EDCB63]/12 to-transparent rounded-full blur-[90px] pointer-events-none" />
-          <div className="absolute -bottom-16 -right-12 w-[500px] h-[350px] bg-gradient-to-tl from-[#6FA8C7]/20 via-[#C58BD9]/12 to-transparent rounded-full blur-[90px] pointer-events-none" />
+        <div className="relative mb-16 w-full">
+          {/* Luminous ambient background blooms for warm cinematic lighting matching inspiration */}
+          <div className="absolute -top-24 -left-20 w-[580px] h-[420px] bg-gradient-to-br from-[#F2A33A]/30 via-amber-700/15 to-transparent rounded-full blur-[110px] pointer-events-none" />
+          <div className="absolute -top-16 -right-16 w-[620px] h-[450px] bg-gradient-to-bl from-[#F59A4A]/35 via-[#F2A33A]/20 to-transparent rounded-full blur-[110px] pointer-events-none" />
+          <div className="absolute -bottom-20 left-1/4 w-[500px] h-[280px] bg-gradient-to-t from-[#F2A33A]/20 to-transparent rounded-full blur-[100px] pointer-events-none" />
 
-          {/* Frosted Glassmorphism Panel */}
+          {/* Frosted Glassmorphism Panel with Golden Rim & Warm Ambient Halo */}
           <div
-            className="relative rounded-3xl p-8 sm:p-10 md:p-14 overflow-hidden transition-all duration-300"
+            className="group relative rounded-[28px] p-6 sm:p-9 lg:p-12 overflow-hidden transition-all duration-300 w-full"
             style={{
               background:
-                'linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(14, 18, 28, 0.22) 100%)',
-              backdropFilter: 'blur(32px) saturate(200%)',
-              WebkitBackdropFilter: 'blur(32px) saturate(200%)',
-              border: '1px solid rgba(255, 255, 255, 0.26)',
+                'linear-gradient(135deg, rgba(26, 23, 20, 0.90) 0%, rgba(16, 15, 17, 0.95) 50%, rgba(12, 12, 14, 0.98) 100%)',
+              backdropFilter: 'blur(36px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(36px) saturate(180%)',
+              border: '1.5px solid rgba(242, 163, 58, 0.45)',
               boxShadow:
-                'inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 70px -15px rgba(0, 0, 0, 0.65)',
+                'inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 2px 0 rgba(242, 163, 58, 0.25), 0 0 50px -10px rgba(242, 163, 58, 0.28), 0 30px 70px -15px rgba(0, 0, 0, 0.75)',
             }}
           >
             {/* Subtle internal specular sheen sweep */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] via-transparent to-transparent pointer-events-none" />
 
-            <div className="relative z-10 max-w-4xl space-y-4">
-              {/* Glass Tag Badge */}
-              <div
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-canary-amber shadow-sm"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.24)',
-                  boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35)',
-                }}
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-canary-amber" />
-                <span>Workforce Health &amp; Prevention</span>
+            {/* Top Row: Left Content & Right 3D Shield Telemetry Graphic */}
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+              {/* Left Column: Badge, Punchy 2-Line Headline, Descriptive Body */}
+              <div className="max-w-2xl space-y-4 flex-1">
+                {/* Golden Glass Tag Badge */}
+                <div
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-[#F2A33A] shadow-sm"
+                  style={{
+                    background: 'rgba(242, 163, 58, 0.12)',
+                    backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(242, 163, 58, 0.35)',
+                    boxShadow: 'inset 0 1px 1px 0 rgba(242, 163, 58, 0.25)',
+                  }}
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#F2A33A]" />
+                  <span>Workforce Health &amp; Prevention</span>
+                </div>
+
+                {/* Headline: Clean 2-Line Layout (Line 1: White, Line 2: Gold + Orange) */}
+                <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-black tracking-tight leading-[1.12] drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+                  <span className="text-white block">Protect Your Workforce.</span>
+                  <span>
+                    <span className="text-[#EDCB63]">Stay Ahead of </span>
+                    <span className="text-[#F08A2E]">Risk.</span>
+                  </span>
+                </h2>
+
+                {/* Prose Body */}
+                <p className="text-sm sm:text-[15px] text-stone-300 leading-relaxed font-normal pt-1 max-w-xl drop-shadow-sm">
+                  Your people are your greatest asset. Don&apos;t wait for health risks to turn into workplace incidents. Canary brings environmental and health signals together to identify early warning signs, helping your organisation make smarter decisions, take preventive action.
+                </p>
               </div>
 
-              {/* Headline with Specular Warm Gradient */}
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-canary-text tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
-                Protect Your Workforce.{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EDCB63] via-[#F2A33A] to-[#E5483D]">
-                  Stay Ahead of Risk.
-                </span>
-              </h2>
+              {/* Right Column: Glowing 3D Glass Shield & Health Telemetry Visual (Pulsing Animation + Feathered Blur) */}
+              <div className="relative flex items-center justify-center shrink-0 w-full lg:w-[480px] pointer-events-none select-none">
+                {/* Ambient Radial Bloom behind Shield */}
+                <div className="absolute w-[360px] h-[280px] bg-gradient-to-tr from-[#F2A33A]/40 via-[#F59A4A]/25 to-transparent rounded-full blur-[70px] -z-10 animate-pulse pointer-events-none" />
 
-              {/* Prose Body */}
-              <p className="text-base sm:text-lg md:text-xl text-canary-text-2 leading-relaxed font-light pt-1 drop-shadow-sm">
-                Your people are your greatest asset. Don&apos;t wait for health risks to turn into workplace incidents. Canary brings environmental and health signals together to identify early warning signs, helping your organisation make smarter decisions, take preventive action, and build a safer, healthier workforce.
-              </p>
-
-              {/* Strategic Value Pillars: 3 Frosted Glass Mini-Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/15">
-                {/* Pillar 1 */}
-                <div
-                  className="p-4 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-white/30"
+                {/* Clean Screen-Blended Shield Graphic with Subtle Pulsing Animation & Masked Blurred Edges */}
+                <img
+                  src="/images/workforce/workforce-shield-graphic.png"
+                  alt="Canary Workforce Health & Prevention Shield"
+                  className="w-full max-w-[420px] lg:max-w-[480px] h-auto object-contain mix-blend-screen animate-shield-pulse select-none pointer-events-none"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
+                    maskImage:
+                      'radial-gradient(ellipse 85% 82% at 50% 50%, black 45%, rgba(0,0,0,0.85) 65%, rgba(0,0,0,0.3) 82%, transparent 100%)',
+                    WebkitMaskImage:
+                      'radial-gradient(ellipse 85% 82% at 50% 50%, black 45%, rgba(0,0,0,0.85) 65%, rgba(0,0,0,0.3) 82%, transparent 100%)',
                   }}
-                >
-                  <div className="w-9 h-9 rounded-xl bg-[#6FA8C7]/20 border border-[#6FA8C7]/35 flex items-center justify-center text-[#6FA8C7] shrink-0 mt-0.5 shadow-sm">
-                    <Wind className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-canary-text group-hover:text-canary-amber transition-colors">
-                      Environmental Precursors
-                    </h4>
-                    <p className="text-[11px] text-canary-text-3 mt-1 leading-normal">
-                      Detect acute heat and air quality anomalies 24–48h before symptoms rise.
-                    </p>
-                  </div>
+                />
+              </div>
+            </div>
+
+            {/* Bottom Row: 3 Golden-Bordered Frosted Glass Mini-Cards */}
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4.5 pt-8">
+              {/* Pillar 1 */}
+              <div
+                className="p-4 sm:p-5 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-[#F2A33A]/80 hover:shadow-[0_0_24px_rgba(242,163,58,0.25)] hover:scale-[1.01]"
+                style={{
+                  background: 'rgba(18, 16, 15, 0.65)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(242, 163, 58, 0.40)',
+                  boxShadow:
+                    'inset 0 1px 1px 0 rgba(242, 163, 58, 0.22), 0 8px 24px -6px rgba(0, 0, 0, 0.6)',
+                }}
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#F2A33A]/15 border border-[#F2A33A]/50 flex items-center justify-center text-[#F2A33A] shrink-0 mt-0.5 shadow-[0_0_14px_rgba(242,163,58,0.28)]">
+                  <Wind className="w-4.5 h-4.5 drop-shadow-[0_0_6px_rgba(242,163,58,0.5)]" />
                 </div>
-
-                {/* Pillar 2 */}
-                <div
-                  className="p-4 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-white/30"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
-                  }}
-                >
-                  <div className="w-9 h-9 rounded-xl bg-[#C58BD9]/20 border border-[#C58BD9]/35 flex items-center justify-center text-[#C58BD9] shrink-0 mt-0.5 shadow-sm">
-                    <Activity className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-canary-text group-hover:text-canary-amber transition-colors">
-                      Syndromic Fusion
-                    </h4>
-                    <p className="text-[11px] text-canary-text-3 mt-1 leading-normal">
-                      Correlate workplace sick leaves with clinic encounters with zero individual tracking.
-                    </p>
-                  </div>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#F2A33A] transition-colors drop-shadow-sm leading-snug">
+                    Environmental Precursors
+                  </h4>
+                  <p className="text-[11px] sm:text-xs text-stone-400 mt-1 leading-relaxed font-normal">
+                    Detect acute heat and air quality anomalies 24–48h before symptoms rise.
+                  </p>
                 </div>
+              </div>
 
-                {/* Pillar 3 */}
-                <div
-                  className="p-4 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-white/30"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    boxShadow: 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.20)',
-                  }}
-                >
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/35 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-sm">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-canary-text group-hover:text-canary-amber transition-colors">
-                      Proportionate Playbooks
-                    </h4>
-                    <p className="text-[11px] text-canary-text-3 mt-1 leading-normal">
-                      Deploy hydration hubs, shift rotations, and early outreach before incidents happen.
-                    </p>
-                  </div>
+              {/* Pillar 2 */}
+              <div
+                className="p-4 sm:p-5 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-[#EDCB63]/80 hover:shadow-[0_0_24px_rgba(237,203,99,0.25)] hover:scale-[1.01]"
+                style={{
+                  background: 'rgba(18, 16, 15, 0.65)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(242, 163, 58, 0.40)',
+                  boxShadow:
+                    'inset 0 1px 1px 0 rgba(242, 163, 58, 0.22), 0 8px 24px -6px rgba(0, 0, 0, 0.6)',
+                }}
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#EDCB63]/15 border border-[#EDCB63]/50 flex items-center justify-center text-[#EDCB63] shrink-0 mt-0.5 shadow-[0_0_14px_rgba(237,203,99,0.28)]">
+                  <Activity className="w-4.5 h-4.5 drop-shadow-[0_0_6px_rgba(237,203,99,0.5)]" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#EDCB63] transition-colors drop-shadow-sm leading-snug">
+                    Syndromic Fusion
+                  </h4>
+                  <p className="text-[11px] sm:text-xs text-stone-400 mt-1 leading-relaxed font-normal">
+                    Correlate workplace sick leaves with clinic encounters with zero individual tracking.
+                  </p>
+                </div>
+              </div>
+
+              {/* Pillar 3 */}
+              <div
+                className="p-4 sm:p-5 rounded-2xl flex items-start gap-3.5 transition-all duration-200 group hover:border-[#E8C14A]/80 hover:shadow-[0_0_24px_rgba(232,193,74,0.25)] hover:scale-[1.01]"
+                style={{
+                  background: 'rgba(18, 16, 15, 0.65)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(242, 163, 58, 0.40)',
+                  boxShadow:
+                    'inset 0 1px 1px 0 rgba(242, 163, 58, 0.22), 0 8px 24px -6px rgba(0, 0, 0, 0.6)',
+                }}
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#E8C14A]/15 border border-[#E8C14A]/50 flex items-center justify-center text-[#E8C14A] shrink-0 mt-0.5 shadow-[0_0_14px_rgba(232,193,74,0.28)]">
+                  <ShieldCheck className="w-4.5 h-4.5 drop-shadow-[0_0_6px_rgba(232,193,74,0.5)]" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#E8C14A] transition-colors drop-shadow-sm leading-snug">
+                    Proportionate Playbooks
+                  </h4>
+                  <p className="text-[11px] sm:text-xs text-stone-400 mt-1 leading-relaxed font-normal">
+                    Deploy hydration hubs, shift rotations, and early outreach before incidents happen.
+                  </p>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Outside Golden 4-Point Twinkle Star (Matches Inspiration Bottom Right) */}
+          <div className="absolute -bottom-5 -right-3 w-8 h-8 text-[#EDCB63]/75 pointer-events-none drop-shadow-[0_0_12px_rgba(237,203,99,0.8)] hidden sm:block">
+            <Sparkles className="w-full h-full fill-[#EDCB63]/50 animate-pulse" />
           </div>
         </div>
 
