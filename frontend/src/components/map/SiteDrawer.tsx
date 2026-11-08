@@ -5,7 +5,7 @@ import { MonitoringUnit } from '@/lib/types/domain';
 import { RiskTierBadge } from '../shared/RiskTierBadge';
 import { CompletenessMeter } from '../shared/CompletenessMeter';
 import { ProvenanceBadge } from '../shared/ProvenanceBadge';
-import { X, Building2, MapPin, Users, Activity, ExternalLink, ShieldAlert } from 'lucide-react';
+import { X, Building2, MapPin, Users, Activity, ExternalLink, ShieldAlert, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useDemoRole } from '@/context/RoleContext';
 
@@ -75,6 +75,40 @@ export const SiteDrawer: React.FC<SiteDrawerProps> = ({ unit, onClose }) => {
           </h4>
           <p className="text-sm text-canary-text-2 bg-panel-inset p-3 rounded-control border border-border">
             {unit.primaryRiskReason || 'Operating within normal expected baseline.'}
+          </p>
+        </div>
+
+        {/* 3 Metric Cards matching District Dossier */}
+        <div className="grid grid-cols-3 gap-2 bg-panel-inset p-3 rounded-control border border-border">
+          <div className="text-center">
+            <span className="text-[10px] uppercase font-mono text-canary-text-3 font-semibold block">Active Cases</span>
+            <span className="text-base font-black text-canary-text font-mono mt-0.5 block">
+              {unit.id.includes('alquoz') ? '3,420' : '4,850'}
+            </span>
+            <span className="text-[10px] font-mono font-bold text-[#E5483D] block">
+              {unit.observedTrendPercent ? `+${unit.observedTrendPercent}% (7d)` : '+18% (7d)'}
+            </span>
+          </div>
+          <div className="text-center border-x border-border px-1">
+            <span className="text-[10px] uppercase font-mono text-canary-text-3 font-semibold block">Workforce</span>
+            <span className="text-base font-bold text-canary-text-2 mt-0.5 block truncate">{unit.headcountBand}</span>
+            <span className="text-[10px] text-canary-text-3 block">Protected</span>
+          </div>
+          <div className="text-center">
+            <span className="text-[10px] uppercase font-mono text-canary-text-3 font-semibold block">Early Lead</span>
+            <span className="text-base font-black text-canary-amber font-mono mt-0.5 block">+2.5d</span>
+            <span className="text-[10px] text-canary-amber/80 font-mono block">Ahead of Risk</span>
+          </div>
+        </div>
+
+        {/* Automated Prevention Playbook */}
+        <div className="space-y-1.5">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-canary-text-3 flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Automated Prevention Playbook</span>
+          </h4>
+          <p className="text-xs text-canary-text-2 bg-panel-inset p-3 rounded-control border border-border leading-relaxed">
+            Immediate Water Testing Sweep & Central Dining Facility Disinfection Protocol.
           </p>
         </div>
 

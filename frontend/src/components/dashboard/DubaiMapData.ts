@@ -382,3 +382,4 @@ export function placeToMonitoringUnit(place: DubaiPlace): MonitoringUnit {
     observedTrendPercent: parseInt(place.caseTrend) || 12,
   };
 }
+
