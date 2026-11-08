@@ -10,17 +10,15 @@ import { DiseaseTrendsBreakdownCard } from '@/components/dashboard/DiseaseTrends
 import { DiseaseTrendsChartCard } from '@/components/dashboard/DiseaseTrendsChartCard';
 import { GeographicSpreadCard } from '@/components/dashboard/GeographicSpreadCard';
 import { OutbreakSourcesCard } from '@/components/dashboard/OutbreakSourcesCard';
-import { SiteDrawer } from '@/components/map/SiteDrawer';
 import { fetchUnits } from '@/lib/api/client';
 import { useDemoRole } from '@/context/RoleContext';
 import { MonitoringUnit } from '@/lib/types/domain';
-import { DubaiPlace, DUBAI_PLACES, placeToMonitoringUnit } from '@/components/dashboard/DubaiMapData';
+import { DubaiPlace, DUBAI_PLACES } from '@/components/dashboard/DubaiMapData';
 
 export default function DashboardPage() {
   const { activeRole } = useDemoRole();
   const [units, setUnits] = useState<MonitoringUnit[]>([]);
-  const [selectedUnit, setSelectedUnit] = useState<MonitoringUnit | null>(null);
-  const [selectedPlace, setSelectedPlace] = useState<DubaiPlace>(DUBAI_PLACES[0]);
+  const [selectedPlace, setSelectedPlace] = useState<DubaiPlace | null>(DUBAI_PLACES[0]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,18 +54,17 @@ export default function DashboardPage() {
         <div className="xl:col-span-7 2xl:col-span-8 flex flex-col">
           <SurveillanceMapCard
             units={units}
-            selectedPlaceId={selectedPlace.id}
+            selectedPlaceId={selectedPlace ? selectedPlace.id : null}
             onSelectPlace={(p) => setSelectedPlace(p)}
-            onSelectUnit={(u) => setSelectedUnit(u)}
           />
         </div>
 
-        {/* Right Column: District Telemetry Dossier Window */}
+        {/* Right Column: District Telemetry Dossier Window (Contained Strictly in Map Tab) */}
         <div className="xl:col-span-5 2xl:col-span-4 flex flex-col">
           <DistrictTelemetryCard
             place={selectedPlace}
             onSelectPlace={(p) => setSelectedPlace(p)}
-            onOpenDossier={(p) => setSelectedUnit(placeToMonitoringUnit(p))}
+            onClose={() => setSelectedPlace(null)}
           />
         </div>
       </div>
@@ -102,9 +99,6 @@ export default function DashboardPage() {
           <OutbreakSourcesCard />
         </div>
       </div>
-
-      {/* Selected Site Drawer Modal (Enforces strict k >= 5 privacy suppression) */}
-      <SiteDrawer unit={selectedUnit} onClose={() => setSelectedUnit(null)} />
     </AppShell>
   );
 }

@@ -36,7 +36,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
   const [showHighways, setShowHighways] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
 
-  const activeSelectedPlaceId = controlledSelectedPlaceId ?? internalSelectedPlaceId;
+  const activeSelectedPlaceId = controlledSelectedPlaceId !== undefined ? controlledSelectedPlaceId : internalSelectedPlaceId;
 
   // Filtered places according to category
   const visiblePlaces = useMemo(() => {
@@ -489,10 +489,7 @@ export const SurveillanceMapCard: React.FC<SurveillanceMapCardProps> = ({
                 key={place.id}
                 className="cursor-pointer group"
                 onClick={() => handlePlaceClick(place)}
-                onMouseEnter={() => {
-                  setHoveredPlaceId(place.id);
-                  if (onSelectPlace) onSelectPlace(place);
-                }}
+                onMouseEnter={() => setHoveredPlaceId(place.id)}
                 onMouseLeave={() => setHoveredPlaceId(null)}
               >
                 {/* Outer Pulsing Glow */}

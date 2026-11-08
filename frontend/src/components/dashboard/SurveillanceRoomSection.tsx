@@ -9,11 +9,10 @@ import { DiseaseTrendsBreakdownCard } from './DiseaseTrendsBreakdownCard';
 import { DiseaseTrendsChartCard } from './DiseaseTrendsChartCard';
 import { GeographicSpreadCard } from './GeographicSpreadCard';
 import { OutbreakSourcesCard } from './OutbreakSourcesCard';
-import { SiteDrawer } from '@/components/map/SiteDrawer';
 import { fetchUnits } from '@/lib/api/client';
 import { useDemoRole } from '@/context/RoleContext';
 import { MonitoringUnit } from '@/lib/types/domain';
-import { DubaiPlace, DUBAI_PLACES, placeToMonitoringUnit } from './DubaiMapData';
+import { DubaiPlace, DUBAI_PLACES } from './DubaiMapData';
 
 interface SurveillanceRoomSectionProps {
   id?: string;
@@ -26,8 +25,7 @@ export const SurveillanceRoomSection: React.FC<SurveillanceRoomSectionProps> = (
 }) => {
   const { activeRole } = useDemoRole();
   const [units, setUnits] = useState<MonitoringUnit[]>([]);
-  const [selectedUnit, setSelectedUnit] = useState<MonitoringUnit | null>(null);
-  const [selectedPlace, setSelectedPlace] = useState<DubaiPlace>(DUBAI_PLACES[0]); // Default Al Quoz Industrial
+  const [selectedPlace, setSelectedPlace] = useState<DubaiPlace | null>(DUBAI_PLACES[0]); // Default Al Quoz Industrial
 
   useEffect(() => {
     let isMounted = true;
@@ -56,18 +54,17 @@ export const SurveillanceRoomSection: React.FC<SurveillanceRoomSectionProps> = (
         <div className="xl:col-span-7 2xl:col-span-8 flex flex-col">
           <SurveillanceMapCard
             units={units}
-            selectedPlaceId={selectedPlace.id}
+            selectedPlaceId={selectedPlace ? selectedPlace.id : null}
             onSelectPlace={(p) => setSelectedPlace(p)}
-            onSelectUnit={(u) => setSelectedUnit(u)}
           />
         </div>
 
-        {/* Right Column: District Telemetry Dossier Window */}
+        {/* Right Column: District Telemetry Dossier Window (Contained Strictly in Map Tab) */}
         <div className="xl:col-span-5 2xl:col-span-4 flex flex-col">
           <DistrictTelemetryCard
             place={selectedPlace}
             onSelectPlace={(p) => setSelectedPlace(p)}
-            onOpenDossier={(p) => setSelectedUnit(placeToMonitoringUnit(p))}
+            onClose={() => setSelectedPlace(null)}
           />
         </div>
       </div>
@@ -102,9 +99,6 @@ export const SurveillanceRoomSection: React.FC<SurveillanceRoomSectionProps> = (
           <OutbreakSourcesCard />
         </div>
       </div>
-
-      {/* Selected Site Drawer Modal (Enforces strict k >= 5 privacy suppression) */}
-      <SiteDrawer unit={selectedUnit} onClose={() => setSelectedUnit(null)} />
     </section>
   );
 };

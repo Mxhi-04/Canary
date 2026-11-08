@@ -17,10 +17,31 @@ interface SiteDrawerProps {
 export const SiteDrawer: React.FC<SiteDrawerProps> = ({ unit, onClose }) => {
   const { roleInfo, isRegulator } = useDemoRole();
 
+  // Close on Escape key press
+  React.useEffect(() => {
+    if (!unit) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [unit, onClose]);
+
   if (!unit) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full max-w-md bg-panel border-l border-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+    <>
+      {/* Click-outside backdrop */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Sliding Drawer Panel */}
+      <div className="fixed inset-y-0 right-0 w-full max-w-md bg-panel border-l border-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
       {/* Header */}
       <div className="p-5 border-b border-border flex items-center justify-between bg-panel-raised">
         <div className="flex items-center gap-2.5">
@@ -186,6 +207,7 @@ export const SiteDrawer: React.FC<SiteDrawerProps> = ({ unit, onClose }) => {
         )}
       </div>
     </div>
-  );
+  </>
+);
 };
 
