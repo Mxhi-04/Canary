@@ -10,7 +10,7 @@ Combines:
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -148,9 +148,9 @@ class MultiSignalFusionEngine:
     """
 
     MAX_STREAM_CONTRIBUTION = 40.0  # Cap at 40% to prevent single-stream false alarms
-    CORRELATION_DISCOUNT = 0.85     # 15% discount for co-occurring clinic + teleconsult
+    CORRELATION_DISCOUNT = 0.85  # 15% discount for co-occurring clinic + teleconsult
 
-    def compute_hazard_prior(self, hazard_type: str, hazard_val: float) -> Dict[str, Any]:
+    def compute_hazard_prior(self, hazard_type: str, hazard_val: float) -> dict[str, Any]:
         """
         Stage 1: Computes hazard exposure prior.
         - Heat WBGT: Threshold 29°C (moderate), 31°C (high), 33°C (extreme)
@@ -197,10 +197,10 @@ class MultiSignalFusionEngine:
 
     def fuse_signals(
         self,
-        hazard_evidence: Dict[str, Any],
-        outcome_streams: List[Dict[str, Any]],
+        hazard_evidence: dict[str, Any],
+        outcome_streams: list[dict[str, Any]],
         completeness_pct: float = 95.0,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Fuses hazard prior with syndromic outcomes into a final composite anomaly score.
         outcome_streams item format:
@@ -212,17 +212,19 @@ class MultiSignalFusionEngine:
             "category": "syndromic" | "absence"
         }
         """
-        waterfall: List[Dict[str, Any]] = []
+        waterfall: list[dict[str, Any]] = []
 
         # 1. Add Hazard Prior Contribution
         hazard_prior = hazard_evidence.get("raw_prior_score", 0.0)
         capped_hazard = min(self.MAX_STREAM_CONTRIBUTION, hazard_prior)
-        waterfall.append({
-            "stream": f"Hazard: {hazard_evidence.get('hazard_type', 'UNKNOWN')}",
-            "raw_score": round(hazard_prior, 1),
-            "effective_contribution": round(capped_hazard, 1),
-            "explanation": f"Observed {hazard_evidence.get('observed_value')} (Lead: +{hazard_evidence.get('estimated_lead_days', 0):.1f}d)",
-        })
+        waterfall.append(
+            {
+                "stream": f"Hazard: {hazard_evidence.get('hazard_type', 'UNKNOWN')}",
+                "raw_score": round(hazard_prior, 1),
+                "effective_contribution": round(capped_hazard, 1),
+                "explanation": f"Observed {hazard_evidence.get('observed_value')} (Lead: +{hazard_evidence.get('estimated_lead_days', 0):.1f}d)",
+            }
+        )
 
         # 2. Add Outcome Stream Contributions
         has_clinic = False
@@ -252,16 +254,18 @@ class MultiSignalFusionEngine:
                     capped_contrib *= self.CORRELATION_DISCOUNT
                     discount_applied = True
 
-            waterfall.append({
-                "stream": stream.get("stream"),
-                "observed": stream.get("observed"),
-                "expected": stream.get("expected"),
-                "z_score": round(z, 2),
-                "raw_score": round(raw_contrib, 1),
-                "effective_contribution": round(capped_contrib, 1),
-                "discount_applied": discount_applied,
-                "explanation": f"Z={z:.1f} vs expected baseline ({stream.get('expected')})",
-            })
+            waterfall.append(
+                {
+                    "stream": stream.get("stream"),
+                    "observed": stream.get("observed"),
+                    "expected": stream.get("expected"),
+                    "z_score": round(z, 2),
+                    "raw_score": round(raw_contrib, 1),
+                    "effective_contribution": round(capped_contrib, 1),
+                    "discount_applied": discount_applied,
+                    "explanation": f"Z={z:.1f} vs expected baseline ({stream.get('expected')})",
+                }
+            )
             total_outcome_score += capped_contrib
 
         # 3. Completeness penalty if data is missing (< 90%)

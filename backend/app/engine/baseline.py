@@ -8,7 +8,7 @@ Implements:
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -161,8 +161,8 @@ class BaselineEngine:
         self.baseline_window_days = baseline_window_days
 
     def compute_expected_baseline(
-        self, historical_counts: List[float], day_of_week: int
-    ) -> Tuple[float, float]:
+        self, historical_counts: list[float], day_of_week: int
+    ) -> tuple[float, float]:
         """
         Calculates expected value and uncertainty (standard deviation)
         adjusted for day-of-week pattern.
@@ -186,9 +186,7 @@ class BaselineEngine:
 
         return adjusted_expected, adjusted_std
 
-    def compute_anomaly_zscore(
-        self, observed: float, expected: float, std_dev: float
-    ) -> float:
+    def compute_anomaly_zscore(self, observed: float, expected: float, std_dev: float) -> float:
         """
         Computes standardized residual z-score: (observed - expected) / sigma
         """
@@ -204,7 +202,7 @@ class EarsC2Comparator:
     Threshold: observed > mean + 3 * std
     """
 
-    def evaluate(self, counts_history: List[float]) -> Dict[str, Any]:
+    def evaluate(self, counts_history: list[float]) -> dict[str, Any]:
         """
         Evaluates current day against EARS C2 rule.
         counts_history: list of daily counts ending at today.
@@ -238,8 +236,8 @@ class CusumComparator:
     """
 
     def evaluate(
-        self, counts_history: List[float], slack: float = 0.5, h: float = 4.0
-    ) -> Dict[str, Any]:
+        self, counts_history: list[float], slack: float = 0.5, h: float = 4.0
+    ) -> dict[str, Any]:
         if len(counts_history) < 7:
             return {"triggered": False, "cusum_stat": 0.0, "threshold": h}
 

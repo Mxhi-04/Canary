@@ -8,17 +8,10 @@ Validates:
 5. Privacy engine (rejection of prohibited personal identifiers, k-suppression).
 """
 
-import pytest
-import sys
-import os
-
-# Add backend directory to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from app.engine.baseline import BaselineEngine, EarsC2Comparator, CusumComparator
-from app.engine.fusion import MultiSignalFusionEngine
-from app.engine.tiering import TieringEngine, RiskTier
-from app.engine.privacy import PrivacyEngine
+from backend.app.engine.baseline import BaselineEngine, EarsC2Comparator
+from backend.app.engine.fusion import MultiSignalFusionEngine
+from backend.app.engine.privacy import PrivacyEngine
+from backend.app.engine.tiering import RiskTier, TieringEngine
 
 
 def test_baseline_and_zscore():
@@ -86,7 +79,9 @@ def test_tiering_persistence_and_cooldown():
     assert res_action["tier"] == RiskTier.ACTION
 
     # Case 4: Cooldown active (last alert closed 1 day ago)
-    res_cooldown = tiering.evaluate_tier(60.0, recent_3day_scores=[60.0, 60.0, 60.0], last_alert_closed_days_ago=1)
+    res_cooldown = tiering.evaluate_tier(
+        60.0, recent_3day_scores=[60.0, 60.0, 60.0], last_alert_closed_days_ago=1
+    )
     assert res_cooldown["in_cooldown"] is True
     assert res_cooldown["tier"] == RiskTier.NORMAL
 
@@ -136,4 +131,3 @@ def test_privacy_small_cell_suppression():
     normal_cell = privacy.apply_small_cell_suppression(count=8, k_threshold=5)
     assert normal_cell["suppressed"] is False
     assert normal_cell["display_value"] == "8"
-

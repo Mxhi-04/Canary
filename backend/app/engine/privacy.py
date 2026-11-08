@@ -9,8 +9,7 @@ Enforces:
    Any count 1 <= count < k is suppressed to prevent re-identification.
 """
 
-from typing import Dict, Any, List, Tuple
-
+from typing import Any
 
 PROHIBITED_PERSON_LEVEL_FIELDS = {
     "person_name",
@@ -36,14 +35,14 @@ class PrivacyEngine:
     DEFAULT_K_THRESHOLD = 5
 
     @classmethod
-    def validate_ingest_payload(cls, record: Dict[str, Any]) -> Tuple[bool, List[str]]:
+    def validate_ingest_payload(cls, record: dict[str, Any]) -> tuple[bool, list[str]]:
         """
         Validates aggregate record. Rejects immediately if prohibited person-level fields appear.
         """
-        violations: List[str] = []
+        violations: list[str] = []
 
         # Check prohibited fields
-        for field in record.keys():
+        for field in record:
             normalized = field.strip().lower().replace("-", "_").replace(" ", "_")
             if normalized in PROHIBITED_PERSON_LEVEL_FIELDS:
                 violations.append(
@@ -71,7 +70,7 @@ class PrivacyEngine:
     @classmethod
     def apply_small_cell_suppression(
         cls, count: int, k_threshold: int = DEFAULT_K_THRESHOLD
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Applies small-cell suppression.
         If count is 0: returns 0.
@@ -90,4 +89,3 @@ class PrivacyEngine:
             }
 
         return {"display_value": str(count), "suppressed": False, "raw_count": count}
-

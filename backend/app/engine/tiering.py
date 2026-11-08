@@ -7,8 +7,8 @@ Implements:
 4. Unit/hazard deduplication.
 """
 
-from typing import List, Dict, Any, Optional
 from enum import Enum
+from typing import Any
 
 
 class RiskTier(str, Enum):
@@ -27,14 +27,17 @@ class TieringEngine:
     def evaluate_tier(
         self,
         current_score: float,
-        recent_3day_scores: List[float],
-        last_alert_closed_days_ago: Optional[int] = None,
-    ) -> Dict[str, Any]:
+        recent_3day_scores: list[float],
+        last_alert_closed_days_ago: int | None = None,
+    ) -> dict[str, Any]:
         """
         Evaluates risk tier with persistence and cooldown logic.
         """
         # Check cooldown first
-        if last_alert_closed_days_ago is not None and last_alert_closed_days_ago < self.COOLDOWN_DAYS:
+        if (
+            last_alert_closed_days_ago is not None
+            and last_alert_closed_days_ago < self.COOLDOWN_DAYS
+        ):
             return {
                 "tier": RiskTier.NORMAL,
                 "in_cooldown": True,
@@ -85,4 +88,3 @@ class TieringEngine:
             "score": current_score,
             "reason": f"Score {current_score:.1f} within expected baseline boundaries.",
         }
-
