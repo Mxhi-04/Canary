@@ -1,11 +1,11 @@
 <div align="center">
 
-# Canary (SentinelHealth)
+# Canary
 
 <p><strong>Explainable early warning for population and workforce health surveillance.</strong></p>
 <p>Integrated full-stack platform for the Future Health Digital Innovation Challenge — Challenge 06.</p>
 
-[![Backend CI](https://github.com/Mxhi-04/SentinelHealth/actions/workflows/ci.yml/badge.svg)](https://github.com/Mxhi-04/SentinelHealth/actions/workflows/ci.yml)
+[![Backend CI](https://github.com/Mxhi-04/Canary/actions/workflows/ci.yml/badge.svg)](https://github.com/Mxhi-04/Canary/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-31746b.svg)](LICENSE)
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-31746b)
 ![Next.js 15](https://img.shields.io/badge/Next.js-15-black)
@@ -39,8 +39,8 @@ Requirements: [uv](https://docs.astral.sh/uv/getting-started/installation/) and 
 
 ```bash
 # Clone and enter repo
-git clone https://github.com/Mxhi-04/SentinelHealth.git
-cd SentinelHealth
+git clone https://github.com/Mxhi-04/Canary.git
+cd Canary
 
 # Install dependencies and sync environment
 uv sync --locked
