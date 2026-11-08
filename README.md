@@ -1,30 +1,98 @@
-# Canary — Population and Workforce Health Early-Warning Platform
+<div align="center">
 
-> **Challenge:** Future Health Digital Innovation Challenge — Challenge 06  
-> **Core Principle:** *Exposure leads; outcomes confirm.*  
-> **Status:** Prototype Target 20 November 2026
+# Canary (SentinelHealth)
 
-Canary is an early-warning and decision-support platform designed to detect emerging population and workforce health risks across enterprise and community facilities. By fusing environmental hazard signals (particulate matter PM2.5/PM10, ambient heat, and WBGT thermal index) with aggregate health-service and workplace outcome signals (syndromic clinic presentations, teleconsultation surges, and sickness absence), Canary identifies developing clusters **2.0 to 3.0 days earlier** than single-signal surveillance methods.
+<p><strong>Explainable early warning for population and workforce health surveillance.</strong></p>
+<p>Integrated full-stack platform for the Future Health Digital Innovation Challenge — Challenge 06.</p>
 
-When an anomaly is detected, Canary explains **what changed, why the system raised the alert, where and when it occurred, how reliable the evidence is, and what proportionate action a responsible human should consider**.
+[![Backend CI](https://github.com/Mxhi-04/SentinelHealth/actions/workflows/ci.yml/badge.svg)](https://github.com/Mxhi-04/SentinelHealth/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-31746b.svg)](LICENSE)
+![Python 3.12](https://img.shields.io/badge/Python-3.12-31746b)
+![Next.js 15](https://img.shields.io/badge/Next.js-15-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+
+<p>
+  <a href="#quick-start">Quick start</a> · 
+  <a href="#core-capabilities--screens">Core screens</a> · 
+  <a href="#validation--benchmarks">Validation</a> · 
+  <a href="docs/api.md">API contract</a> · 
+  <a href="ARCHITECTURE.md">Architecture</a> · 
+  <a href="docs/deployment.md">Deployment</a>
+</p>
+
+</div>
 
 ---
 
-## Key Capabilities & Core Screens
+> **Core Principle:** *Exposure leads; outcomes confirm.*  
+> **Status:** Submission target 20 November 2026
 
-1. **Overview & Spatial Surveillance (`/`)**:
+Canary combines environmental hazard exposure (particulate matter PM2.5/PM10, ambient heat, and WBGT thermal index) with aggregate clinic and workplace reports (syndromic clinic presentations, teleconsultation surges, and sickness absence). Exposure can trigger a **Watch**, and persistent corroborating evidence can raise an **Alert** or **Action**. When an anomaly is detected, Canary explains **what changed, why the system raised the alert, where and when it occurred, how reliable the evidence is, and what proportionate action a responsible human should consider**.
+
+---
+
+## Quick Start
+
+### 1. Backend (FastAPI & Engine)
+
+Requirements: [uv](https://docs.astral.sh/uv/getting-started/installation/) and Python 3.12+.
+
+```bash
+# Clone and enter repo
+git clone https://github.com/Mxhi-04/SentinelHealth.git
+cd SentinelHealth
+
+# Install dependencies and sync environment
+uv sync --locked
+
+# Start the FastAPI early-warning backend
+uv run uvicorn backend.app.api.main:app --no-access-log
+```
+
+Open [Swagger UI](http://127.0.0.1:8000/docs). Try the [respiratory replay](http://127.0.0.1:8000/replay/respiratory?day=16) or inspect `/alerts/{alert_id}`.
+
+### 2. Frontend (Next.js Surveillance App)
+
+Requirements: Node.js 18+ and npm.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the interactive Canary landing page, live Disease Surveillance Room, UAE / Dubai geospatial map, and role-based operational dashboard.
+
+### 3. Docker Compose (Full-Stack)
+
+```bash
+docker compose up --build --wait
+```
+
+- Backend API: `http://127.0.0.1:8000`
+- API Health Check: `http://127.0.0.1:8000/healthz`
+
+---
+
+## Core Capabilities & Screens
+
+1. **Overview & Spatial Surveillance (`/` and `/map`)**:
    - UAE geospatial map across Abu Dhabi Central, Musaffah & ICAD, Al Ain, and Dubai South.
    - Semicircular operational gauges for data completeness, percentage of sites at Alert or above, and open Action alerts.
    - Ranked horizontal site bars by anomaly severity.
    - Exposure vs confirmatory outcome trends (European CAMS PM2.5 vs site clinic visits).
    - Real-time data quality and feed health auditing (detects and isolates delayed feeds).
 
-2. **Alert Inbox (`/alerts`)**:
+2. **Live Disease Surveillance Room & Dubai Telemetry**:
+   - Interactive bento grid matching blueprint specifications with glowing hotspot map, 3 circular gauges, spline trend chart, geographic spread, and outbreak sources.
+   - Deep-dive District Telemetry Dossier with live clinical metrics, environmental indices, and synchronized site drawers.
+
+3. **Alert Inbox (`/alerts`)**:
    - Multi-tiered operational queue categorized into **Watch (●)**, **Alert (▲)**, and **Action (◆)**.
    - Filterable by tier, hazard type (Respiratory, Gastrointestinal, Heat Stress), monitoring unit, and status.
-   - Left-edge 3px severity bar, stream completeness meter, and uncertainty indicator.
+   - Left-edge severity indicators, stream completeness meters, and uncertainty metrics.
 
-3. **Explainable Alert Detail (`/alerts/[id]`)**:
+4. **Explainable Alert Detail (`/alerts/[id]`)**:
    - Organized strictly under the **five core PRD questions**:
      1. *What changed*: Observed count vs rolling negative-binomial GLM baseline with 95% forecast interval.
      2. *Why Canary raised this*: Evidence contribution waterfall, evidence capping, correlation discounts, and persistence rules.
@@ -33,117 +101,89 @@ When an anomaly is detected, Canary explains **what changed, why the system rais
      5. *What to consider doing*: Action playbook, designated owner role, supporting evidence, explicit assumptions, escalation criteria, review-by deadline, and authoritative WHO/ILO citations.
    - Mandatory human-review disclaimer bar and read-only demo sign-off workflow.
 
-4. **Scenario Replay (`/replay`)**:
+5. **Scenario Replay (`/replay`)**:
    - Interactive 14-day timeline scrubber with day ticks, play/pause controls, and keyboard navigation (`←`/`→`, `Space`).
    - Replays three distinct scenarios:
      - *Scenario 1:* Respiratory Dust / PM2.5 Episode (Musaffah Sector 14).
      - *Scenario 2:* Gastrointestinal Cluster in Shared Accommodation (ICAD Village 02).
      - *Scenario 3:* Heat-Related Illness & WBGT Thermal Stress (Dubai South Aviation District).
    - Real-time marker tracks comparing Canary against **EARS C2 (absence)** and **CUSUM (clinic visits)** baselines.
-   - Live evidence snapshot reconstructing what Canary knew at that exact day with zero future data leakage.
 
-5. **Validation & Benchmarks (`/validation`)**:
+6. **Validation & Benchmarks (`/validation`)**:
    - Empirical back-testing summary on held-out synthetic test seeds (Calibration Seed 42, Test Seed 108).
    - Comparator matrix reporting event-level sensitivity, lead time (days), alert-level PPV, and false alerts per site-month.
    - Lead time advantage chart relative to the clinical-significance zero line (+2.9 days for Canary).
    - Ablation and robustness stress testing (evaluates feed removal, 48h reporting delays, and 30% noise).
 
-6. **Privacy & Governance (`/privacy`)**:
+7. **Privacy & Governance (`/privacy`)**:
    - Canonical 4-field aggregate data contract (`unit_id`, `date`, `category`, `count`).
    - Interactive ingestion testing sandbox that rejects prohibited person-level fields (`patient_id`, `employee_name`).
    - Live small-cell suppression engine with an interactive threshold slider ($k=3$ to $10$, default $k=5$) showing primary suppression and secondary total-protection suppression.
    - Server-enforced role access comparison across Site HSE, OH Lead, District Health Officer, and Regulator compliance views.
    - Immutable append-only audit event log.
 
-7. **Health & Resilience Impact Estimator (`/impact`)**:
-   - Low, Base, and High scenario projections for avoided clinical presentations, severe cases, and lost workdays.
-   - Interactive sliders for intervention uptake, preventive efficacy, and lead time gain.
-   - Transparent mathematical equation breakdown and ILO/WHO citation caveats.
+8. **Health & Resilience Impact Estimator (`/impact`)**:
+   - Low, Base, and High scenario impact calculator modeling averted worker sick days, prevented severe heat illness events, and operational savings across enterprise workforces.
 
 ---
 
-## Honest Data & Provenance Language
+## Validation & Benchmarks
 
-Canary adheres to strict honest provenance marking:
-- <span style="color:#6FA8C7">**Real Feed**</span>: Ambient environmental observations (European CAMS PM2.5/PM10 and ECMWF atmosphere via Open-Meteo).
-- <span style="color:#C58BD9">**Simulated**</span>: Health-service clinical encounters, teleconsultations, and workplace absence generated for scenario evaluation.
-- <span style="color:#D9B26F">**Illustrative**</span>: Scenario-based impact estimates and projections.
-- <span style="color:#E8C14A">**≈ Approximation**</span>: Derived indices such as the WBGT heat-stress proxy.
+<div align="center">
+  <img src="eval/reports/validation.svg" width="100%" alt="Canary leads absence EARS C2 by one median day, trails clinic CUSUM by one day, and loses sensitivity when feeds are missing">
+</div>
 
----
+| Detector | Event sensitivity | Alert precision | False alerts per site-month | Median lead for Canary |
+| :--- | :---: | :---: | :---: | :---: |
+| **Canary** | **88.9%** | **92.3%** | **0.032** | — |
+| Absence EARS C2 | 66.0% | 35.2% | 0.588 | 1 day earlier |
+| Clinic CUSUM | 98.6% | 88.9% | 0.107 | 1 day later |
+| Fixed exposure threshold | 49.3% | 53.5% | 0.577 | 3 days later |
 
-## Local Development & Quick Start
+Results cover 144 injected events across three held-out seeds. Lead time is calculated on events both detectors found. Canary had higher precision and fewer false alerts than clinic CUSUM. CUSUM detected more events, especially gastrointestinal clusters. The fixed exposure comparator has no GI rule. These are simulated operational results. [Full report](eval/reports/summary.json) · [Methods and limitations](docs/validation.md)
 
-### Prerequisites
-- Node.js 18+ or 20+ (tested on Node 24)
-- npm 10+
-
-### Running the Web Platform
 ```bash
-# 1. Navigate to the frontend directory
-cd frontend
-
-# 2. Install dependencies (if not already installed)
-npm install
-
-# 3. Start local Next.js development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Building for Production
-```bash
-cd frontend
-npm run build
-npm run start
+# Run backtest suite and tests
+uv run python -m eval.backtest
+uv run pytest -q
 ```
 
 ---
 
-## Demo Roles Switcher
+## How it works
 
-Switch roles dynamically via the top-right header selector:
-1. **Occupational Physician / OH Lead**: Multi-site aggregate operational view with full syndromic signal strips.
-2. **Site HSE Officer**: Scoped specifically to Musaffah Sector 14 Heavy Steel Fabrication (Site 04).
-3. **District Public-Health Officer**: Regional district surveillance view with cross-site cluster visibility.
-4. **Health & Safety Regulator**: Compliance-only view with granular health-count fields masked server-side.
-
----
-
-## Project Structure
-
-```text
-Canary/
-├── PRD.md                  # Product Requirements Document
-├── ARCHITECTURE.md         # System Architecture & Technical Specifications
-├── DESIGN.md               # Visual Tokens, Components & UI Specs
-├── RULES.md                # Engineering Rules & Architecture Boundaries
-├── MODEL_CARD.md           # Model Card: Intended use, methods, limitations
-├── DATA_GOVERNANCE.md      # Data contracts, retention & privacy rules
-├── ASSUMPTIONS.md          # Open assumptions & evidence base
-├── TASKS.md                # Task backlog & delivery tracking
-├── CHANGELOG.md            # Version changelog
-│
-├── frontend/               # Next.js 15 App Router Frontend
-│   ├── src/
-│   │   ├── app/            # App routes (/, /alerts, /replay, /validation, /privacy, /impact)
-│   │   │   └── api/v1/     # REST API route handlers
-│   │   ├── components/     # Reusable layout, map, dashboard, and shared components
-│   │   ├── context/        # RoleProvider demo session context
-│   │   ├── lib/            # Seeded data, API client, domain & API TypeScript types
-│   │   └── globals.css     # Design tokens and custom theme styling
-│   ├── package.json
-│   ├── tailwind.config.ts
-│   └── tsconfig.json
-│
-└── backend/                # Python backend blueprints & YAML playbooks
-    └── app/playbooks/rules # Editable YAML response playbooks (respiratory, GI, heat)
+```mermaid
+flowchart LR
+  A["Aggregate clinic & workplace reports"] --> B["Schema checks & SQLite"]
+  C["Open-Meteo & CAMS Hazards"] --> D["Parquet hazard cache"]
+  B --> E["Negative-binomial GLM baselines"]
+  D --> F["Evidence fusion engine"]
+  E --> F
+  F --> G["Persistent tiers & scoped scan"]
+  G --> H["k-Suppression, role checks & audit"]
+  H --> I["FastAPI backend & Next.js frontend"]
 ```
 
+Site HSE sees its assigned site. Occupational physicians can read assigned sites. District public health sees district summaries. The regulator view reports feed compliance indicators. Small counts and their diagnostic contributions are suppressed, and eligible district rollups are shown in bands. Alerts require human review and cannot be used for individual employment or disciplinary decisions. [Data contract and governance](docs/data.md)
+
 ---
 
-## License & Responsible Use
+## Documentation Links
 
-Canary is designed for the Future Health Digital Innovation Challenge. It is an early-warning decision-support system requiring human clinical and HSE review before interventions are enacted. It is not approved for automated clinical diagnosis, individual profiling, or employee disciplinary action.
+- [System Architecture (ARCHITECTURE.md)](ARCHITECTURE.md)
+- [Product Requirements Document (PRD.md)](PRD.md)
+- [Clinical & Epidemiological Rules (RULES.md)](RULES.md)
+- [Design Specifications (DESIGN.md)](DESIGN.md)
+- [Data Governance & Privacy (DATA_GOVERNANCE.md)](DATA_GOVERNANCE.md)
+- [Model Card & Safety Boundaries (MODEL_CARD.md)](MODEL_CARD.md)
+- [API Contract Specification (docs/api.md)](docs/api.md)
+- [Data Model & Catalog (docs/data.md)](docs/data.md)
+- [Deployment Guide (docs/deployment.md)](docs/deployment.md)
 
+---
+
+## License and Sources
+
+The code is available under the [MIT License](LICENSE). Weather and air-quality inputs come from Open-Meteo and the Copernicus Atmosphere Monitoring Service (CAMS), ECMWF. [Weather documentation](https://open-meteo.com/en/docs/historical-weather-api) · [Air quality documentation](https://open-meteo.com/en/docs/air-quality-api) · [Data use terms](https://open-meteo.com/en/terms)
+
+Challenge requirements and submission details are published on the [official Future Health challenge page](https://hack2skill.com/event/futurehealthchallenge/).

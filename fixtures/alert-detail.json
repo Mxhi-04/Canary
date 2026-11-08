@@ -1,0 +1,98 @@
+{
+  "id": "site-07.respiratory.2026-08-14.Alert",
+  "unit_id": "site-07",
+  "syndrome": "respiratory",
+  "tier": "Alert",
+  "start": "2026-08-14",
+  "completeness": 1.0,
+  "confidence": "higher",
+  "contributions": [
+    {
+      "stream": "clinic_respiratory",
+      "date": "2026-08-14",
+      "status": "available",
+      "observed": 11,
+      "expected": 3.5843534207962655,
+      "dispersion": 0.1326606275992439,
+      "p_value": 0.008405141301002882,
+      "z": 3.2245834852879636,
+      "expected_band": [
+        0,
+        8
+      ],
+      "contribution": 2.339
+    },
+    {
+      "stream": "absence",
+      "date": "2026-08-14",
+      "status": "available",
+      "observed": 6,
+      "expected": 9.941929901930685,
+      "dispersion": 0.22345487495530805,
+      "p_value": 0.7719895095380102,
+      "z": -0.6965296052167108,
+      "expected_band": [
+        2,
+        21
+      ],
+      "contribution": 0.0
+    },
+    {
+      "stream": "hazard_prior",
+      "contribution": 1.9,
+      "status": "available",
+      "inputs": {
+        "pm2_5": {
+          "date": "2026-08-14",
+          "status": "available",
+          "observed": 80.668
+        },
+        "dust": {
+          "date": "2026-08-14",
+          "status": "available",
+          "observed": 122.266
+        }
+      }
+    }
+  ],
+  "zone": {
+    "unit_ids": [
+      "site-07"
+    ],
+    "label": "Al Ain Logistics"
+  },
+  "window": {
+    "from": "2026-08-12",
+    "to": "2026-08-14"
+  },
+  "scan": {
+    "status": "available",
+    "observed": 28,
+    "expected": 10.177,
+    "llr": 10.515,
+    "reference_p_value": 0.005,
+    "reference": "Poisson maximum over eligible zones/windows; descriptive only"
+  },
+  "recommendation": {
+    "action": "Review exposure controls and reduce avoidable dust exposure pending occupational health review.",
+    "owner_role": "Occupational health nurse",
+    "review_by": "2026-08-15",
+    "evidence": [
+      {
+        "title": "WHO guidance on reducing exposure to air pollution",
+        "url": "https://www.who.int/publications/i/item/WHO-EURO-2024-9115-48887-72806"
+      }
+    ],
+    "assumptions": [
+      "A short dust-to-symptom lag is plausible in this scenario. Check local monitoring and other causes."
+    ],
+    "escalation_path": "District public health officer for a sustained cross-site pattern.",
+    "requires_human_signoff": true
+  },
+  "data_availability": {
+    "clinic_respiratory": true,
+    "absence": true,
+    "pm2_5": true,
+    "dust": true
+  }
+}

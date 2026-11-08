@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: canary-health-api
+    runtime: docker
+    plan: free
+    branch: main
+    healthCheckPath: /healthz
+    envVars:
+      - key: CANARY_DEMO
+        value: "1"

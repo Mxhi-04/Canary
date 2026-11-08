@@ -1,19 +1,37 @@
-node_modules
-.next
-out
-build
-dist
-*.log
-.DS_Store
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+var/
+*.sqlite*
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+frontend/tsconfig.tsbuildinfo
+
+# Environment & Logs
 .env
 .env.local
 .env*.local
-__pycache__
-*.pyc
-.pytest_cache
-.coverage
-htmlcov
-.venv
-venv
+*.log
 
-frontend/tsconfig.tsbuildinfo
+# OS & Temp
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+image.png
+ideas/canary_scroll_enhanced_4k.mp4

@@ -1,0 +1,8 @@
+title: Heat stress and first-aid uptick
+syndrome: heat
+sites: [site-11, site-12]
+start: 2026-07-18
+duration_days: 10
+severity: 1.65
+outcome_lag_days: 1
+ramp: gradual

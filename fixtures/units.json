@@ -1,0 +1,98 @@
+[
+  {
+    "id": "site-01",
+    "name": "Abu Dhabi Accommodation",
+    "district": "abu-dhabi",
+    "kind": "accommodation",
+    "latitude": 24.4419,
+    "longitude": 54.366299999999995
+  },
+  {
+    "id": "site-02",
+    "name": "Abu Dhabi Construction",
+    "district": "abu-dhabi",
+    "kind": "construction",
+    "latitude": 24.4539,
+    "longitude": 54.3773
+  },
+  {
+    "id": "site-03",
+    "name": "Abu Dhabi Logistics",
+    "district": "abu-dhabi",
+    "kind": "logistics",
+    "latitude": 24.4659,
+    "longitude": 54.3883
+  },
+  {
+    "id": "site-04",
+    "name": "Mussafah Construction",
+    "district": "mussafah",
+    "kind": "construction",
+    "latitude": 24.3323,
+    "longitude": 54.477399999999996
+  },
+  {
+    "id": "site-05",
+    "name": "Mussafah Logistics",
+    "district": "mussafah",
+    "kind": "logistics",
+    "latitude": 24.3443,
+    "longitude": 54.4884
+  },
+  {
+    "id": "site-06",
+    "name": "Mussafah Office",
+    "district": "mussafah",
+    "kind": "office",
+    "latitude": 24.3563,
+    "longitude": 54.4994
+  },
+  {
+    "id": "site-07",
+    "name": "Al Ain Logistics",
+    "district": "al-ain",
+    "kind": "logistics",
+    "latitude": 24.1797,
+    "longitude": 55.749599999999994
+  },
+  {
+    "id": "site-08",
+    "name": "Al Ain Office",
+    "district": "al-ain",
+    "kind": "office",
+    "latitude": 24.1917,
+    "longitude": 55.7606
+  },
+  {
+    "id": "site-09",
+    "name": "Al Ain Accommodation",
+    "district": "al-ain",
+    "kind": "accommodation",
+    "latitude": 24.2037,
+    "longitude": 55.7716
+  },
+  {
+    "id": "site-10",
+    "name": "Dubai Office",
+    "district": "dubai",
+    "kind": "office",
+    "latitude": 25.1928,
+    "longitude": 55.2598
+  },
+  {
+    "id": "site-11",
+    "name": "Dubai Accommodation",
+    "district": "dubai",
+    "kind": "accommodation",
+    "latitude": 25.2048,
+    "longitude": 55.2708
+  },
+  {
+    "id": "site-12",
+    "name": "Dubai Construction",
+    "district": "dubai",
+    "kind": "construction",
+    "latitude": 25.2168,
+    "longitude": 55.281800000000004
+  }
+]

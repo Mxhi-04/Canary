@@ -1,0 +1,34 @@
+# Integration defaults. The product owner can replace wording without changing the API.
+respiratory:
+  evidence:
+    - title: WHO guidance on reducing exposure to air pollution
+      url: https://www.who.int/publications/i/item/WHO-EURO-2024-9115-48887-72806
+  assumptions:
+    - "A short dust-to-symptom lag is plausible in this scenario. Check local monitoring and other causes."
+  escalation: District public health officer for a sustained cross-site pattern.
+  tiers:
+    Watch: {action: Check local air quality and confirm routine respiratory reporting., owner: Site HSE officer, days: 2}
+    Alert: {action: Review exposure controls and reduce avoidable dust exposure pending occupational health review., owner: Occupational health nurse, days: 1}
+    Action: {action: Review the need for coordinated exposure controls with district public health., owner: Occupational physician, days: 0}
+gi:
+  evidence:
+    - title: CDC norovirus prevention guidance for food workers
+      url: https://www.cdc.gov/norovirus/communication-resources/facts-for-food-workers.html
+  assumptions:
+    - "Shared food, water, accommodation, or transport are hypotheses. The syndrome does not identify a pathogen."
+  escalation: Environmental health officer and district public health if reports persist across sites.
+  tiers:
+    Watch: {action: Confirm clinic and absence reports and review accommodation hygiene checks., owner: Occupational health nurse, days: 2}
+    Alert: {action: Review food and water safety and reinforce hand hygiene in shared accommodation., owner: Accommodation manager, days: 1}
+    Action: {action: Request an environmental health investigation and review the need for sampling., owner: Environmental health officer, days: 0}
+heat:
+  evidence:
+    - title: NIOSH workplace heat stress recommendations
+      url: https://www.cdc.gov/niosh/heat-stress/recommendations/
+  assumptions:
+    - "The temperature-humidity proxy is approximate. Confirm site conditions, workload, and protective clothing."
+  escalation: Occupational physician when first-aid reports or heat exposure remain elevated.
+  tiers:
+    Watch: {action: Check the local forecast and confirm on-site heat monitoring., owner: Site HSE officer, days: 2}
+    Alert: {action: Review task timing and confirm access to rest breaks, drinking water, and shade., owner: Site HSE officer, days: 1}
+    Action: {action: Review exposure controls and high-exertion work with occupational health., owner: Occupational physician, days: 0}
